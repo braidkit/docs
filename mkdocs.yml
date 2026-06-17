@@ -1,0 +1,70 @@
+site_name: Braid Docs
+site_url: https://docs.braidkit.io/
+site_description: Protocol and product docs for Braid.
+repo_url: https://github.com/braidkit/docs
+repo_name: braidkit/docs
+
+theme:
+  name: material
+  logo: assets/logo.svg
+  favicon: assets/favicon.svg
+  features:
+    - navigation.sections
+    - navigation.instant
+    - navigation.tracking
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: deep purple
+      accent: teal
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      primary: deep purple
+      accent: teal
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+nav:
+  - Home: index.md
+  - Protocol:
+      - Overview: protocol/overview.md
+      - Entity Relations: protocol/entity-relations.md
+      - Event Stories: protocol/event-stories.md
+      - WorkEvent Reference: protocol/work-event.md
+  - Stories:
+      - Human Thread: stories/human-thread.md
+      - Agent Thread: stories/agent-thread.md
+      - Sub-Agent Delegation: stories/sub-agent-delegation.md
+      - Review and Promote: stories/review-and-promote.md
+  - Concepts:
+      - Braids: concepts/braids.md
+      - Threads: concepts/threads.md
+      - Contributors: concepts/contributors.md
+      - Decisions: concepts/decisions.md
+  - Keeping Docs Current: keeping-docs-current.md
+  - Deploying: deploying.md
+
