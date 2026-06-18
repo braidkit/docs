@@ -5,6 +5,17 @@ Source for `docs.braidkit.io`.
 The site is intentionally small and Markdown-first. The current focus is the
 Braid protocol: entity relationships, event stories, and the `WorkEvent` model.
 
+## Brand
+
+The docs theme consumes the shared brand capsule from the marketing site:
+
+```text
+https://braidkit.io/brand/tokens.css
+```
+
+Local CSS in `docs/stylesheets/brand.css` maps those tokens into MkDocs
+Material and keeps fallback values for local development.
+
 ## Local development
 
 ```sh

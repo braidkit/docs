@@ -17,5 +17,9 @@ Add the custom domain:
 docs.braidkit.io
 ```
 
+The docs site references brand assets from `https://braidkit.io/brand/`.
+Deploy the marketing site brand capsule before merging docs changes that depend
+on new shared assets.
+
 Cloudflare Pages creates preview deployments for pull requests and rebuilds the
 production site whenever `main` changes.
