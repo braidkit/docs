@@ -18,6 +18,7 @@
   --braid-docs-radius-md: var(--braid-radius-md, 14px);
   --braid-docs-content-width: var(--braid-content-width, 680px);
   --braid-docs-shell-width: var(--braid-nav-width, 900px);
+  --braid-docs-main-width: 1280px;
   --md-primary-fg-color: var(--braid-docs-canvas);
   --md-primary-fg-color--light: var(--braid-docs-canvas);
   --md-primary-fg-color--dark: var(--braid-docs-ink);
@@ -120,6 +121,10 @@ body {
 .md-main__inner {
   margin: 0 auto;
   padding: 0 32px;
+}
+
+.md-main__inner.md-grid {
+  max-width: min(var(--braid-docs-main-width), calc(100vw - 48px));
 }
 
 .md-content {
@@ -254,11 +259,11 @@ body {
 }
 
 .diagram-stage {
-  --diagram-stage-width: min(1120px, calc(100vw - 64px));
+  --diagram-stage-width: min(1120px, calc(100vw - 360px));
   background: var(--braid-docs-surface);
   border: 1px solid var(--braid-docs-border);
   border-radius: var(--braid-docs-radius-md);
-  margin: 32px 0 40px calc((100% - var(--diagram-stage-width)) / 2);
+  margin: 32px 0 40px;
   overflow: hidden;
   width: var(--diagram-stage-width);
 }
