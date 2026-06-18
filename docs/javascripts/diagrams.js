@@ -1,14 +1,15 @@
 (function () {
   const minScale = 0.75;
-  const maxScale = 2;
+  const maxScale = 3;
   const step = 0.25;
+  const minimumDiagramWidth = 2400;
 
   function clamp(value) {
     return Math.max(minScale, Math.min(maxScale, value));
   }
 
   function enhanceDiagram(diagram, index) {
-    if (diagram.dataset.diagramEnhanced === "true") {
+    if (diagram.dataset.diagramEnhanced === "true" || diagram.closest(".diagram-stage")) {
       return;
     }
 
@@ -56,13 +57,23 @@
     stage.append(toolbar, viewport);
 
     let scale = 1;
+    let baseWidth = minimumDiagramWidth;
 
     function applyScale() {
       const percent = `${Math.round(scale * 100)}%`;
-      diagram.style.setProperty("--diagram-zoom", percent);
+      const width = Math.round(baseWidth * scale);
+
+      diagram.style.setProperty("--diagram-width", `${width}px`);
       zoomValue.textContent = percent;
       zoomOut.disabled = scale <= minScale;
       zoomIn.disabled = scale >= maxScale;
+
+      const svg = diagram.querySelector("svg");
+      if (svg) {
+        svg.style.width = `${width}px`;
+        svg.style.maxWidth = "none";
+        svg.style.height = "auto";
+      }
     }
 
     function setScale(nextScale) {
@@ -86,11 +97,25 @@
       { passive: false },
     );
 
-    applyScale();
+    function syncRenderedSize() {
+      const svg = diagram.querySelector("svg");
+      if (svg) {
+        const viewBoxWidth = svg.viewBox && svg.viewBox.baseVal ? svg.viewBox.baseVal.width : 0;
+        const attrWidth = parseFloat(svg.getAttribute("width") || "0");
+        baseWidth = Math.max(minimumDiagramWidth, viewBoxWidth, attrWidth);
+      }
+
+      applyScale();
+    }
+
+    const observer = new MutationObserver(syncRenderedSize);
+    observer.observe(diagram, { childList: true, subtree: true });
+
+    requestAnimationFrame(syncRenderedSize);
   }
 
   function initDiagrams() {
-    document.querySelectorAll("pre.mermaid").forEach(enhanceDiagram);
+    document.querySelectorAll(".mermaid").forEach(enhanceDiagram);
   }
 
   if (window.document$) {
@@ -98,4 +123,7 @@
   } else {
     document.addEventListener("DOMContentLoaded", initDiagrams);
   }
+
+  const pageObserver = new MutationObserver(initDiagrams);
+  pageObserver.observe(document.documentElement, { childList: true, subtree: true });
 })();

@@ -254,7 +254,7 @@ body {
 }
 
 .diagram-stage {
-  --diagram-stage-width: min(var(--braid-docs-shell-width), calc(100vw - 64px));
+  --diagram-stage-width: min(1120px, calc(100vw - 64px));
   background: var(--braid-docs-surface);
   border: 1px solid var(--braid-docs-border);
   border-radius: var(--braid-docs-radius-md);
@@ -307,25 +307,34 @@ body {
 }
 
 .diagram-viewport {
+  max-height: 72vh;
+  min-height: 560px;
   overflow: auto;
   padding: 24px;
   touch-action: pan-x pan-y;
 }
 
-.diagram-viewport pre.mermaid {
+.diagram-viewport .mermaid {
   background: transparent;
   margin: 0;
-  min-width: 760px;
+  min-width: var(--diagram-width, 2400px);
   overflow: visible;
+  width: var(--diagram-width, 2400px);
 }
 
-.diagram-viewport pre.mermaid svg {
+.diagram-viewport .mermaid svg {
   display: block;
   height: auto;
-  margin: 0 auto;
+  margin: 0;
   max-width: none;
-  min-width: 760px;
-  width: var(--diagram-zoom, 100%);
+  min-width: var(--diagram-width, 2400px);
+  width: var(--diagram-width, 2400px);
+}
+
+.diagram-viewport .mermaid text,
+.diagram-viewport .mermaid .entityLabel,
+.diagram-viewport .mermaid .relationshipLabel {
+  font-size: 18px !important;
 }
 
 .md-footer,
@@ -389,5 +398,6 @@ body {
 
   .diagram-viewport {
     padding: 18px;
+    min-height: 460px;
   }
 }
