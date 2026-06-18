@@ -6,8 +6,9 @@ repo_name: braidkit/docs
 
 theme:
   name: material
-  logo: assets/logo.svg
-  favicon: assets/favicon.svg
+  logo: assets/brand/logo/braid-mark-purple-512.png
+  favicon: assets/brand/logo/braid-avatar-purple-512.png
+  font: false
   features:
     - navigation.sections
     - navigation.instant
@@ -31,6 +32,12 @@ theme:
 
 plugins:
   - search
+
+extra_css:
+  - stylesheets/brand.css
+
+extra_javascript:
+  - javascripts/diagrams.js
 
 markdown_extensions:
   - admonition
@@ -67,4 +74,3 @@ nav:
       - Decisions: concepts/decisions.md
   - Keeping Docs Current: keeping-docs-current.md
   - Deploying: deploying.md
-
