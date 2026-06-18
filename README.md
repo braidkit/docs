@@ -16,18 +16,21 @@ https://braidkit.io/brand/manifest.json
 https://braidkit.io/brand/logo/...
 ```
 
-The docs site consumes those files instead of keeping a separate copy of the
-logo, colors, and type stack. In `mkdocs.yml`, the logo, favicon, and first CSS
-file all point at `https://braidkit.io/brand/...`.
+The docs site imports the shared token CSS through
+`docs/stylesheets/brand.css`. That adapter maps Braid tokens into MkDocs
+Material variables, adds docs-specific layout styles, and keeps fallback values
+so local previews still look right when the marketing site has not deployed a
+new capsule yet.
 
-`docs/stylesheets/brand.css` is the local adapter layer. It maps Braid tokens
-into MkDocs Material variables, adds a few docs-specific styles, and keeps
-fallback values so local builds still work before the remote brand CSS loads.
+MkDocs needs concrete image paths for its logo and favicon, so this repo keeps
+local copies in `docs/assets/brand/logo/`. Treat those as copies from the
+marketing site's `public/brand/logo/` folder, not as a new source of truth.
 
 The deploy order matters when brand assets change:
 
 1. Merge and deploy the marketing site change that publishes `/brand/...`.
-2. Merge the docs change that consumes the new brand asset or token.
+2. Refresh local logo copies here if the image asset changed.
+3. Merge the docs change that consumes the new brand asset or token.
 
 ## Local development
 

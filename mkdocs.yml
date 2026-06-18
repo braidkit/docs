@@ -6,8 +6,8 @@ repo_name: braidkit/docs
 
 theme:
   name: material
-  logo: https://braidkit.io/brand/logo/braid-mark-black.svg
-  favicon: https://braidkit.io/brand/logo/braid-avatar-purple-512.png
+  logo: assets/brand/logo/braid-mark-black.svg
+  favicon: assets/brand/logo/braid-avatar-purple-512.png
   font: false
   features:
     - navigation.sections
@@ -34,7 +34,6 @@ plugins:
   - search
 
 extra_css:
-  - https://braidkit.io/brand/tokens.css
   - stylesheets/brand.css
 
 markdown_extensions:

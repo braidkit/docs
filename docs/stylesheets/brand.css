@@ -1,77 +1,298 @@
+@import url("https://braidkit.io/brand/tokens.css");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400;1,14..32,500&family=Space+Grotesk:wght@500;600;700&display=swap");
+
 :root {
-  --braid-purple: #5c2d4a;
-  --braid-ink: #1d1317;
-  --braid-text: #1a1a1a;
-  --braid-muted: #555555;
-  --braid-subtle: #888888;
-  --braid-canvas: #f7f6f4;
-  --braid-surface: #ffffff;
-  --braid-border: #e5e5e5;
-  --braid-code: #ebebeb;
-  --braid-font-body: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --braid-font-display: "Space Grotesk", var(--braid-font-body);
-  --md-primary-fg-color: var(--braid-ink);
-  --md-primary-fg-color--light: var(--braid-purple);
-  --md-primary-fg-color--dark: var(--braid-ink);
-  --md-accent-fg-color: var(--braid-purple);
-  --md-default-bg-color: var(--braid-canvas);
-  --md-default-fg-color: var(--braid-text);
-  --md-default-fg-color--light: var(--braid-muted);
-  --md-code-bg-color: var(--braid-code);
-  --md-text-font: var(--braid-font-body);
+  --braid-docs-purple: var(--braid-purple, #5c2d4a);
+  --braid-docs-ink: var(--braid-ink, #1d1317);
+  --braid-docs-text: var(--braid-text, #1a1a1a);
+  --braid-docs-muted: var(--braid-muted, #555555);
+  --braid-docs-subtle: var(--braid-subtle, #888888);
+  --braid-docs-canvas: var(--braid-canvas, #f7f6f4);
+  --braid-docs-surface: var(--braid-surface, #ffffff);
+  --braid-docs-border: var(--braid-border, #e5e5e5);
+  --braid-docs-code: var(--braid-code, #ebebeb);
+  --braid-docs-body: var(--braid-font-body, "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+  --braid-docs-display: var(--braid-font-display, "Space Grotesk", var(--braid-docs-body));
+  --braid-docs-radius-sm: var(--braid-radius-sm, 6px);
+  --braid-docs-radius-md: var(--braid-radius-md, 10px);
+  --braid-docs-content-width: var(--braid-content-width, 680px);
+  --braid-docs-shell-width: var(--braid-nav-width, 900px);
+  --md-primary-fg-color: var(--braid-docs-canvas);
+  --md-primary-fg-color--light: var(--braid-docs-canvas);
+  --md-primary-fg-color--dark: var(--braid-docs-ink);
+  --md-primary-bg-color: var(--braid-docs-ink);
+  --md-accent-fg-color: var(--braid-docs-purple);
+  --md-default-bg-color: var(--braid-docs-canvas);
+  --md-default-fg-color: var(--braid-docs-text);
+  --md-default-fg-color--light: var(--braid-docs-muted);
+  --md-code-bg-color: var(--braid-docs-code);
+  --md-code-fg-color: #333333;
+  --md-text-font: var(--braid-docs-body);
   --md-code-font: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  --md-typeset-a-color: var(--braid-docs-purple);
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
-  font-family: var(--braid-font-body);
+  background: var(--braid-docs-canvas);
+  color: var(--braid-docs-text);
+  font-family: var(--braid-docs-body);
 }
 
-.md-header,
-.md-tabs {
-  background: var(--braid-canvas);
-  color: var(--braid-ink);
-  border-bottom: 1px solid var(--braid-border);
+.md-grid {
+  max-width: var(--braid-docs-shell-width);
+}
+
+.md-header {
+  background: var(--braid-docs-canvas);
+  border-bottom: 1px solid var(--braid-docs-border);
   box-shadow: none;
+  color: var(--braid-docs-ink);
 }
 
-.md-header__title,
-.md-nav__title,
+.md-header__inner {
+  min-height: 56px;
+  padding: 0 32px;
+}
+
+.md-header__button {
+  color: var(--braid-docs-ink);
+}
+
+.md-header__button.md-logo {
+  margin: 0 8px 0 0;
+  padding: 0;
+}
+
+.md-header__button.md-logo img,
+.md-nav__button.md-logo img {
+  display: block;
+  height: 20px;
+  width: auto;
+}
+
+.md-header__title {
+  color: var(--braid-docs-ink);
+  font-family: var(--braid-docs-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-left: 0;
+}
+
+.md-header__topic {
+  line-height: 1;
+}
+
+.md-header__topic + .md-header__topic {
+  display: none;
+}
+
+.md-header__source,
+.md-nav__source {
+  display: none;
+}
+
+.md-search__form {
+  background: var(--braid-docs-surface);
+  border: 1px solid var(--braid-docs-border);
+  border-radius: var(--braid-docs-radius-sm);
+  box-shadow: none;
+  height: 36px;
+}
+
+.md-search__input {
+  color: var(--braid-docs-text);
+  font-family: var(--braid-docs-body);
+  font-size: 0.75rem;
+}
+
+.md-container,
+.md-main {
+  background: var(--braid-docs-canvas);
+}
+
+.md-main__inner {
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.md-content {
+  max-width: var(--braid-docs-content-width);
+}
+
+.md-content__inner {
+  margin: 0;
+  padding: 64px 0 96px;
+}
+
+.md-content__inner::before {
+  display: none;
+}
+
+.md-sidebar {
+  padding-top: 32px;
+}
+
+.md-sidebar--primary {
+  width: 10rem;
+}
+
+.md-sidebar--secondary {
+  display: none;
+}
+
+.md-sidebar__scrollwrap {
+  margin: 0;
+}
+
+.md-nav {
+  color: var(--braid-docs-muted);
+  font-size: 0.7rem;
+}
+
+.md-nav__title {
+  background: transparent;
+  box-shadow: none;
+  color: var(--braid-docs-ink);
+  font-family: var(--braid-docs-display);
+  font-weight: 700;
+}
+
+.md-nav__link {
+  color: var(--braid-docs-muted);
+  margin-top: 0.2rem;
+}
+
+.md-nav__link:hover,
+.md-nav__link--active {
+  color: var(--braid-docs-ink);
+}
+
+.md-nav__item .md-nav__link--active {
+  font-weight: 600;
+}
+
+.md-typeset {
+  color: var(--braid-docs-text);
+  font-size: 0.84rem;
+  line-height: 1.8;
+}
+
 .md-typeset h1,
 .md-typeset h2,
 .md-typeset h3 {
-  font-family: var(--braid-font-display);
+  color: var(--braid-docs-ink);
+  font-family: var(--braid-docs-display);
   letter-spacing: 0;
 }
 
 .md-typeset h1 {
-  color: var(--braid-ink);
+  font-size: clamp(2rem, 4vw, 2.8rem);
   font-weight: 800;
+  line-height: 1.15;
+  margin: 0 0 24px;
+}
+
+.md-typeset h2 {
+  border-top: 1px solid var(--braid-docs-border);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 48px 0 20px;
+  padding-top: 48px;
+}
+
+.md-typeset h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.md-typeset p,
+.md-typeset li {
+  color: #444444;
 }
 
 .md-typeset a {
-  color: var(--braid-purple);
-}
-
-.md-search__form {
-  background: var(--braid-surface);
-  border: 1px solid var(--braid-border);
-  border-radius: var(--braid-radius-sm, 6px);
+  color: var(--braid-docs-purple);
 }
 
 .md-typeset code {
+  background: var(--braid-docs-code);
   border-radius: 3px;
+  color: #333333;
+  padding: 1px 5px;
+}
+
+.md-typeset pre > code {
+  font-size: 0.75rem;
+}
+
+.md-typeset .admonition,
+.md-typeset details {
+  background: var(--braid-docs-surface);
+  border: 1px solid var(--braid-docs-border);
+  border-radius: var(--braid-docs-radius-md);
+  box-shadow: none;
+}
+
+.md-typeset table:not([class]) {
+  background: var(--braid-docs-surface);
+  border: 1px solid var(--braid-docs-border);
+  border-radius: var(--braid-docs-radius-sm);
+  font-size: 0.75rem;
+}
+
+.md-footer,
+.md-footer-meta {
+  background: var(--braid-docs-canvas);
+  border-top: 1px solid var(--braid-docs-border);
+  color: var(--braid-docs-subtle);
 }
 
 [data-md-color-scheme="slate"] {
-  --md-default-bg-color: #1d1317;
-  --md-default-fg-color: #f7f6f4;
-  --md-default-fg-color--light: #d9d2d5;
-  --md-code-bg-color: #2a1e23;
+  --braid-docs-canvas: #1d1317;
+  --braid-docs-surface: #261a20;
+  --braid-docs-text: #f7f6f4;
+  --braid-docs-muted: #d9d2d5;
+  --braid-docs-border: #3a2a31;
+  --braid-docs-code: #2a1e23;
+  --md-code-fg-color: #f7f6f4;
 }
 
-[data-md-color-scheme="slate"] .md-header,
-[data-md-color-scheme="slate"] .md-tabs {
-  background: #1d1317;
-  color: #f7f6f4;
-  border-bottom-color: #3a2a31;
+[data-md-color-scheme="slate"] .md-typeset p,
+[data-md-color-scheme="slate"] .md-typeset li {
+  color: #e6dde1;
+}
+
+@media screen and (min-width: 60em) {
+  .md-search__inner {
+    width: 12rem;
+  }
+}
+
+@media screen and (max-width: 76.234375em) {
+  .md-main__inner {
+    padding: 0 24px;
+  }
+
+  .md-content__inner {
+    padding-top: 48px;
+  }
+}
+
+@media screen and (max-width: 44.984375em) {
+  .md-header__inner {
+    padding: 0 20px;
+  }
+
+  .md-main__inner {
+    padding: 0 24px;
+  }
+
+  .md-typeset h1 {
+    font-size: 2rem;
+  }
 }
