@@ -4,17 +4,18 @@
 :root {
   --braid-docs-purple: var(--braid-purple, #5c2d4a);
   --braid-docs-ink: var(--braid-ink, #1d1317);
-  --braid-docs-text: var(--braid-text, #1a1a1a);
-  --braid-docs-muted: var(--braid-muted, #555555);
-  --braid-docs-subtle: var(--braid-subtle, #888888);
-  --braid-docs-canvas: var(--braid-canvas, #f7f6f4);
+  --braid-docs-text: var(--braid-text, #1d1317);
+  --braid-docs-muted: var(--braid-muted, #6e5858);
+  --braid-docs-subtle: var(--braid-subtle, #9a8080);
+  --braid-docs-canvas: var(--braid-canvas, #f8f5fd);
   --braid-docs-surface: var(--braid-surface, #ffffff);
-  --braid-docs-border: var(--braid-border, #e5e5e5);
-  --braid-docs-code: var(--braid-code, #ebebeb);
+  --braid-docs-border: var(--braid-border, #ddd5f0);
+  --braid-docs-code: var(--braid-code, #f0e8e4);
   --braid-docs-body: var(--braid-font-body, "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
   --braid-docs-display: var(--braid-font-display, "Space Grotesk", var(--braid-docs-body));
+  --braid-docs-brand: var(--braid-font-brand, "DM Serif Display", Georgia, serif);
   --braid-docs-radius-sm: var(--braid-radius-sm, 6px);
-  --braid-docs-radius-md: var(--braid-radius-md, 10px);
+  --braid-docs-radius-md: var(--braid-radius-md, 14px);
   --braid-docs-content-width: var(--braid-content-width, 680px);
   --braid-docs-shell-width: var(--braid-nav-width, 900px);
   --md-primary-fg-color: var(--braid-docs-canvas);
@@ -55,7 +56,7 @@ body {
 }
 
 .md-header__inner {
-  min-height: 56px;
+  min-height: 68px;
   padding: 0 32px;
 }
 
@@ -71,15 +72,16 @@ body {
 .md-header__button.md-logo img,
 .md-nav__button.md-logo img {
   display: block;
-  height: 20px;
+  height: 34px;
   width: auto;
 }
 
 .md-header__title {
   color: var(--braid-docs-ink);
-  font-family: var(--braid-docs-display);
-  font-size: 0.8rem;
-  font-weight: 700;
+  font-family: var(--braid-docs-brand);
+  font-size: 1.35rem;
+  font-style: italic;
+  font-weight: 400;
   margin-left: 0;
 }
 
@@ -186,33 +188,39 @@ body {
 .md-typeset h2,
 .md-typeset h3 {
   color: var(--braid-docs-ink);
-  font-family: var(--braid-docs-display);
   letter-spacing: 0;
 }
 
 .md-typeset h1 {
-  font-size: clamp(2rem, 4vw, 2.8rem);
-  font-weight: 800;
-  line-height: 1.15;
+  background: linear-gradient(135deg, var(--braid-docs-ink) 10%, #6b3060 100%);
+  background-clip: text;
+  font-family: var(--braid-docs-brand);
+  font-size: clamp(2.4rem, 5vw, 3.4rem);
+  font-weight: 400;
+  line-height: 1.18;
   margin: 0 0 24px;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .md-typeset h2 {
   border-top: 1px solid var(--braid-docs-border);
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 48px 0 20px;
+  font-family: var(--braid-docs-brand);
+  font-size: 1.65rem;
+  font-weight: 400;
+  margin: 56px 0 20px;
   padding-top: 48px;
 }
 
 .md-typeset h3 {
+  font-family: var(--braid-docs-display);
   font-size: 1.15rem;
   font-weight: 700;
 }
 
 .md-typeset p,
 .md-typeset li {
-  color: #444444;
+  color: #4a3535;
 }
 
 .md-typeset a {
@@ -222,7 +230,7 @@ body {
 .md-typeset code {
   background: var(--braid-docs-code);
   border-radius: 3px;
-  color: #333333;
+  color: #4a2d35;
   padding: 1px 5px;
 }
 
@@ -243,6 +251,81 @@ body {
   border: 1px solid var(--braid-docs-border);
   border-radius: var(--braid-docs-radius-sm);
   font-size: 0.75rem;
+}
+
+.diagram-stage {
+  --diagram-stage-width: min(var(--braid-docs-shell-width), calc(100vw - 64px));
+  background: var(--braid-docs-surface);
+  border: 1px solid var(--braid-docs-border);
+  border-radius: var(--braid-docs-radius-md);
+  margin: 32px 0 40px calc((100% - var(--diagram-stage-width)) / 2);
+  overflow: hidden;
+  width: var(--diagram-stage-width);
+}
+
+.diagram-toolbar {
+  align-items: center;
+  border-bottom: 1px solid var(--braid-docs-border);
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  padding: 8px 10px;
+}
+
+.diagram-control,
+.diagram-reset {
+  align-items: center;
+  background: var(--braid-docs-canvas);
+  border: 1px solid var(--braid-docs-border);
+  border-radius: var(--braid-docs-radius-sm);
+  color: var(--braid-docs-ink);
+  cursor: pointer;
+  display: inline-flex;
+  font: 600 0.72rem/1 var(--braid-docs-body);
+  height: 28px;
+  justify-content: center;
+  min-width: 28px;
+  padding: 0 8px;
+}
+
+.diagram-control:hover,
+.diagram-reset:hover {
+  border-color: var(--braid-docs-subtle);
+}
+
+.diagram-control:disabled {
+  color: var(--braid-docs-subtle);
+  cursor: default;
+  opacity: 0.45;
+}
+
+.diagram-zoom-value {
+  color: var(--braid-docs-muted);
+  font-size: 0.72rem;
+  min-width: 38px;
+  text-align: center;
+}
+
+.diagram-viewport {
+  overflow: auto;
+  padding: 24px;
+  touch-action: pan-x pan-y;
+}
+
+.diagram-viewport pre.mermaid {
+  background: transparent;
+  margin: 0;
+  min-width: 760px;
+  overflow: visible;
+}
+
+.diagram-viewport pre.mermaid svg {
+  display: block;
+  height: auto;
+  margin: 0 auto;
+  max-width: none;
+  min-width: 760px;
+  width: var(--diagram-zoom, 100%);
 }
 
 .md-footer,
@@ -281,6 +364,10 @@ body {
   .md-content__inner {
     padding-top: 48px;
   }
+
+  .diagram-stage {
+    --diagram-stage-width: calc(100vw - 48px);
+  }
 }
 
 @media screen and (max-width: 44.984375em) {
@@ -294,5 +381,13 @@ body {
 
   .md-typeset h1 {
     font-size: 2rem;
+  }
+
+  .diagram-stage {
+    --diagram-stage-width: calc(100vw - 32px);
+  }
+
+  .diagram-viewport {
+    padding: 18px;
   }
 }

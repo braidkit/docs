@@ -6,7 +6,7 @@ repo_name: braidkit/docs
 
 theme:
   name: material
-  logo: assets/brand/logo/braid-mark-black.svg
+  logo: assets/brand/logo/braid-mark-purple-512.png
   favicon: assets/brand/logo/braid-avatar-purple-512.png
   font: false
   features:
@@ -35,6 +35,9 @@ plugins:
 
 extra_css:
   - stylesheets/brand.css
+
+extra_javascript:
+  - javascripts/diagrams.js
 
 markdown_extensions:
   - admonition
