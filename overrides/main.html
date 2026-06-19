@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+<!-- Breadcrumbs: the open-source Material theme has no breadcrumb feature, so we
+     render them from the page's nav ancestors. Shown on every page except the
+     top-level home page. -->
+{% block content %}
+  {% if page and page.ancestors %}
+    <nav class="braid-crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="{{ nav.homepage.url | url }}">Home</a></li>
+        {% for ancestor in page.ancestors | reverse %}
+          <li class="braid-crumbs__sep" aria-hidden="true">/</li>
+          <li>
+            {% if ancestor.url %}
+              <a href="{{ ancestor.url | url }}">{{ ancestor.title }}</a>
+            {% else %}
+              <span>{{ ancestor.title }}</span>
+            {% endif %}
+          </li>
+        {% endfor %}
+        <li class="braid-crumbs__sep" aria-hidden="true">/</li>
+        <li><span class="braid-crumbs__current" aria-current="page">{{ page.title }}</span></li>
+      </ol>
+    </nav>
+  {% endif %}
+  {{ super() }}
+{% endblock %}
