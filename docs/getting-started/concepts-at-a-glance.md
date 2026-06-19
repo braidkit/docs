@@ -40,7 +40,7 @@ flowchart TD
   messages.
 - Every event names its **contributor**, **thread**, **time**,
   **capture method**, and exactly one **payload kind**.
-- Events are signed with **Ed25519** over the canonical event bytes, so the
+- Events are signed with **Ed25519** over canonical-JSON encoding, so the
   record is tamper-evident. See [Capture & Provenance](../protocol/capture-and-provenance.md).
 - The **orchestrator** assembles thread artifacts, runs the promote gate, and
   computes touched files from git — it never trusts a client to report what

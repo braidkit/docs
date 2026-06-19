@@ -26,10 +26,10 @@ authoritative.
 
 ## Signatures
 
-Each event carries a `signature`: an **Ed25519** signature over the canonical
-event bytes. Because the signature covers the canonical serialization, any change
-to the event after signing is detectable — the stream is tamper-evident, and each
-event can be attributed to the key that produced it.
+Each event carries a `signature`: an **Ed25519** signature over the event's
+canonical-JSON encoding. Because the signature covers that canonical encoding,
+any change to the event after signing is detectable — the stream is
+tamper-evident, and each event can be attributed to the key that produced it.
 
 ## Provenance through lineage
 

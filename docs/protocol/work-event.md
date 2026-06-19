@@ -9,7 +9,7 @@ Every event has:
 - `thread_id`: the lane inside the braid.
 - `contributor`: the human or agent session that acted.
 - `ts`: event time.
-- `signature`: Ed25519 signature over the canonical event bytes.
+- `signature`: Ed25519 signature over the event's canonical-JSON encoding.
 - `capture_method`: whether the event came from native integration, wrapper
   markers, extraction, or human entry.
 - exactly one payload kind.
@@ -33,4 +33,3 @@ Current payload kinds:
 
 Canonical proto:
 [`work.proto`](https://github.com/braidkit/Prototype/blob/main/api/proto/braid/work/v1/work.proto).
-

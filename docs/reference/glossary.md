@@ -47,8 +47,9 @@ with a reason and evidence. See [Decisions](../concepts/decisions.md).
 
 #### Ed25519
 
-The signature scheme used to sign each event over its canonical bytes, making
-the stream tamper-evident. See [Capture & Provenance](../protocol/capture-and-provenance.md).
+The signature scheme used to sign each event over its canonical-JSON encoding,
+making the stream tamper-evident. See
+[Capture & Provenance](../protocol/capture-and-provenance.md).
 
 #### Event
 

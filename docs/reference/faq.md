@@ -48,10 +48,11 @@ files from git commit state rather than trusting a self-reported list. See
 
 ## How do I know an event is genuine?
 
-Each event is signed with **Ed25519** over its canonical bytes, so tampering is
-detectable and each event is attributable to a key. Events also record a
-`capture_method` so you can tell a natively captured event from a reconstructed
-or hand-entered one. See [Capture & Provenance](../protocol/capture-and-provenance.md).
+Each event is signed with **Ed25519** over its canonical-JSON encoding, so
+tampering is detectable and each event is attributable to a key. Events also
+record a `capture_method` so you can tell a natively captured event from a
+reconstructed or hand-entered one. See
+[Capture & Provenance](../protocol/capture-and-provenance.md).
 
 ## What gets checked before work is promoted?
 

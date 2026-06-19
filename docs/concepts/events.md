@@ -10,7 +10,7 @@ payload kind. The envelope names:
 - the **thread** (and braid) it belongs to,
 - when it happened (`ts`),
 - how it was captured (`capture_method`),
-- and a **signature** over the canonical event bytes.
+- and a **signature** over the event's canonical-JSON encoding.
 
 ## One event, one kind
 
