@@ -81,8 +81,8 @@ A `WorkEvent` kind recording a contributor's own deliberation.
 
 #### Review
 
-A judgment on one or more subjects (`THREAD`, `CONTRIBUTOR`, `COMMIT`, `BRAID`).
-Review is itself work. See [Reviews](../concepts/reviews.md).
+A judgment on one or more subjects (`EVENT`, `THREAD`, `CONTRIBUTOR`, `COMMIT`,
+`BRAID`). Review is itself work. See [Reviews](../concepts/reviews.md).
 
 #### Scope
 

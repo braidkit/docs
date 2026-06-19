@@ -14,8 +14,10 @@ events and derives touched files from git commit state.
 ## Does Braid replace my code review tool?
 
 No. Braid models review as first-class, signed [`Review`](../concepts/reviews.md)
-events that can vouch for threads, contributors, commits, or a whole braid. How
-that surfaces in a review UI is a product concern layered on top of the protocol.
+events that can vouch for one event, thread, contributor, commit, or whole braid.
+Event-level review is the precise audit case; promotion will usually care about
+thread, commit, or braid-level review. How that surfaces in a review UI is a
+product concern layered on top of the protocol.
 
 ## What is the difference between a braid and a thread?
 

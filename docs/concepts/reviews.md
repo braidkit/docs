@@ -11,13 +11,16 @@ single review can vouch for things at different granularities:
 
 | Subject kind | Example |
 | --- | --- |
+| `EVENT` | Review one specific `WorkEvent`, usually for precise audit or investigation. |
 | `THREAD` | Approve one thread's final artifact. |
 | `CONTRIBUTOR` | Review all work by a specific agent session. |
 | `COMMIT` | Approve a specific git commit. |
 | `BRAID` | Approve the coordinated work as a whole. |
 
 This is what lets a reviewer say "I vouch for everything this agent session did"
-or "I approve this commit" rather than only "I approve the PR."
+or "I approve this commit" rather than only "I approve the PR." Event-level
+reviews are the narrow case: useful when a reviewer wants to vouch for, or call
+out, one exact prompt, tool use, decision, or other recorded action.
 
 ## Review versus decision
 

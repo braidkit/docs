@@ -53,7 +53,7 @@ remains the source of truth for field-level shape.
 
 ### Judgment
 
-- **`Review`** — a judgment naming one or more subjects (`THREAD`,
+- **`Review`** — a judgment naming one or more subjects (`EVENT`, `THREAD`,
   `CONTRIBUTOR`, `COMMIT`, or `BRAID`). See [Reviews](../concepts/reviews.md).
 - **`Decision`** — the thread's terminal verdict. Carries `verdict`,
   `commit_sha`, `reason`, `evidence_event_ids`, and acknowledged
