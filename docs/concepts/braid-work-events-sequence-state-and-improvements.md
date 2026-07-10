@@ -4,6 +4,9 @@ Generated from the latest sequence diagram:
 
 - SVG: `../assets/braid-work-events/braid-work-events-sequence.svg`
 - PR loop SVG: `../assets/braid-work-events/pr-change-loop-sequence.svg`
+- Commit/session boundary SVG: `../assets/braid-work-events/commit-boundary-sequence.svg`
+- PR creation boundary SVG: `../assets/braid-work-events/pr-creation-boundary-sequence.svg`
+- Merge/promotion boundary SVG: `../assets/braid-work-events/merge-boundary-sequence.svg`
 
 ## Current State
 
@@ -43,6 +46,8 @@ The Inbox is the pre-attach local FileStore. It is not the durable braid databas
 
 ## Commit Boundary
 
+![Commit / Session Boundary](../assets/braid-work-events/commit-boundary-sequence.svg)
+
 The commit boundary anchors work to a stable Git object.
 
 Current flow:
@@ -68,7 +73,35 @@ Intended object anchor:
 Commit git note -> commit SHA
 ```
 
+Stress-tested hardening:
+
+```text
+duplicate hook event
+-> dedupe by client_event_id before attach
+
+agent emits events but never attaches
+-> keep in Inbox until explicit attach or cleanup policy
+
+commit is amended / rewritten
+-> old commit note remains historical; new commit SHA gets a new projection
+
+note generation fails
+-> SQLite remains truth; retry note generation from stored slice
+
+off-scope events appear in Inbox
+-> attach rejects them before SQLite fold
+```
+
+Commit boundary invariant:
+
+```text
+The commit boundary never promotes work.
+It only folds local evidence and creates a retryable commit-note projection.
+```
+
 ## PR Boundary
+
+![PR Creation Boundary](../assets/braid-work-events/pr-creation-boundary-sequence.svg)
 
 The PR boundary is the durability boundary.
 
@@ -98,6 +131,32 @@ PR/head git note -> PR head SHA
 ```
 
 Important detail: Git notes attach to Git objects, not directly to GitHub PRs. So the PR note should attach to the PR head commit SHA while also recording the PR id / PR URL in the note body and Intent DB.
+
+Stress-tested hardening:
+
+```text
+duplicate pr.created webhook / hook event
+-> dedupe by provider_event_id and PR id
+
+PR created before all local events are attached
+-> create a pending drain; retry until the local braid projection is complete
+
+head SHA changes immediately after PR creation
+-> write v1 as historical, then PR change loop creates v2 for the new head SHA
+
+PR summary write fails
+-> Intent DB remains truth; summary_status stays pending or failed
+
+PR/head git note write fails
+-> note_status stays pending or failed; retry from Intent DB projection
+```
+
+PR boundary invariant:
+
+```text
+At PR creation, Intent DB becomes the source of truth.
+PR/head git notes and PR descriptions are projections of Intent DB, not truth.
+```
 
 ## PR Change Loop
 
@@ -130,6 +189,8 @@ This prevents the PR summary from becoming stale after review activity or follow
 
 ## Merge Boundary
 
+![Merge / Promotion Boundary](../assets/braid-work-events/merge-boundary-sequence.svg)
+
 The merge boundary finalizes acceptance/promotion.
 
 Current flow:
@@ -157,6 +218,32 @@ Intended object anchor:
 Merge git note -> merge commit SHA
 ```
 
+Stress-tested hardening:
+
+```text
+merge starts while PR change loop is still draining
+-> lock / finalize the latest projection version before promotion
+
+merge SHA is missing or delayed
+-> hold as merge_pending; do not promote until merge commit SHA exists
+
+head SHA in merge event does not match finalized PR projection
+-> reject as stale-head and re-run the PR loop
+
+closed without merge
+-> mark abandoned, superseded, or closed_unmerged; never accepted_promoted
+
+merge git note push fails
+-> accepted state remains in Intent DB; note push is retryable
+```
+
+Merge boundary invariant:
+
+```text
+Merge is the only boundary that may finalize promotion.
+The merge note attaches to the merge commit SHA and indexes the accepted projection.
+```
+
 ## Status Model
 
 The lifecycle should distinguish reviewable work from accepted work.
@@ -167,9 +254,11 @@ Recommended statuses:
 local_active
 reviewable_candidate
 changed_after_pr
+merge_pending
 accepted_promoted
 abandoned
 superseded
+closed_unmerged
 ```
 
 The PR boundary should not be treated as final promotion. It should publish a reviewable candidate. Merge should finalize promotion.
@@ -347,6 +436,53 @@ closed_unmerged
 ```
 
 They should not become promoted.
+
+### 9. Harden Commit Boundary Retries
+
+The commit boundary needs an explicit retry model because it is still local-first.
+
+Required behavior:
+
+```text
+Inbox append is idempotent
+braid attach is idempotent by braid_id / thread_id / session_id / event range
+commit notes are projections and can be regenerated
+amended commits create a new commit-note projection
+unattached Inbox events do not enter promotion logic
+```
+
+### 10. Harden PR Creation As The Source-Of-Truth Handoff
+
+PR creation should be treated as a checkpoint transaction, not just a notification.
+
+Required behavior:
+
+```text
+drain SQLite braid projection into Intent DB
+store PR id, PR URL, branch, base SHA, current head SHA, commit SHAs
+store raw stamped event ranges and digest
+write PR/head git note against head SHA
+record PR summary status separately from Intent DB success
+```
+
+If the PR is raised twice or the webhook is replayed, the Orchestrator should return the existing projection instead of creating a second one.
+
+### 11. Harden Merge Boundary As Promotion Finalization
+
+Merge is the acceptance boundary and should not rely on local state as truth after the PR has been raised.
+
+Required behavior:
+
+```text
+drain any remaining local deltas before finalization
+query Intent DB, not SQLite, for merge-note context
+verify finalized head/base/merge SHAs
+mark accepted_promoted only after the projection lock succeeds
+write merge git note against merge commit SHA
+record git-note push status separately from promotion status
+```
+
+If merge note generation or note push fails, promotion can remain durable in Intent DB while the note write is retried.
 
 ## Bottom Line
 
