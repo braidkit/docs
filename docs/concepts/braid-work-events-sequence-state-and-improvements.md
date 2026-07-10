@@ -112,7 +112,21 @@ Any PR commit, PR body edit, PR comment, review reply, goal change, or scope cha
 must emit a changed-intent delta into Intent DB before merge.
 ```
 
-This prevents the PR summary from becoming stale after review activity or follow-up agent/developer changes.
+The hardened PR loop treats every change as an append-only delta, then rebuilds the current PR projection from Intent DB.
+
+Required behavior:
+
+```text
+dedupe incoming PR events
+apply changed-intent deltas through projection versions
+record old_head_sha -> new_head_sha for force-push/rebase
+keep old PR/head notes historical
+regenerate current PR/head note from Intent DB
+retry PR summary and git-note writes without blocking Intent DB truth
+lock/finalize the latest projection before merge promotion
+```
+
+This prevents the PR summary from becoming stale after review activity or follow-up agent/developer changes, while also making webhook retries, out-of-order events, force-pushes, and note-write failures survivable.
 
 ## Merge Boundary
 
@@ -162,20 +176,20 @@ The PR boundary should not be treated as final promotion. It should publish a re
 
 ## Improvements To Make The Diagram Implementation-Ready
 
-### 1. Make PR Change Loop A Full Sequence
+### 1. Implement PR Change Loop As A Versioned Projection
 
-The current diagram has the PR change loop as a callout. For an implementation spec, make it explicit:
+The diagram now shows the PR change loop as a full sequence. Implementation should preserve these invariants:
 
 ```text
 Agent / Developer changes PR
 -> GitHub PR emits change event
 -> Hooks / Braid CLI capture event
 -> Local Braid Daemon or Orchestrator records changed-intent delta
--> Intent DB updates braid projection
--> PR/head git note is appended or regenerated
+-> Intent DB dedupes and applies vN -> vN+1
+-> PR/head git note is regenerated from the current projection
 ```
 
-This makes changed intent a first-class lifecycle behavior instead of an annotation.
+Changed intent should be a first-class lifecycle object, not a free-form transcript.
 
 ### 2. Add Git Object Anchors To Namespace Boxes
 
@@ -239,13 +253,18 @@ Every drain should be safe to retry.
 Recommended identifiers:
 
 ```text
+provider_event_id
 braid_id
 thread_id
 session_id
 workevent_seq
 commit_sha
 pr_id
+pr_event_type
+previous_head_sha
+current_head_sha
 merge_sha
+projection_version
 drain_digest
 ```
 
@@ -266,6 +285,8 @@ changed_intent_delta
 
 If the PR head note attaches to a moving head SHA, the previous note remains attached to the older commit. The latest PR projection in Intent DB should point to the current head SHA.
 
+The PR-loop sequence now treats the previous PR/head note as historical and regenerates the current PR/head note against the new head SHA.
+
 ### 6. Clarify Note Update Semantics
 
 Decide whether PR/head notes are:
@@ -277,6 +298,15 @@ or written as one note per PR head SHA
 ```
 
 Recommendation: keep Intent DB append-only, and let PR/head git notes be a compact current projection for the specific head SHA.
+
+Note and PR-summary write failures should not block durable intent. Track:
+
+```text
+note_status = pending | written | pushed | failed
+summary_status = pending | updated | failed
+```
+
+Both can be retried from Intent DB.
 
 ### 7. Clarify Ownership Of Note Generation
 
@@ -293,6 +323,30 @@ Selects evidence, validates schema, redacts sensitive content, writes git notes,
 ```
 
 The model should not decide which Git object receives the note.
+
+### 8. Add Merge Race Guard
+
+Merge should never consume a partially-drained PR change.
+
+Before promotion:
+
+```text
+drain final PR-loop delta
+lock or finalize the current PR projection
+query Intent DB by finalized projection version
+mark promoted
+write merge git note
+```
+
+If a PR changes while merge starts, serialize it through the projection version. Closed-unmerged PRs should transition to:
+
+```text
+abandoned
+superseded
+closed_unmerged
+```
+
+They should not become promoted.
 
 ## Bottom Line
 
