@@ -3,6 +3,7 @@
 Generated from the latest sequence diagram:
 
 - SVG: `../assets/braid-work-events/braid-work-events-sequence.svg`
+- PR loop SVG: `../assets/braid-work-events/pr-change-loop-sequence.svg`
 
 ## Current State
 
@@ -99,6 +100,8 @@ PR/head git note -> PR head SHA
 Important detail: Git notes attach to Git objects, not directly to GitHub PRs. So the PR note should attach to the PR head commit SHA while also recording the PR id / PR URL in the note body and Intent DB.
 
 ## PR Change Loop
+
+![PR Change Loop](../assets/braid-work-events/pr-change-loop-sequence.svg)
 
 The current diagram includes a callout for changed intent after PR creation.
 
