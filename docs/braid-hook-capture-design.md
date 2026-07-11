@@ -69,6 +69,107 @@ In hook mode, the developer should be able to open Claude Code normally. Braid-m
 
 The important product goal is zero developer overhead: no new command is needed for normal captured sessions once hooks are installed and enabled.
 
+## Sample Claude Hook Config
+
+This is the shape of a Braid-managed Claude hook block. The exact command names can change, but the important contract is that Claude hooks call the Braid CLI, and the CLI owns signing and writing WorkEvents.
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "braid hook ingest --event session-start",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "braid hook ingest --event user-prompt-submit",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "braid hook ingest --event pre-tool-use",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "braid hook ingest --event post-tool-use",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "FileChanged": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "braid hook ingest --event file-changed",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "braid hook ingest --event stop",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "braid hook ingest --event session-end",
+            "async": true
+          }
+        ]
+      }
+    ]
+  },
+  "braid": {
+    "managedBy": "braid",
+    "hookSchema": "claude-code-hooks-v1",
+    "capture": {
+      "claude_hooks": {
+        "enabled": true
+      }
+    }
+  }
+}
+```
+
+The hook command should read the Claude hook JSON from stdin. For context-injection hooks such as `SessionStart` or `UserPromptSubmit`, it may return hook output that adds Braid marker guidance. For observation hooks such as `PostToolUse` or `FileChanged`, it should usually capture and exit without changing Claude's behavior.
+
 ## Suggested Hook Mapping
 
 | Claude hook | Braid capture role |
