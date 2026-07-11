@@ -69,6 +69,18 @@ In hook mode, the developer should be able to open Claude Code normally. Braid-m
 
 The important product goal is zero developer overhead: no new command is needed for normal captured sessions once hooks are installed and enabled.
 
+## Claude Hook Contract Used Here
+
+This design depends on Claude Code's documented hook behavior:
+
+- Claude Code runs configured command hooks at lifecycle points such as `SessionStart`, `UserPromptSubmit`, `PostToolUse`, `FileChanged`, `Stop`, and `SessionEnd`.
+- A command hook receives event JSON on stdin and reports results through stdout, stderr, and its exit code.
+- `UserPromptSubmit` fires before Claude processes the user's prompt, so it can add capture guidance before the model sees the turn.
+- For `UserPromptSubmit`, Braid can return plain stdout or structured JSON with `additionalContext` to add marker guidance to Claude's context.
+- Async hooks run in the background, so marker-injection hooks must stay synchronous; observation-only hooks may be async when Braid accepts the ordering and durability tradeoff.
+
+References: [Claude Code hooks guide](https://code.claude.com/docs/en/hooks-guide), [Claude Code hooks reference](https://code.claude.com/docs/en/hooks).
+
 ## Sample Claude Hook Config
 
 This is the shape of a Braid-managed Claude hook block. The exact command names can change, but the important contract is that Claude hooks call the Braid CLI, and the CLI owns signing and writing WorkEvents.
@@ -81,7 +93,8 @@ This is the shape of a Braid-managed Claude hook block. The exact command names 
         "hooks": [
           {
             "type": "command",
-            "command": "braid hook ingest --event session-start",
+            "command": "braid",
+            "args": ["hook", "ingest", "--event", "session-start"],
             "async": true
           }
         ]
@@ -92,8 +105,9 @@ This is the shape of a Braid-managed Claude hook block. The exact command names 
         "hooks": [
           {
             "type": "command",
-            "command": "braid hook ingest --event user-prompt-submit",
-            "async": true
+            "command": "braid",
+            "args": ["hook", "ingest", "--event", "user-prompt-submit", "--inject-markers"],
+            "timeout": 5
           }
         ]
       }
@@ -104,7 +118,8 @@ This is the shape of a Braid-managed Claude hook block. The exact command names 
         "hooks": [
           {
             "type": "command",
-            "command": "braid hook ingest --event pre-tool-use",
+            "command": "braid",
+            "args": ["hook", "ingest", "--event", "pre-tool-use"],
             "async": true
           }
         ]
@@ -116,7 +131,8 @@ This is the shape of a Braid-managed Claude hook block. The exact command names 
         "hooks": [
           {
             "type": "command",
-            "command": "braid hook ingest --event post-tool-use",
+            "command": "braid",
+            "args": ["hook", "ingest", "--event", "post-tool-use"],
             "async": true
           }
         ]
@@ -127,7 +143,8 @@ This is the shape of a Braid-managed Claude hook block. The exact command names 
         "hooks": [
           {
             "type": "command",
-            "command": "braid hook ingest --event file-changed",
+            "command": "braid",
+            "args": ["hook", "ingest", "--event", "file-changed"],
             "async": true
           }
         ]
@@ -138,7 +155,8 @@ This is the shape of a Braid-managed Claude hook block. The exact command names 
         "hooks": [
           {
             "type": "command",
-            "command": "braid hook ingest --event stop",
+            "command": "braid",
+            "args": ["hook", "ingest", "--event", "stop"],
             "async": true
           }
         ]
@@ -149,7 +167,8 @@ This is the shape of a Braid-managed Claude hook block. The exact command names 
         "hooks": [
           {
             "type": "command",
-            "command": "braid hook ingest --event session-end",
+            "command": "braid",
+            "args": ["hook", "ingest", "--event", "session-end"],
             "async": true
           }
         ]
@@ -168,7 +187,84 @@ This is the shape of a Braid-managed Claude hook block. The exact command names 
 }
 ```
 
-The hook command should read the Claude hook JSON from stdin. For context-injection hooks such as `SessionStart` or `UserPromptSubmit`, it may return hook output that adds Braid marker guidance. For observation hooks such as `PostToolUse` or `FileChanged`, it should usually capture and exit without changing Claude's behavior.
+The hook command should read the Claude hook JSON from stdin. For context-injection hooks such as `UserPromptSubmit`, it should return hook output that adds Braid marker guidance. That hook must be synchronous, because Claude needs the returned context before it sends the prompt to the model. For observation hooks such as `PostToolUse` or `FileChanged`, it should usually capture and exit without changing Claude's behavior; those can be async if durability and ordering are acceptable for the event type.
+
+## UserPromptSubmit Ingest Flow
+
+This is the important zero-overhead flow. The developer opens Claude Code normally. Claude Code owns hook execution, but Braid CLI owns capture, signing, and inbox writes.
+
+```mermaid
+sequenceDiagram
+  participant User
+  participant Claude as Claude Code
+  participant BraidCLI as Braid CLI<br/>braid hook ingest
+  participant Inbox as .braid/inbox
+  participant Model as Claude model
+
+  User->>Claude: Submit prompt
+  Claude->>BraidCLI: Start command hook<br/>braid hook ingest --event user-prompt-submit --inject-markers
+  Claude->>BraidCLI: Send hook JSON on stdin<br/>session_id, cwd, hook_event_name, prompt
+  BraidCLI->>BraidCLI: Parse hook JSON
+  BraidCLI->>BraidCLI: Load Braid config, identity, and capture mode
+  BraidCLI->>Inbox: Append signed intent WorkEvent
+  BraidCLI-->>Claude: Return marker guidance on stdout<br/>plain context or JSON additionalContext
+  Claude->>Model: Send original user prompt + Braid marker context
+  Model-->>Claude: Respond with normal work plus markers
+```
+
+Sample input Claude sends to `braid hook ingest` on stdin:
+
+```json
+{
+  "session_id": "abc123",
+  "cwd": "/repo",
+  "hook_event_name": "UserPromptSubmit",
+  "prompt": "Implement retry handling between the frontend and backend."
+}
+```
+
+Sample structured output from Braid CLI when it wants marker guidance injected:
+
+```json
+{
+  "hookSpecificOutput": {
+    "hookEventName": "UserPromptSubmit",
+    "additionalContext": "Use Braid capture markers on their own concise lines: ATTEMPT <n>: ..., DECISION: ..., DESIGN_DECISION: ..., VERDICT: ..."
+  }
+}
+```
+
+Operational rules:
+
+- `UserPromptSubmit` marker injection must not use `async: true`.
+- Stdout is part of the Claude contract; logs should go to stderr or a Braid log file.
+- The Braid CLI should finish fast enough that the prompt path does not feel slower.
+- If Braid cannot inject context safely, it should still capture the intent event and return no marker guidance rather than breaking the Claude session.
+
+## Observation Hook Flow
+
+Observation hooks record what Claude actually did. They do not need to inject marker instructions and normally should not alter Claude's behavior.
+
+```mermaid
+sequenceDiagram
+  participant Claude as Claude Code
+  participant Tool as Tool or file event
+  participant BraidCLI as Braid CLI<br/>braid hook ingest
+  participant Inbox as .braid/inbox
+  participant Attach as braid attach
+  participant SQLite as Braid SQLite DB
+
+  Claude->>Tool: Run tool or change file
+  Tool-->>Claude: Result
+  Claude->>BraidCLI: Fire hook event<br/>PostToolUse, FileChanged, Stop, SessionEnd
+  Claude->>BraidCLI: Send raw hook JSON on stdin
+  BraidCLI->>BraidCLI: Map raw hook JSON to WorkEvent
+  BraidCLI->>Inbox: Append signed event to session log
+  Attach->>Inbox: Import inbox events
+  Attach->>SQLite: Store normalized events and evidence
+```
+
+This is where Braid gets file paths, tool names, tool inputs, tool result metadata, terminal markers, and session boundaries. Rich reasoning is only available if Claude exposes it through events such as `MessageDisplay` or if marker guidance leads the assistant to write `ATTEMPT`, `DECISION`, `REFINED UNDERSTANDING`, `DESIGN_DECISION`, and `VERDICT` lines.
 
 ## Suggested Hook Mapping
 
