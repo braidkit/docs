@@ -7,6 +7,54 @@ Generated from the latest sequence diagram:
 - Commit/session boundary SVG: `../assets/braid-work-events/commit-boundary-sequence.svg`
 - PR creation boundary SVG: `../assets/braid-work-events/pr-creation-boundary-sequence.svg`
 - Merge/promotion boundary SVG: `../assets/braid-work-events/merge-boundary-sequence.svg`
+- Simplified target architecture SVG: `../assets/braid-work-events/braid-simplified-target-architecture.svg`
+
+## Simplified Target Architecture
+
+![Braid simplified target architecture](../assets/braid-work-events/braid-simplified-target-architecture.svg)
+
+This component view collapses the sequence diagrams into three ownership zones:
+
+```text
+Local Dev Box
+Remote Server
+GitHub
+```
+
+The local path is intentionally narrow:
+
+```text
+Agent Session -> Hooks -> Braid CLI -> Local Braid Recorder Daemon
+```
+
+Hooks do not call the daemon directly. They invoke the Braid CLI. The Braid CLI also does not own side effects against GitHub, git notes, or remote storage. It sends those requests to the Local Braid Recorder Daemon.
+
+The daemon is the local side-effect owner:
+
+```text
+Local Braid Recorder Daemon
+-> captures work events into Inbox / FileStore
+-> folds attached work into Local SQLite
+-> starts Sync / Drain Worker
+-> writes local git notes
+-> routes GitHub PR / merge operations through the daemon
+```
+
+The remote path is also narrow:
+
+```text
+Sync / Drain Worker -> Orchestrator -> Intent DB
+```
+
+Before a PR exists, Inbox and Local SQLite are the local source of truth. At PR creation, the daemon drains braid records, thread records, raw stamped events, commit SHAs, PR ids, merge ids when present, and digests through the Orchestrator into Intent DB. After that PR boundary, Intent DB is the durable source of truth.
+
+Git notes remain projections:
+
+```text
+Local Git Notes -> Remote Git Notes
+```
+
+They are generated and written through the daemon, then pushed into GitHub as note refs. The notes are useful for Git-facing intent and provenance, but the durable lifecycle state lives in Intent DB after the PR boundary.
 
 ## Current State
 
