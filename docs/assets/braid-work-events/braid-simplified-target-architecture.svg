@@ -72,7 +72,8 @@
 
   <rect x="95" y="390" width="430" height="285" rx="18" class="agent-box"/>
   <text x="125" y="430" class="zone-title">Agent Runtime</text>
-  <text x="125" y="456" class="zone-sub">Braid Skills are installed in the agent and triggered by hooks.</text>
+  <text x="125" y="454" class="zone-sub">Braid Skills are installed in the agent</text>
+  <text x="125" y="477" class="zone-sub">and triggered by hooks.</text>
 
   <rect x="130" y="495" width="165" height="78" rx="13" class="node-agent"/>
   <text x="212.5" y="530" class="node-title">Agent Session</text>
