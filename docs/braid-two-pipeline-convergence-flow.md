@@ -1,5 +1,90 @@
 # Braid Two-Pipeline Convergence Flow
 
+## At A Glance
+
+### Existing Convergence Problem
+
+```mermaid
+flowchart LR
+    GOAL[One issue or parent goal]
+    PLAN[Planner divides the goal]
+
+    T1[Sub-work A]
+    T2[Sub-work B]
+
+    S1[Agent session or pipeline A]
+    S2[Agent session or pipeline B]
+
+    W1[Code, decisions and evidence A]
+    W2[Code, decisions and evidence B]
+
+    C{Independent work must converge}
+
+    GOAL --> PLAN
+    PLAN --> T1 --> S1 --> W1
+    PLAN --> T2 --> S2 --> W2
+
+    W1 --> C
+    W2 --> C
+
+    C --> Q1[Were the work scopes actually disjoint?]
+    C --> Q2[Did each session remain inside its scope?]
+    C --> Q3[Do the results collectively achieve the parent goal?]
+    C --> Q4[Can the evidence and intent be trusted?]
+    C --> Q5[Who can accept and promote the combined result?]
+
+    Q1 --> R[Unsafe, ambiguous or untraceable integration]
+    Q2 --> R
+    Q3 --> R
+    Q4 --> R
+    Q5 --> R
+
+    classDef source fill:#dceeff,stroke:#339cff,color:#1a1c1f,stroke-width:2px;
+    classDef problem fill:#ffe4e4,stroke:#cc3333,color:#1a1c1f,stroke-width:2px;
+
+    class GOAL,PLAN,T1,T2,S1,S2,W1,W2 source;
+    class C,Q1,Q2,Q3,Q4,Q5,R problem;
+```
+
+### Braid Solution
+
+```mermaid
+flowchart LR
+    INPUT[Parent goal and delegated agent work]
+
+    B[BRAID]
+
+    CONTRACT[Bind goal, delegated scopes, sessions and identities]
+    EVENTS[Capture WorkEvents, decisions, evidence and intent]
+    GUARDS[Detect scope, lifecycle and evidence violations]
+    VERIFY[Verify sub-work and parent-goal completion]
+    CONVERGE[Construct and test the convergence candidate]
+    REVIEW[Collect independent review verdicts]
+    POLICY[Apply authority policy and quorum]
+    PROMOTE[Authorize, merge and promote the exact candidate]
+
+    RESULT[Traceable, governed and reconstructable outcome]
+
+    INPUT --> B
+    B --> CONTRACT
+    CONTRACT --> EVENTS
+    EVENTS --> GUARDS
+    GUARDS --> VERIFY
+    VERIFY --> CONVERGE
+    CONVERGE --> REVIEW
+    REVIEW --> POLICY
+    POLICY --> PROMOTE
+    PROMOTE --> RESULT
+
+    classDef source fill:#dceeff,stroke:#339cff,color:#1a1c1f,stroke-width:2px;
+    classDef braid fill:#fef0e5,stroke:#f3883b,color:#1a1c1f,stroke-width:2px;
+    classDef result fill:#e1f6e8,stroke:#299052,color:#1a1c1f,stroke-width:2px;
+
+    class INPUT source;
+    class B,CONTRACT,EVENTS,GUARDS,VERIFY,CONVERGE,REVIEW,POLICY,PROMOTE braid;
+    class RESULT result;
+```
+
 ## Purpose
 
 This document describes the target Braid flow when one parent goal is split into two independent agentic pipeline sessions.
