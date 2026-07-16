@@ -1,8 +1,16 @@
 # Braid Two-Pipeline Convergence Flow
 
+This document describes the target Braid flow when one parent goal is split into two independent agentic pipeline sessions.
+
+Braid is the planner's coordination, evidence, and authority substrate. It does not implement the delegated code or independently resolve engineering conflicts. It records the delegation contract, binds sessions to scopes, evaluates lifecycle evidence, collects review verdicts, and controls whether a candidate merge is eligible for promotion.
+
+This is a target design. Individual controls shown below may not yet exist in the current implementation.
+
 ## At A Glance
 
 ### Existing Convergence Problem
+
+A planner can divide a goal and independent pipelines can produce working changes, but their completion alone does not establish scope disjointness, scope compliance, collective goal achievement, trustworthy evidence, or promotion authority.
 
 ```mermaid
 flowchart LR
@@ -48,6 +56,8 @@ flowchart LR
 
 ### Braid Solution
 
+Braid supplies the coordination and authority layer: it records the delegation contract, binds sessions to scopes, preserves evidence and intent, evaluates guards, verifies convergence, collects review verdicts, and authorizes promotion of the exact accepted candidate.
+
 ```mermaid
 flowchart LR
     INPUT[Parent goal and delegated agent work]
@@ -84,14 +94,6 @@ flowchart LR
     class B,CONTRACT,EVENTS,GUARDS,VERIFY,CONVERGE,REVIEW,POLICY,PROMOTE braid;
     class RESULT result;
 ```
-
-## Purpose
-
-This document describes the target Braid flow when one parent goal is split into two independent agentic pipeline sessions.
-
-Braid is the planner's coordination, evidence, and authority substrate. It does not implement the delegated code or independently resolve engineering conflicts. It records the delegation contract, binds sessions to scopes, evaluates lifecycle evidence, collects review verdicts, and controls whether a candidate merge is eligible for promotion.
-
-This is a target design. Individual controls shown below may not yet exist in the current implementation.
 
 ## Flow Diagram
 
