@@ -95,6 +95,19 @@ flowchart LR
     class RESULT result;
 ```
 
+## Where Braid Fits
+
+Braid becomes more valuable as work grows more parallel, independent, asynchronous, and difficult to reconstruct. The following scores assess the fit of Braid's target design, not the completeness of the current implementation.
+
+| Development model | Problem severity | Braid solution fit | Assessment |
+| --- | ---: | ---: | --- |
+| Ordinary human development | 3/10 | **3/10** | Git, CI, and pull requests usually provide enough coordination. Braid can add provenance and policy, but may introduce unnecessary overhead. |
+| One supervised agent session | 4/10 | **5/10** | Intent capture, evidence preservation, and promotion controls help, but a single supervised session presents little convergence risk. |
+| Multiple independent agent sessions | 8/10 | **9/10** | This is Braid's strongest use case: delegated scopes, session identity, WorkEvents, guards, parent-goal folding, review, and exact-candidate promotion. |
+| Multiple asynchronous pipelines across repositories | 9/10 | **7/10** | Braid addresses the conceptual problem, but complete support also requires distributed identity, cross-repository contracts, federated evidence, failure recovery, and coordinated promotion. |
+
+The clearest product fit is governed convergence for multiple independent agent workstreams. Cross-repository convergence may ultimately provide the highest value, but it is also the hardest operating model to solve completely.
+
 ## Flow Diagram
 
 Color convention:
