@@ -6,6 +6,8 @@
 
 **Lifecycle reference:** [Braid issue #24](https://github.com/braidkit/braid/issues/24)
 
+**PDF:** [Download the Phase 1 scope](assets/phase-1/braid-phase-1-scope.pdf)
+
 ## Phase 1 Outcome
 
 A developer can install Braid, use it with Claude Code or Codex, run the complete Braid lifecycle, observe the progress of independent agent sessions, review the converged result, and promote it with durable Git-note provenance.
