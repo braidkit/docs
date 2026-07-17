@@ -1,0 +1,311 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1900" height="1260" viewBox="0 0 1900 1260" role="img" aria-labelledby="title desc">
+  <title id="title">Entire simplified architecture</title>
+  <desc id="desc">Component diagram showing Entire's local capture layer, Git-backed checkpoint storage, Entire web and control plane, GitHub origin, and regional distributed Git data planes.</desc>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4.5" markerHeight="4.5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#334155"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4.5" markerHeight="4.5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4.5" markerHeight="4.5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#7c3aed"/>
+    </marker>
+    <style>
+      .bg { fill: #ffffff; }
+      .title { font: 700 42px Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 400 22px Arial, sans-serif; fill: #475569; }
+      .zone-title { font: 700 24px Arial, sans-serif; fill: #0f172a; }
+      .zone-sub { font: 400 17px Arial, sans-serif; fill: #475569; }
+      .node-title { font: 700 20px Arial, sans-serif; fill: #0f172a; text-anchor: middle; }
+      .node-sub { font: 400 15px Arial, sans-serif; fill: #475569; text-anchor: middle; }
+      .label { font: 700 14px Arial, sans-serif; fill: #0f172a; text-anchor: middle; }
+      .small { font: 400 15px Arial, sans-serif; fill: #334155; }
+      .note-title { font: 700 18px Arial, sans-serif; fill: #0f172a; }
+      .note { font: 400 15px Arial, sans-serif; fill: #334155; }
+      .mono { font: 400 13px Menlo, Consolas, monospace; fill: #475569; text-anchor: middle; }
+      .zone-local { fill: #f8fafc; stroke: #94a3b8; stroke-width: 2.5; }
+      .zone-cloud { fill: #f5f3ff; stroke: #8b5cf6; stroke-width: 2.5; }
+      .zone-git { fill: #f0fdfa; stroke: #14b8a6; stroke-width: 2.5; }
+      .agent-box { fill: #eff6ff; stroke: #2563eb; stroke-width: 2; }
+      .node-user { fill: #f1f5f9; stroke: #64748b; stroke-width: 2.5; }
+      .node-agent { fill: #e0f2fe; stroke: #0284c7; stroke-width: 2.5; }
+      .node-hook { fill: #fef3c7; stroke: #d97706; stroke-width: 2.5; }
+      .node-skill { fill: #fae8ff; stroke: #a21caf; stroke-width: 2.5; }
+      .node-cli { fill: #ecfeff; stroke: #0891b2; stroke-width: 2.5; }
+      .node-state { fill: #f0fdf4; stroke: #16a34a; stroke-width: 2.5; }
+      .node-shadow { fill: #fff7ed; stroke: #ea580c; stroke-width: 2.5; }
+      .node-code { fill: #fff1f2; stroke: #e11d48; stroke-width: 2.5; }
+      .node-checkpoint { fill: #eef2ff; stroke: #4f46e5; stroke-width: 2.5; }
+      .node-helper { fill: #e0f2fe; stroke: #0369a1; stroke-width: 2.5; }
+      .node-control { fill: #ede9fe; stroke: #7c3aed; stroke-width: 2.5; }
+      .node-web { fill: #fae8ff; stroke: #a21caf; stroke-width: 2.5; }
+      .node-origin { fill: #f8fafc; stroke: #0f172a; stroke-width: 2.5; }
+      .node-sync { fill: #fff7ed; stroke: #ea580c; stroke-width: 2.5; }
+      .node-api { fill: #ecfeff; stroke: #0891b2; stroke-width: 2.5; }
+      .node-store { fill: #f0fdf4; stroke: #16a34a; stroke-width: 2.5; }
+      .owned-entire { fill: #ede9fe; stroke: #7c3aed; stroke-width: 2.8; }
+      .owned-github { fill: #f1f5f9; stroke: #0f172a; stroke-width: 2.8; }
+      .line { stroke: #334155; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+      .capture-line { stroke: #2563eb; stroke-width: 2; fill: none; marker-end: url(#arrow-blue); }
+      .remote-line { stroke: #7c3aed; stroke-width: 2; fill: none; marker-end: url(#arrow-purple); }
+      .return-line { stroke: #64748b; stroke-width: 1.8; stroke-dasharray: 8 8; fill: none; marker-end: url(#arrow); }
+      .mirror-line { stroke: #ea580c; stroke-width: 2; stroke-dasharray: 10 7; fill: none; marker-end: url(#arrow); }
+      .label-bg { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1.3; }
+      .footer { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 2; }
+      .legend-capture { stroke: #2563eb; stroke-width: 4; }
+      .legend-code { stroke: #334155; stroke-width: 4; }
+      .legend-hosted { stroke: #7c3aed; stroke-width: 4; }
+      .legend-mirror { stroke: #ea580c; stroke-width: 4; stroke-dasharray: 9 6; }
+      .owner-entire { fill: #7c3aed; }
+      .owner-github { fill: #0f172a; }
+      .owner-label { font: 700 13px Arial, sans-serif; fill: #ffffff; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1900" height="1260"/>
+
+  <text x="60" y="68" class="title">Entire Simplified Architecture</text>
+  <text x="60" y="106" class="subtitle">Agent session capture is Git-native locally; the hosted platform distributes and presents the same code and checkpoint objects.</text>
+
+  <!-- Legend -->
+  <rect x="60" y="126" width="1780" height="48" rx="10" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <line x1="92" y1="150" x2="138" y2="150" class="legend-capture"/>
+  <text x="151" y="155" class="small">session capture / checkpoint flow</text>
+  <line x1="430" y1="150" x2="476" y2="150" class="legend-code"/>
+  <text x="489" y="155" class="small">normal Git code flow</text>
+  <line x1="740" y1="150" x2="786" y2="150" class="legend-hosted"/>
+  <text x="799" y="155" class="small">Entire hosted control / read flow</text>
+  <line x1="1160" y1="150" x2="1206" y2="150" class="legend-mirror"/>
+  <text x="1219" y="155" class="small">Git mirror / replication flow</text>
+  <rect x="1460" y="138" width="18" height="18" rx="4" class="owner-entire"/>
+  <text x="1488" y="154" class="small">Entire-owned</text>
+  <rect x="1645" y="138" width="18" height="18" rx="4" class="owner-github"/>
+  <text x="1673" y="154" class="small">GitHub-owned</text>
+
+  <!-- Zones -->
+  <rect x="50" y="195" width="1100" height="850" rx="22" class="zone-local"/>
+  <text x="85" y="238" class="zone-title">Local Dev Box</text>
+  <text x="85" y="265" class="zone-sub">Entire CLI owns capture, checkpoint construction, rewind/resume, and Git synchronization. No local daemon or SQLite event store.</text>
+
+  <rect x="1195" y="195" width="650" height="365" rx="22" class="zone-cloud"/>
+  <text x="1230" y="238" class="zone-title">Entire Hosted Platform</text>
+  <text x="1230" y="265" class="zone-sub">Global coordination and user-facing projections.</text>
+  <text x="1230" y="287" class="zone-sub">Repository content is not stored in the control plane.</text>
+  <rect x="1640" y="215" width="165" height="27" rx="7" class="owner-entire"/>
+  <text x="1722.5" y="234" class="owner-label">ENTIRE-OPERATED</text>
+
+  <rect x="1195" y="595" width="650" height="450" rx="22" class="zone-git"/>
+  <text x="1230" y="638" class="zone-title">Entire Distributed Git Data Plane</text>
+  <text x="1230" y="665" class="zone-sub">GitHub remains the origin; Entire fans code and checkpoint Git objects</text>
+  <text x="1230" y="687" class="zone-sub">into independent regional mirrors. Three example regions are shown.</text>
+
+  <!-- Local: user and runtime -->
+  <rect x="90" y="305" width="185" height="82" rx="14" class="node-user"/>
+  <text x="182.5" y="341" class="node-title">Developer</text>
+  <text x="182.5" y="366" class="node-sub">works normally</text>
+
+  <rect x="90" y="430" width="430" height="280" rx="18" class="agent-box"/>
+  <text x="122" y="469" class="zone-title">Agent Runtime</text>
+  <text x="122" y="494" class="zone-sub">Supported coding agents and subagents</text>
+
+  <rect x="125" y="525" width="170" height="78" rx="13" class="node-agent"/>
+  <text x="210" y="560" class="node-title">Agent Session</text>
+  <text x="210" y="585" class="node-sub">agent + subagents</text>
+
+  <rect x="330" y="525" width="155" height="78" rx="13" class="node-hook"/>
+  <text x="407.5" y="560" class="node-title">Agent Hooks</text>
+  <text x="407.5" y="585" class="node-sub">lifecycle adapters</text>
+
+  <rect x="195" y="625" width="220" height="62" rx="13" class="node-skill"/>
+  <text x="305" y="653" class="node-title">Entire Skills</text>
+  <text x="305" y="676" class="node-sub">search, explain, handoff</text>
+
+  <!-- Local: CLI and stores -->
+  <rect x="630" y="305" width="230" height="88" rx="15" class="node-cli"/>
+  <text x="745" y="342" class="node-title">Entire CLI</text>
+  <text x="745" y="368" class="node-sub">recorder + Git coordinator</text>
+
+  <path d="M600,462 C600,448 820,448 820,462 L820,525 C820,539 600,539 600,525 Z" class="node-state"/>
+  <path d="M600,462 C600,476 820,476 820,462" fill="none" stroke="#16a34a" stroke-width="2.5"/>
+  <text x="710" y="493" class="node-title">Session State</text>
+  <text x="710" y="517" class="mono">.git/entire-sessions/</text>
+
+  <rect x="865" y="448" width="240" height="92" rx="14" class="node-shadow"/>
+  <text x="985" y="482" class="node-title">Shadow Branches</text>
+  <text x="985" y="507" class="node-sub">temporary rewind points</text>
+  <text x="985" y="529" class="mono">entire/&lt;base&gt;-&lt;worktree&gt;</text>
+
+  <rect x="600" y="615" width="230" height="88" rx="14" class="node-code"/>
+  <text x="715" y="650" class="node-title">Code Commits</text>
+  <text x="715" y="675" class="node-sub">normal working branch</text>
+  <text x="715" y="696" class="mono">Entire-Checkpoint trailer</text>
+
+  <rect x="865" y="605" width="240" height="108" rx="14" class="node-checkpoint"/>
+  <text x="985" y="638" class="node-title">Checkpoint Git Store</text>
+  <text x="985" y="663" class="node-sub">transcripts, prompts, attribution</text>
+  <text x="985" y="685" class="mono">entire/checkpoints/v1</text>
+  <text x="985" y="705" class="mono">or refs/entire/checkpoints/*</text>
+
+  <rect x="625" y="805" width="225" height="88" rx="14" class="node-helper"/>
+  <text x="737.5" y="840" class="node-title">Git Client</text>
+  <text x="737.5" y="865" class="node-sub">commit, push, fetch</text>
+
+  <rect x="885" y="805" width="220" height="88" rx="14" class="node-helper"/>
+  <text x="995" y="840" class="node-title">git-remote-entire</text>
+  <text x="995" y="865" class="node-sub">handles entire:// remotes</text>
+
+  <rect x="625" y="940" width="480" height="70" rx="14" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+  <text x="865" y="970" class="node-title">Local Git Object Database</text>
+  <text x="865" y="995" class="node-sub">code and session context are both commits, trees, blobs, and refs</text>
+
+  <!-- Hosted platform -->
+  <rect x="1245" y="315" width="255" height="105" rx="15" class="node-control"/>
+  <text x="1372.5" y="350" class="node-title">Global Control Plane</text>
+  <text x="1372.5" y="375" class="node-sub">identity, access, placement</text>
+  <text x="1372.5" y="398" class="node-sub">regional selection</text>
+
+  <rect x="1540" y="315" width="255" height="105" rx="15" class="node-web"/>
+  <text x="1667.5" y="350" class="node-title">Entire Web / API</text>
+  <text x="1667.5" y="375" class="node-sub">browse, search, review</text>
+  <text x="1667.5" y="398" class="node-sub">checkpoint projections</text>
+
+  <rect x="1365" y="458" width="310" height="70" rx="13" fill="#ffffff" stroke="#c4b5fd" stroke-width="2"/>
+  <text x="1520" y="487" class="node-title">Authentication / Token Exchange</text>
+  <text x="1520" y="512" class="node-sub">authorizes CLI and regional Git access</text>
+
+  <!-- Remote Git and data plane -->
+  <rect x="1225" y="725" width="220" height="95" rx="15" class="node-origin owned-github"/>
+  <text x="1335" y="760" class="node-title">GitHub Origin</text>
+  <text x="1335" y="785" class="node-sub">authoritative code + PR refs</text>
+  <text x="1335" y="807" class="node-sub">checkpoints only if configured</text>
+  <rect x="1252" y="712" width="165" height="25" rx="7" class="owner-github"/>
+  <text x="1334.5" y="730" class="owner-label">GITHUB-OPERATED</text>
+
+  <rect x="1225" y="875" width="220" height="92" rx="15" class="node-sync owned-entire"/>
+  <text x="1335" y="910" class="node-title">Mirror Coordinator</text>
+  <text x="1335" y="935" class="node-sub">git-sync / Smart HTTP relay</text>
+  <text x="1335" y="957" class="node-sub">fans out refs + objects</text>
+
+  <rect x="1500" y="705" width="300" height="90" rx="15" class="owned-entire"/>
+  <text x="1650" y="735" class="node-title">Entire Mirror - US</text>
+  <text x="1650" y="760" class="node-sub">regional Git API + object storage</text>
+  <text x="1650" y="781" class="node-sub">code refs + checkpoint refs</text>
+
+  <rect x="1500" y="815" width="300" height="90" rx="15" class="owned-entire"/>
+  <text x="1650" y="845" class="node-title">Entire Mirror - EU</text>
+  <text x="1650" y="870" class="node-sub">regional Git API + object storage</text>
+  <text x="1650" y="891" class="node-sub">code refs + checkpoint refs</text>
+
+  <rect x="1500" y="925" width="300" height="90" rx="15" class="owned-entire"/>
+  <text x="1650" y="955" class="node-title">Entire Mirror - Australia</text>
+  <text x="1650" y="980" class="node-sub">regional Git API + object storage</text>
+  <text x="1650" y="1001" class="node-sub">code refs + checkpoint refs</text>
+
+  <!-- Local internal flow -->
+  <path d="M275,347 C420,347 505,347 630,347" class="line"/>
+  <rect x="420" y="312" width="120" height="26" rx="6" class="label-bg"/>
+  <text x="480" y="330" class="label">CLI commands</text>
+
+  <path d="M183,387 C183,407 194,418 210,430" class="line"/>
+  <rect x="205" y="395" width="72" height="24" rx="6" class="label-bg"/>
+  <text x="241" y="412" class="label">uses</text>
+
+  <path d="M295,564 L330,564" class="capture-line"/>
+  <rect x="295" y="500" width="72" height="24" rx="6" class="label-bg"/>
+  <text x="331" y="517" class="label">events</text>
+
+  <path d="M210,603 C210,614 230,619 250,625" class="capture-line"/>
+  <rect x="145" y="605" width="72" height="24" rx="6" class="label-bg"/>
+  <text x="181" y="622" class="label">uses</text>
+
+  <path d="M415,656 C560,656 550,430 630,376" class="capture-line"/>
+  <rect x="470" y="518" width="104" height="26" rx="6" class="label-bg"/>
+  <text x="522" y="536" class="label">CLI queries</text>
+
+  <path d="M485,564 C555,564 560,420 630,376" class="capture-line"/>
+  <rect x="504" y="445" width="120" height="26" rx="6" class="label-bg"/>
+  <text x="564" y="463" class="label">hook to CLI</text>
+
+  <path d="M710,393 L710,448" class="capture-line"/>
+  <rect x="727" y="408" width="100" height="26" rx="6" class="label-bg"/>
+  <text x="777" y="426" class="label">track state</text>
+
+  <path d="M820,487 L865,487" class="capture-line"/>
+  <rect x="819" y="411" width="92" height="26" rx="6" class="label-bg"/>
+  <text x="865" y="429" class="label">snapshot</text>
+
+  <path d="M745,393 C820,430 850,568 865,637" class="capture-line"/>
+  <rect x="786" y="549" width="118" height="26" rx="6" class="label-bg"/>
+  <text x="845" y="567" class="label">condense</text>
+
+  <path d="M600,659 C555,658 552,349 630,349" class="line"/>
+  <rect x="535" y="555" width="92" height="26" rx="6" class="label-bg"/>
+  <text x="581" y="573" class="label">Git hooks</text>
+
+  <path d="M830,659 L865,659" class="capture-line"/>
+
+  <path d="M715,703 L715,805" class="line"/>
+  <rect x="731" y="741" width="92" height="26" rx="6" class="label-bg"/>
+  <text x="777" y="759" class="label">push code</text>
+
+  <path d="M985,713 C985,754 842,766 805,805" class="capture-line"/>
+  <rect x="851" y="746" width="138" height="26" rx="6" class="label-bg"/>
+  <text x="920" y="764" class="label">pre-push refs</text>
+
+  <path d="M850,849 L885,849" class="line"/>
+  <rect x="848" y="765" width="102" height="26" rx="6" class="label-bg"/>
+  <text x="899" y="783" class="label">entire://</text>
+
+  <path d="M715,893 L715,940" class="line"/>
+  <path d="M995,893 C995,918 945,930 910,940" class="line"/>
+  <path d="M985,713 C985,786 940,904 905,940" class="capture-line"/>
+
+  <!-- Hosted / remote flow -->
+  <path d="M1105,849 C1145,760 1135,590 1210,550 C1270,518 1315,505 1365,493" class="remote-line"/>
+  <rect x="1065" y="565" width="126" height="26" rx="6" class="label-bg"/>
+  <text x="1128" y="583" class="label">token exchange</text>
+
+  <path d="M1372,420 L1455,458" class="remote-line"/>
+  <rect x="1370" y="425" width="102" height="24" rx="6" class="label-bg"/>
+  <text x="1421" y="442" class="label">authorize</text>
+
+  <path d="M995,805 C1050,690 1100,365 1245,365" class="remote-line"/>
+  <rect x="1070" y="545" width="140" height="26" rx="6" class="label-bg"/>
+  <text x="1140" y="563" class="label">resolve placement</text>
+
+  <path d="M1245,388 C1120,465 1070,735 1045,805" class="return-line"/>
+  <rect x="1090" y="605" width="118" height="26" rx="6" class="label-bg"/>
+  <text x="1149" y="623" class="label">regional target</text>
+
+  <path d="M1105,870 C1220,842 1370,850 1500,860" class="line"/>
+  <rect x="1125" y="817" width="130" height="26" rx="6" class="label-bg"/>
+  <text x="1190" y="835" class="label">selected mirror</text>
+
+  <path d="M795,805 C930,710 1070,758 1225,772" class="line"/>
+  <rect x="995" y="721" width="130" height="26" rx="6" class="label-bg"/>
+  <text x="1060" y="739" class="label">normal origin</text>
+
+  <path d="M1335,820 L1335,875" class="mirror-line"/>
+
+  <path d="M1445,921 C1470,921 1470,750 1500,750" class="mirror-line"/>
+  <path d="M1445,921 C1470,921 1470,860 1500,860" class="mirror-line"/>
+  <path d="M1445,921 C1470,921 1470,970 1500,970" class="mirror-line"/>
+
+  <path d="M1540,367 L1500,367" class="remote-line"/>
+  <rect x="1475" y="333" width="90" height="26" rx="6" class="label-bg"/>
+  <text x="1520" y="351" class="label">identity</text>
+
+  <path d="M1667,420 C1830,540 1830,755 1800,860" class="remote-line"/>
+  <rect x="1710" y="605" width="122" height="26" rx="6" class="label-bg"/>
+  <text x="1771" y="623" class="label">read / index</text>
+
+  <!-- Architecture constraints -->
+  <rect x="70" y="1070" width="1760" height="140" rx="16" class="footer"/>
+  <text x="100" y="1104" class="note-title">Boundaries and ownership</text>
+  <text x="100" y="1131" class="note">Agent hooks invoke the Entire CLI directly. The CLI records active sessions, writes shadow checkpoints, condenses permanent checkpoints, and coordinates Git push/fetch.</text>
+  <text x="100" y="1156" class="note">Code and session context share Git's object model but use separate refs. Commit trailers link code commits to checkpoint IDs without putting transcripts on the working branch.</text>
+  <text x="100" y="1181" class="note">Entire owns its control plane, regional Git APIs, mirror workers, and regional storage. GitHub owns the upstream repository, PR records, and any refs stored on GitHub.</text>
+  <text x="100" y="1203" class="note">Entire Web/API is a presentation and query layer over Git-linked checkpoint context. The hosted Git backend is publicly described but not yet open sourced.</text>
+</svg>
