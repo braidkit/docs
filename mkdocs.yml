@@ -105,6 +105,7 @@ nav:
       - Glossary: reference/glossary.md
       - FAQ: reference/faq.md
   - Operations:
+      - Phase 1 Scope: phase-1-scope.md
       - Keeping Docs Current: keeping-docs-current.md
       - Deploying: deploying.md
 
