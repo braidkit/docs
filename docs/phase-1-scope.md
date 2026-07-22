@@ -24,16 +24,16 @@ The target architecture below is colored by implementation status. Green compone
 - The daemon owns local SQLite, lifecycle queries, and the Developer Review backend.
 - Phase 1 completes Claude Code and Codex support.
 - Phase 1 completes the issue #24 lifecycle command surface.
-- Phase 1 provides installation packages for the selected platforms.
+- Phase 1 provides an installation package for macOS on Apple silicon; the minimum supported macOS version remains to be finalized.
 - Phase 1 provides the Developer Review UI and its backend service.
 - Phase 1 generates and pushes Git notes.
-- The following remain explicit product decisions within Phase 1 planning:
-  - Claude Code and Codex hooks
+- The following remain explicit product decisions or delivery items within Phase 1 planning:
+  - Discovery-only Claude Code and Codex hooks, validated through a Sandeep and Sri spike
   - Braid Skills
-  - Supported platform coverage
-  - Git-note format and publication policy
+  - Minimum supported macOS version
+  - Git-note format and publication policy, targeted for completion by end of week
   - Developer Review workflow and design
-  - Nudges
+  - Nudges, targeted for completion by end of week
 - The separate remote Orchestrator, Intent DB, and sync/drain architecture are deferred until after Phase 1.
 
 ## Explicitly Outside Phase 1
@@ -50,6 +50,7 @@ The following target-architecture capabilities are not included in the Phase 1 r
 - Multi-machine or organization-wide intent retrieval
 - Remote lifecycle projections
 - Agent integrations beyond Claude Code and Codex
+- Automatic or strict sub-agent capture and delegated-work governance
 - Distributed or server-managed nudges
 - Full Git-provider integrations beyond pushing Git-note refs
 - Production-scale multi-user identity, tenancy, and access control
@@ -57,7 +58,11 @@ The following target-architecture capabilities are not included in the Phase 1 r
 - Separation of the local recorder daemon from the orchestrator
 - Cross-repository and asynchronous multi-pipeline convergence infrastructure
 
-Hooks, supported platforms, Git-note policy, Developer Review design, Braid Skills, and nudges are not automatically outside Phase 1. Their inclusion is determined by the open Phase 1 product decisions.
+The protocol may continue to represent contributor lineage and delegated
+outcomes in Phase 1, but complete child-agent capture, recursive delegation
+governance, and promotion enforcement for retained sub-agent work are deferred.
+Discovery hooks, Git-note policy, Developer Review design, Braid Skills, and
+nudges remain Phase 1 work under the decisions and targets below.
 
 ## 1. Existing Foundation
 
@@ -80,14 +85,14 @@ Phase 1 must provide an installable product rather than requiring developers to 
 
 Required work:
 
-- Select the supported operating systems and architectures.
-- Build distributable packages for every supported platform.
+- Build and validate the Phase 1 package for macOS on Apple silicon.
 - Install and configure the Braid CLI.
 - Install and configure the Phase 1 Braid daemon.
 - Install any required Claude Code and Codex integrations.
 - Provide version, diagnostics, upgrade, and uninstall behavior.
 
-**Open decision:** Supported platform and architecture matrix.
+**Phase 1 platform:** macOS on Apple silicon. The minimum supported macOS
+version remains an open packaging decision.
 
 ## 3. Agent Support
 
@@ -98,7 +103,9 @@ Phase 1 supports only:
 
 Both adapters must produce the same normalized WorkEvent model and lifecycle behavior.
 
-**Open decision:** Whether Claude Code and Codex hooks are required for Phase 1.
+**Phase 1 decision:** Hooks are used only for discovery capture. Sandeep and Sri
+own a spike to validate the Claude Code and Codex behavior and finalize the
+implementation boundary.
 
 The hook decision affects:
 
@@ -107,6 +114,17 @@ The hook decision affects:
 - Nudges
 - Automatic wrap and attach assistance
 - Detection of changed intent
+
+### Deferred Beyond Phase 1: Sub-Agent Capture Governance
+
+Complete sub-agent capture and governance are outside the Phase 1 boundary. The
+current protocol can represent contributor lineage and delegated outcomes, but
+Phase 1 does not claim complete child lifecycle capture or automatic promotion
+authority over retained sub-agent work.
+
+A later phase must finalize native versus Braid-owned delegation, nested and
+resumed child identity, minimum lifecycle evidence, degraded capture states,
+artifact and informational-influence attribution, and promotion policy.
 
 ## 4. Complete Braid Lifecycle
 
@@ -227,6 +245,9 @@ The Git-note design must settle:
 
 **Open decision:** Final Git-note contract and publication policy.
 
+**Delivery target:** Finalize the Git-note format and push semantics by end of
+week.
+
 ## 9. Nudges
 
 Phase 1 must decide which lifecycle conditions should produce developer or agent nudges.
@@ -245,16 +266,21 @@ Candidate conditions include:
 
 **Open decision:** Nudge conditions, channels, timing, recipients, and whether any nudges are blocking.
 
+**Delivery target:** Decide the Phase 1 nudge model by end of week.
+
 ## Open Decision Order
 
-The unresolved decisions should be made in this order because later decisions depend on earlier ones:
+The current decision and delivery order is:
 
 1. Freeze the issue #24 command and state-transition contract.
-2. Choose the supported platform matrix.
-3. Decide whether hooks are required.
-4. Finalize the review workflow and authority model.
-5. Finalize the Git-note format and push semantics.
-6. Decide the nudge model.
-7. Freeze the Developer Review UI design.
+2. **Partially decided:** Support Apple silicon for Phase 1; finalize the minimum supported macOS version.
+3. **Decided:** Use hooks only for discovery; Sandeep and Sri complete the spike.
+4. **Deferred:** Finalize the sub-agent capture and governance contract after Phase 1.
+5. Finalize the review workflow and authority model.
+6. Finalize the Git-note format and push semantics by end of week.
+7. Decide the nudge model by end of week.
+8. Freeze the Developer Review UI design.
 
-The hook decision should be made before finalizing nudges and the Review UI backend because hooks determine how quickly and reliably live session progress enters Braid.
+The discovery-hook spike should complete before live progress behavior is frozen.
+The review authority decision remains upstream of final promotion behavior and
+the Developer Review UI design.
