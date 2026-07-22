@@ -1,4 +1,4 @@
-# Proposed Braid Architecture -Simplified
+# Proposed Braid Architecture - Simplified
 
 Braid is a provider-independent coordination, evidence, and promotion layer for agent-produced software work. The proposed architecture gives agent sessions a controlled local capture path, preserves work and intent before integration, moves durable lifecycle state to a remote authority after the pull-request checkpoint is acknowledged, and projects accepted context back into Git through notes.
 
@@ -8,7 +8,7 @@ This is a **target architecture**. It describes the intended component boundarie
 
 The simplified Braid target-architecture diagram is embedded below.
 
-![Proposed Braid Architecture -Simplified](assets/braid-work-events/braid-simplified-target-architecture.svg)
+![Proposed Braid Architecture - Simplified](assets/braid-work-events/braid-simplified-target-architecture.svg)
 
 [Open the full-size SVG](assets/braid-work-events/braid-simplified-target-architecture.svg)
 

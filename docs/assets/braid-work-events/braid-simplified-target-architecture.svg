@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1160" viewBox="0 0 1800 1160" role="img" aria-labelledby="title desc">
-  <title id="title">Proposed Braid Architecture -Simplified</title>
+  <title id="title">Proposed Braid Architecture - Simplified</title>
   <desc id="desc">Simplified component diagram showing local capture, acknowledged handoff to the remote authority, exact-candidate authorization, and GitHub access through a Git Provider Adapter.</desc>
 
   <defs>
@@ -49,7 +49,7 @@
 
   <rect class="bg" width="1800" height="1160"/>
 
-  <text x="60" y="70" class="title">Proposed Braid Architecture -Simplified</text>
+  <text x="60" y="70" class="title">Proposed Braid Architecture - Simplified</text>
   <text x="60" y="108" class="subtitle">Braid captures locally, hands durable intent to the Orchestrator at PR, and reaches GitHub through a provider adapter.</text>
 
   <!-- Zones -->
