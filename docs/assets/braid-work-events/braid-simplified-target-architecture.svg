@@ -1,47 +1,47 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1160" viewBox="0 0 1800 1160" role="img" aria-labelledby="title desc">
-  <title id="title">Braid simplified target architecture</title>
-  <desc id="desc">Component diagram showing Local Dev Box, Remote Server, and GitHub. Hooks call the Braid CLI, the CLI calls the Local Braid Recorder Daemon, and the daemon owns sync, GitHub actions, and Git note writing.</desc>
+  <title id="title">Proposed Braid Architecture -Simplified</title>
+  <desc id="desc">Simplified component diagram showing local capture, acknowledged handoff to the remote authority, exact-candidate authorization, and GitHub access through a Git Provider Adapter.</desc>
 
   <defs>
-    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
       <path d="M0,0 L10,5 L0,10 Z" fill="#334155"/>
     </marker>
-    <marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+    <marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
       <path d="M0,0 L10,5 L0,10 Z" fill="#64748b"/>
     </marker>
     <style>
       .bg { fill: #ffffff; }
       .title { font: 700 42px Arial, sans-serif; fill: #0f172a; }
       .subtitle { font: 400 22px Arial, sans-serif; fill: #475569; }
-      .zone-title { font: 700 24px Arial, sans-serif; fill: #0f172a; }
+      .zone-title { font: 700 22px Arial, sans-serif; fill: #0f172a; }
       .zone-sub { font: 400 17px Arial, sans-serif; fill: #475569; }
-      .node-title { font: 700 20px Arial, sans-serif; fill: #0f172a; text-anchor: middle; }
+      .node-title { font: 700 18px Arial, sans-serif; fill: #0f172a; text-anchor: middle; }
       .node-sub { font: 400 15px Arial, sans-serif; fill: #475569; text-anchor: middle; }
       .label { font: 700 14px Arial, sans-serif; fill: #0f172a; text-anchor: middle; }
       .small { font: 400 15px Arial, sans-serif; fill: #334155; }
       .note-title { font: 700 18px Arial, sans-serif; fill: #0f172a; }
       .note { font: 400 15px Arial, sans-serif; fill: #334155; }
       .mono { font: 400 14px Menlo, Consolas, monospace; fill: #334155; }
-      .zone-local { fill: #f8fafc; stroke: #94a3b8; stroke-width: 2.5; }
-      .zone-remote { fill: #f0fdfa; stroke: #14b8a6; stroke-width: 2.5; }
-      .zone-github { fill: #f5f3ff; stroke: #8b5cf6; stroke-width: 2.5; }
-      .agent-box { fill: #eff6ff; stroke: #2563eb; stroke-width: 2; }
-      .node-user { fill: #f1f5f9; stroke: #64748b; stroke-width: 2.5; }
-      .node-agent { fill: #e0f2fe; stroke: #0284c7; stroke-width: 2.5; }
-      .node-hook { fill: #fef3c7; stroke: #d97706; stroke-width: 2.5; }
-      .node-skill { fill: #fae8ff; stroke: #a21caf; stroke-width: 2.5; }
-      .node-cli { fill: #ecfeff; stroke: #0891b2; stroke-width: 2.5; }
-      .node-daemon { fill: #eef2ff; stroke: #4f46e5; stroke-width: 2.5; }
-      .node-store { fill: #f0fdf4; stroke: #16a34a; stroke-width: 2.5; }
-      .node-worker { fill: #fff7ed; stroke: #ea580c; stroke-width: 2.5; }
-      .node-git { fill: #fff1f2; stroke: #e11d48; stroke-width: 2.5; }
-      .node-orch { fill: #f5f3ff; stroke: #7c3aed; stroke-width: 2.5; }
-      .node-gh { fill: #f8fafc; stroke: #0f172a; stroke-width: 2.5; }
-      .line { stroke: #334155; stroke-width: 3; fill: none; marker-end: url(#arrow); }
-      .muted-line { stroke: #64748b; stroke-width: 2.7; fill: none; marker-end: url(#arrow-muted); }
-      .return-line { stroke: #64748b; stroke-width: 2.7; stroke-dasharray: 8 8; fill: none; marker-end: url(#arrow-muted); }
-      .label-bg { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1.3; }
-      .footer { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 2; }
+      .zone-local { fill: #f8fafc; stroke: #94a3b8; stroke-width: 1.5; }
+      .zone-remote { fill: #f8fafc; stroke: #64748b; stroke-width: 1.5; }
+      .zone-github { fill: #f5f3ff; stroke: #8b5cf6; stroke-width: 1.5; }
+      .agent-box { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+      .node-user { fill: #f1f5f9; stroke: #64748b; stroke-width: 1.5; }
+      .node-agent { fill: #e0f2fe; stroke: #0284c7; stroke-width: 1.5; }
+      .node-hook { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+      .node-skill { fill: #fae8ff; stroke: #a21caf; stroke-width: 1.5; }
+      .node-cli { fill: #ecfeff; stroke: #0891b2; stroke-width: 1.5; }
+      .node-daemon { fill: #eef2ff; stroke: #4f46e5; stroke-width: 1.5; }
+      .node-store { fill: #f0fdf4; stroke: #16a34a; stroke-width: 1.5; }
+      .node-worker { fill: #fff7ed; stroke: #ea580c; stroke-width: 1.5; }
+      .node-git { fill: #fff1f2; stroke: #e11d48; stroke-width: 1.5; }
+      .node-orch { fill: #f5f3ff; stroke: #7c3aed; stroke-width: 1.5; }
+      .node-gh { fill: #f8fafc; stroke: #0f172a; stroke-width: 1.5; }
+      .line { stroke: #334155; stroke-width: 1.8; fill: none; marker-end: url(#arrow); }
+      .muted-line { stroke: #64748b; stroke-width: 1.6; fill: none; marker-end: url(#arrow-muted); }
+      .return-line { stroke: #64748b; stroke-width: 1.6; stroke-dasharray: 7 7; fill: none; marker-end: url(#arrow-muted); }
+      .label-bg { fill: #ffffff; stroke: #e2e8f0; stroke-width: 0.8; }
+      .footer { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1.2; }
       .badge { fill: #0f766e; }
       .badge-text { font: 700 13px Arial, sans-serif; fill: #ffffff; text-anchor: middle; }
     </style>
@@ -49,21 +49,21 @@
 
   <rect class="bg" width="1800" height="1160"/>
 
-  <text x="60" y="70" class="title">Braid Simplified Target Architecture</text>
-  <text x="60" y="108" class="subtitle">Hooks go through Braid CLI. Braid CLI goes through the local recorder daemon. The daemon owns sync, GitHub actions, and Git note writes.</text>
+  <text x="60" y="70" class="title">Proposed Braid Architecture -Simplified</text>
+  <text x="60" y="108" class="subtitle">Braid captures locally, hands durable intent to the Orchestrator at PR, and reaches GitHub through a provider adapter.</text>
 
   <!-- Zones -->
   <rect x="50" y="150" width="1085" height="835" rx="22" class="zone-local"/>
   <text x="85" y="195" class="zone-title">Local Dev Box</text>
-  <text x="85" y="222" class="zone-sub">Before PR: local Inbox and SQLite are the working source of truth.</text>
+  <text x="85" y="222" class="zone-sub">Before acknowledgement: Inbox is staging; SQLite is the attached working truth.</text>
 
   <rect x="1195" y="150" width="550" height="500" rx="22" class="zone-remote"/>
   <text x="1230" y="195" class="zone-title">Remote Server</text>
-  <text x="1230" y="222" class="zone-sub">After PR: Intent DB becomes the durable source of truth.</text>
+  <text x="1230" y="222" class="zone-sub">After PR checkpoint acknowledgement: Intent DB is durable truth.</text>
 
   <rect x="1195" y="700" width="550" height="285" rx="22" class="zone-github"/>
-  <text x="1230" y="745" class="zone-title">GitHub</text>
-  <text x="1230" y="772" class="zone-sub">PR, merge, and pushed Git note refs live here.</text>
+  <text x="1230" y="745" class="zone-title">Git Provider</text>
+  <text x="1230" y="772" class="zone-sub">GitHub is shown as the provider example.</text>
 
   <!-- Local nodes -->
   <rect x="95" y="260" width="185" height="82" rx="14" class="node-user"/>
@@ -101,7 +101,7 @@
   <text x="717.5" y="665" class="node-sub">pre-attach capture</text>
 
   <path d="M910,615 C910,602 1110,602 1110,615 L1110,675 C1110,688 910,688 910,675 Z" class="node-store"/>
-  <path d="M910,615 C910,628 1110,628 1110,615" fill="none" stroke="#16a34a" stroke-width="2.5"/>
+  <path d="M910,615 C910,628 1110,628 1110,615" fill="none" stroke="#16a34a" stroke-width="1.5"/>
   <text x="1010" y="647" class="node-title">Local SQLite</text>
   <text x="1010" y="672" class="node-sub">raw events and braid record</text>
 
@@ -119,18 +119,19 @@
   <text x="1450" y="348" class="node-sub">remote authority</text>
 
   <path d="M1335,470 C1335,456 1565,456 1565,470 L1565,555 C1565,569 1335,569 1335,555 Z" class="node-store"/>
-  <path d="M1335,470 C1335,484 1565,484 1565,470" fill="none" stroke="#16a34a" stroke-width="2.5"/>
+  <path d="M1335,470 C1335,484 1565,484 1565,470" fill="none" stroke="#16a34a" stroke-width="1.5"/>
   <text x="1450" y="506" class="node-title">Intent DB</text>
   <text x="1450" y="531" class="node-sub">events, braids, SHAs</text>
 
   <!-- GitHub nodes -->
-  <rect x="1265" y="820" width="210" height="88" rx="15" class="node-gh"/>
-  <text x="1370" y="856" class="node-title">PR / Merge</text>
-  <text x="1370" y="881" class="node-sub">GitHub boundary</text>
+  <rect x="1265" y="815" width="210" height="100" rx="15" class="node-cli"/>
+  <text x="1370" y="849" class="node-title">Git Provider</text>
+  <text x="1370" y="871" class="node-title">Adapter</text>
+  <text x="1370" y="896" class="node-sub">normalized operations</text>
 
-  <rect x="1505" y="820" width="210" height="88" rx="15" class="node-git"/>
-  <text x="1610" y="856" class="node-title">Remote Git Notes</text>
-  <text x="1610" y="881" class="node-sub">pushed refs</text>
+  <rect x="1505" y="815" width="210" height="100" rx="15" class="node-gh"/>
+  <text x="1610" y="853" class="node-title">GitHub</text>
+  <text x="1610" y="879" class="node-sub">PR, merge, note refs</text>
 
   <!-- Local internal arrows -->
   <path d="M280,301 C405,301 505,301 635,301" class="line"/>
@@ -196,31 +197,35 @@
 
   <path d="M1335,349 C1190,407 1090,500 925,500" class="return-line"/>
   <rect x="1083" y="466" width="130" height="26" rx="6" class="label-bg"/>
-  <text x="1148" y="484" class="label">context/ack</text>
+  <text x="1148" y="484" class="label">authority/ack</text>
 
   <path d="M925,493 C1105,550 1195,820 1265,858" class="line"/>
-  <rect x="1118" y="650" width="104" height="26" rx="6" class="label-bg"/>
-  <text x="1170" y="668" class="label">via daemon</text>
+  <rect x="1092" y="650" width="156" height="26" rx="6" class="label-bg"/>
+  <text x="1170" y="668" class="label">authorized action</text>
 
-  <path d="M1265,881 C1112,895 1030,548 925,512" class="return-line"/>
+  <path d="M1265,891 C1112,895 1030,548 925,512" class="return-line"/>
   <rect x="1055" y="870" width="126" height="26" rx="6" class="label-bg"/>
-  <text x="1118" y="888" class="label">status/events</text>
+  <text x="1118" y="888" class="label">provider events</text>
 
-  <path d="M1012,920 C1180,920 1330,864 1505,864" class="line"/>
-  <rect x="1195" y="884" width="132" height="26" rx="6" class="label-bg"/>
-  <text x="1261" y="902" class="label">push refs</text>
+  <path d="M1012,920 C1110,944 1185,905 1265,887" class="line"/>
+  <rect x="1128" y="900" width="138" height="26" rx="6" class="label-bg"/>
+  <text x="1197" y="918" class="label">push note refs</text>
+
+  <path d="M1475,865 L1505,865" class="line"/>
+  <rect x="1430" y="786" width="120" height="26" rx="6" class="label-bg"/>
+  <text x="1490" y="804" class="label">provider API</text>
 
   <!-- Important constraints -->
   <rect x="70" y="1000" width="1655" height="112" rx="16" class="footer"/>
   <text x="100" y="1032" class="note-title">Boundaries and ownership</text>
-  <text x="100" y="1058" class="note">Hooks never call the daemon directly; they invoke Braid CLI. Braid CLI never talks to GitHub or remote stores directly.</text>
-  <text x="100" y="1080" class="note">It asks the local recorder daemon. The daemon drains Local SQLite through Sync / Drain Worker into Orchestrator.</text>
-  <text x="100" y="1102" class="note">Orchestrator writes Intent DB. Git notes are daemon-written locally, then pushed to GitHub.</text>
+  <text x="100" y="1058" class="note">Hooks invoke Braid CLI; the CLI asks the local recorder daemon. Neither talks directly to remote stores or GitHub.</text>
+  <text x="100" y="1080" class="note">Acknowledged PR checkpoints make Intent DB durable truth. Braid authorizes the exact candidate before provider merge.</text>
+  <text x="100" y="1102" class="note">The daemon reaches GitHub through the Git Provider Adapter; Git notes remain retryable projections.</text>
 
   <!-- Mini legend -->
-  <rect x="1230" y="582" width="470" height="52" rx="10" fill="#ffffff" stroke="#99f6e4" stroke-width="1.5"/>
+  <rect x="1230" y="582" width="470" height="52" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.1"/>
   <circle cx="1252" cy="607" r="9" class="badge"/>
   <text x="1252" y="612" class="badge-text">1</text>
-  <text x="1270" y="604" class="small">PR raised drains braid, raw events, commit SHA,</text>
-  <text x="1270" y="626" class="small">merge/PR ids, and digests into Intent DB.</text>
+  <text x="1270" y="604" class="small">PR checkpoint drains braid, raw events, SHAs, and digests.</text>
+  <text x="1270" y="626" class="small">Orchestrator acknowledgement makes Intent DB durable truth.</text>
 </svg>
