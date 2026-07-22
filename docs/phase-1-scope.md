@@ -29,6 +29,7 @@ The target architecture below is colored by implementation status. Green compone
 - Phase 1 generates and pushes Git notes.
 - The following remain explicit product decisions within Phase 1 planning:
   - Claude Code and Codex hooks
+  - Sub-agent capture contract and governance
   - Braid Skills
   - Supported platform coverage
   - Git-note format and publication policy
@@ -107,6 +108,32 @@ The hook decision affects:
 - Nudges
 - Automatic wrap and attach assistance
 - Detection of changed intent
+
+### Open Todo: Finalize Sub-Agent Capture
+
+Sub-agent capture remains an explicit Phase 1 discussion item. The current
+protocol can represent contributor lineage and delegated outcomes, but the Phase
+1 product contract must not imply that observing a parent delegation call is the
+same as capturing the child agent's work.
+
+Before the Phase 1 scope is finalized:
+
+- [ ] Decide whether Phase 1 requires automatic native sub-agent capture,
+      explicit Braid-owned delegation, or an advisory combination of both.
+- [ ] Define how parent-child lineage, nested delegation, resumed children, and
+      separate child thread/session identity are represented.
+- [ ] Define the minimum child lifecycle evidence required for complete capture,
+      including start, observable work events, terminal outcome, and event-drain
+      completion.
+- [ ] Decide how partial, opaque, or missing child capture affects verification,
+      review, Git-note provenance, and promotion.
+- [ ] Define how retained child artifacts and consumed research or advice are
+      attributed when work crosses back into the parent session.
+- [ ] Validate the Claude Code and Codex behavior against supported runtime
+      versions, then finalize the Phase 1 implementation and acceptance tests.
+
+**Open decision:** Final Phase 1 sub-agent capture, enforcement, degradation,
+and promotion contract.
 
 ## 4. Complete Braid Lifecycle
 
@@ -252,9 +279,13 @@ The unresolved decisions should be made in this order because later decisions de
 1. Freeze the issue #24 command and state-transition contract.
 2. Choose the supported platform matrix.
 3. Decide whether hooks are required.
-4. Finalize the review workflow and authority model.
-5. Finalize the Git-note format and push semantics.
-6. Decide the nudge model.
-7. Freeze the Developer Review UI design.
+4. Finalize the sub-agent capture and governance contract.
+5. Finalize the review workflow and authority model.
+6. Finalize the Git-note format and push semantics.
+7. Decide the nudge model.
+8. Freeze the Developer Review UI design.
 
-The hook decision should be made before finalizing nudges and the Review UI backend because hooks determine how quickly and reliably live session progress enters Braid.
+The hook decision and sub-agent capture contract should be finalized before
+nudges, Git-note provenance, promotion behavior, and the Review UI backend,
+because they determine which delegated work is visible, attributable, and safe
+to accept.
