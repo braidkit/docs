@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1160" viewBox="0 0 1800 1160" role="img" aria-labelledby="title desc">
   <title id="title">Braid Phase 1 architecture implementation overlay</title>
-  <desc id="desc">The Braid target architecture colored by existing foundation, Phase 1 implementation, open decisions, later architecture, and external components.</desc>
+  <desc id="desc">The Braid target architecture colored by existing foundation, Phase 1 implementation, resolved macOS and discovery-hook scope, open decisions, deferred sub-agent governance, later architecture, and external components.</desc>
 
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
@@ -103,7 +103,8 @@
 
   <rect x="350" y="260" width="205" height="82" rx="14" class="node-worker status-phase1"/>
   <text x="452.5" y="294" class="node-title">Install Packages</text>
-  <text x="452.5" y="319" class="node-sub">platform matrix open</text>
+  <text x="452.5" y="315" class="node-sub">macOS version TBD</text>
+  <text x="452.5" y="335" class="node-sub">Apple silicon</text>
 
   <rect x="95" y="390" width="430" height="285" rx="18" class="agent-box status-partial"/>
   <text x="125" y="430" class="zone-title">Agent Runtime</text>
@@ -114,13 +115,17 @@
   <text x="212.5" y="530" class="node-title">Agent Adapters</text>
   <text x="212.5" y="555" class="node-sub">Claude + Codex</text>
 
-  <rect x="330" y="495" width="150" height="78" rx="13" class="node-hook status-open"/>
-  <text x="405" y="530" class="node-title">Hooks</text>
-  <text x="405" y="555" class="node-sub">lifecycle events</text>
+  <rect x="330" y="495" width="150" height="78" rx="13" class="node-hook status-phase1"/>
+  <text x="405" y="530" class="node-title">Discovery Hooks</text>
+  <text x="405" y="555" class="node-sub">Sandeep + Sri spike</text>
 
-  <rect x="210" y="598" width="210" height="58" rx="13" class="node-skill status-open"/>
-  <text x="315" y="625" class="node-title">Braid Skills</text>
-  <text x="315" y="647" class="node-sub">depends on hooks/note design</text>
+  <rect x="115" y="598" width="175" height="58" rx="13" class="node-skill status-open"/>
+  <text x="202.5" y="625" class="node-title">Braid Skills</text>
+  <text x="202.5" y="647" class="node-sub">open decision</text>
+
+  <rect x="315" y="598" width="185" height="58" rx="13" class="node-worker status-later"/>
+  <text x="407.5" y="625" class="node-title">Sub-agent Capture</text>
+  <text x="407.5" y="647" class="node-sub">deferred after Phase 1</text>
 
   <rect x="95" y="760" width="390" height="95" rx="15" class="node-agent status-phase1"/>
   <text x="290" y="797" class="node-title">Developer Review UI</text>
@@ -151,7 +156,7 @@
 
   <rect x="742" y="885" width="270" height="70" rx="14" class="node-git status-partial"/>
   <text x="877" y="916" class="node-title">Local Git Notes</text>
-  <text x="877" y="940" class="node-sub">finalize format + daemon write</text>
+  <text x="877" y="940" class="node-sub">contract due end of week</text>
 
   <!-- Remote nodes -->
   <rect x="1335" y="285" width="230" height="92" rx="15" class="node-orch status-later"/>
@@ -169,8 +174,9 @@
   <text x="1370" y="881" class="node-sub">GitHub boundary</text>
 
   <rect x="1505" y="820" width="210" height="88" rx="15" class="node-git status-phase1"/>
-  <text x="1610" y="856" class="node-title">Remote Git Notes</text>
-  <text x="1610" y="881" class="node-sub">push refs with retry policy</text>
+  <text x="1610" y="850" class="node-title">Remote Git Notes</text>
+  <text x="1610" y="875" class="node-sub">push semantics</text>
+  <text x="1610" y="895" class="node-sub">due end of week</text>
 
   <!-- Local internal arrows -->
   <path d="M280,301 L350,301" class="line"/>
@@ -197,13 +203,13 @@
   <rect x="296" y="500" width="72" height="24" rx="6" class="label-bg"/>
   <text x="332" y="517" class="label">events</text>
 
-  <path d="M405,573 C405,586 375,592 353,598" class="muted-line"/>
-  <rect x="384" y="573" width="98" height="24" rx="6" class="label-bg"/>
-  <text x="433" y="590" class="label">trigger</text>
+  <path d="M390,573 C365,586 295,592 250,598" class="muted-line"/>
+  <rect x="302" y="573" width="88" height="24" rx="6" class="label-bg"/>
+  <text x="346" y="590" class="label">trigger</text>
 
-  <path d="M315,598 C315,584 342,578 373,573" class="return-line"/>
-  <rect x="228" y="571" width="88" height="24" rx="6" class="label-bg"/>
-  <text x="272" y="588" class="label">result</text>
+  <path d="M202,598 C202,580 300,580 350,573" class="return-line"/>
+  <rect x="220" y="571" width="78" height="24" rx="6" class="label-bg"/>
+  <text x="259" y="588" class="label">result</text>
 
   <path d="M480,534 C555,534 588,315 635,315" class="line"/>
   <rect x="500" y="407" width="118" height="26" rx="6" class="label-bg"/>
@@ -266,8 +272,8 @@
   <rect x="70" y="1000" width="1655" height="112" rx="16" class="footer"/>
   <text x="100" y="1032" class="note-title">Phase 1 boundary</text>
   <text x="100" y="1058" class="note">The existing orchestrator is deployed locally as the Braid daemon and owns SQLite, lifecycle queries, and the Developer Review backend.</text>
-  <text x="100" y="1080" class="note">Phase 1 completes Claude/Codex support, the issue #24 command surface, installation packages, review UI, and pushed Git notes.</text>
-  <text x="100" y="1102" class="note">Hooks, Braid Skills, platform coverage, Git-note policy, review design, and nudges remain explicit product decisions.</text>
+  <text x="100" y="1080" class="note">Phase 1 targets Apple silicon; the minimum macOS version remains open. Discovery-only hooks use a Sandeep and Sri spike.</text>
+  <text x="100" y="1102" class="note">Sub-agent governance is deferred; review remains open; Git-note and nudge decisions target end of week.</text>
 
   <!-- Mini legend -->
   <rect x="1230" y="582" width="470" height="52" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.1"/>
