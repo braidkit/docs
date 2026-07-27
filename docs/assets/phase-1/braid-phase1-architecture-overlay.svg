@@ -1,278 +1,217 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1160" viewBox="0 0 1800 1160" role="img" aria-labelledby="title desc">
-  <title id="title">Braid Phase 1 architecture implementation overlay</title>
-  <desc id="desc">The Braid target architecture colored by existing foundation, Phase 1 implementation, open decisions, later architecture, and external components.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1460" viewBox="0 0 1800 1460" role="img" aria-labelledby="title desc">
+  <title id="title">Braid Phase 0 and Phase 1 architecture</title>
+  <desc id="desc">Two-stage architecture showing the controlled Phase 0 VC demo and the hardened Phase 1 design-partner product. Both use a local Braid CLI, daemon, SQLite store, Review UI, Git repository, and a remote bounded Intent Engine.</desc>
 
   <defs>
-    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
-      <path d="M0,0 L10,5 L0,10 Z" fill="#334155"/>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#334155"/>
     </marker>
-    <marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
-      <path d="M0,0 L10,5 L0,10 Z" fill="#64748b"/>
+    <marker id="arrow-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/>
+    </marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#c2410c"/>
     </marker>
     <style>
       .bg { fill: #ffffff; }
-      .title { font: 700 42px Arial, sans-serif; fill: #0f172a; }
-      .subtitle { font: 400 22px Arial, sans-serif; fill: #475569; }
-      .zone-title { font: 700 20px Arial, sans-serif; fill: #0f172a; }
-      .zone-sub { font: 400 17px Arial, sans-serif; fill: #475569; }
-      .node-title { font: 700 15px Arial, sans-serif; fill: #0f172a; text-anchor: middle; }
-      .node-sub { font: 400 15px Arial, sans-serif; fill: #475569; text-anchor: middle; }
-      .label { font: 700 14px Arial, sans-serif; fill: #0f172a; text-anchor: middle; }
-      .small { font: 400 15px Arial, sans-serif; fill: #334155; }
-      .note-title { font: 700 18px Arial, sans-serif; fill: #0f172a; }
-      .note { font: 400 15px Arial, sans-serif; fill: #334155; }
-      .mono { font: 400 14px Menlo, Consolas, monospace; fill: #334155; }
-      .zone-local { fill: #f8fafc; stroke: #94a3b8; stroke-width: 1.5; }
-      .zone-remote { fill: #f8fafc; stroke: #64748b; stroke-width: 1.5; }
-      .zone-github { fill: #f5f3ff; stroke: #8b5cf6; stroke-width: 1.5; }
-      .agent-box { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
-      .node-user { fill: #f1f5f9; stroke: #64748b; stroke-width: 1.5; }
-      .node-agent { fill: #e0f2fe; stroke: #0284c7; stroke-width: 1.5; }
-      .node-hook { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
-      .node-skill { fill: #fae8ff; stroke: #a21caf; stroke-width: 1.5; }
-      .node-cli { fill: #ecfeff; stroke: #0891b2; stroke-width: 1.5; }
-      .node-daemon { fill: #eef2ff; stroke: #4f46e5; stroke-width: 1.5; }
-      .node-store { fill: #f0fdf4; stroke: #16a34a; stroke-width: 1.5; }
-      .node-worker { fill: #fff7ed; stroke: #ea580c; stroke-width: 1.5; }
-      .node-git { fill: #fff1f2; stroke: #e11d48; stroke-width: 1.5; }
-      .node-orch { fill: #f5f3ff; stroke: #7c3aed; stroke-width: 1.5; }
-      .node-gh { fill: #f8fafc; stroke: #0f172a; stroke-width: 1.5; }
-      .line { stroke: #334155; stroke-width: 1.8; fill: none; marker-end: url(#arrow); }
-      .muted-line { stroke: #64748b; stroke-width: 1.6; fill: none; marker-end: url(#arrow-muted); }
-      .return-line { stroke: #64748b; stroke-width: 1.6; stroke-dasharray: 7 7; fill: none; marker-end: url(#arrow-muted); }
-      .label-bg { fill: #ffffff; stroke: #e2e8f0; stroke-width: 0.8; }
-      .footer { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1.2; }
-      .badge { fill: #64748b; }
-      .badge-text { font: 700 13px Arial, sans-serif; fill: #ffffff; text-anchor: middle; }
-      .status-existing { fill: #dcfce7; stroke: #15803d; stroke-width: 1.8; }
-      .status-partial { fill: #fef3c7; stroke: #ca8a04; stroke-width: 1.8; }
-      .status-phase1 { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.8; }
-      .status-open { fill: #f3e8ff; stroke: #9333ea; stroke-width: 1.8; stroke-dasharray: 8 6; }
-      .status-later { fill: #e2e8f0; stroke: #64748b; stroke-width: 1.8; }
-      .status-external { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.8; }
-      .legend-text { font: 700 14px Arial, sans-serif; fill: #0f172a; }
-      .status-pill { font: 700 12px Arial, sans-serif; text-anchor: middle; }
-      .phase1-pill { fill: #ea580c; }
-      .open-pill { fill: #9333ea; }
-      .later-pill { fill: #64748b; }
-      .existing-pill { fill: #15803d; }
-      .pill-text { font: 700 11px Arial, sans-serif; fill: #ffffff; text-anchor: middle; }
+      .title { font: 700 40px Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 400 20px Arial, sans-serif; fill: #475569; }
+      .phase-title { font: 700 27px Arial, sans-serif; fill: #0f172a; }
+      .phase-sub { font: 400 17px Arial, sans-serif; fill: #475569; }
+      .zone-title { font: 700 17px Arial, sans-serif; fill: #334155; }
+      .node-title { font: 700 17px Arial, sans-serif; fill: #0f172a; text-anchor: middle; }
+      .node-sub { font: 400 14px Arial, sans-serif; fill: #475569; text-anchor: middle; }
+      .node-small { font: 400 13px Arial, sans-serif; fill: #475569; text-anchor: middle; }
+      .edge-label { font: 700 13px Arial, sans-serif; fill: #334155; text-anchor: middle; }
+      .legend { font: 700 14px Arial, sans-serif; fill: #334155; }
+      .pill-text { font: 700 12px Arial, sans-serif; fill: #ffffff; text-anchor: middle; }
+
+      .phase0-panel { fill: #f8fafc; stroke: #0f766e; stroke-width: 1.6; }
+      .phase1-panel { fill: #f8fafc; stroke: #c2410c; stroke-width: 1.6; }
+      .local-zone { fill: #ffffff; stroke: #94a3b8; stroke-width: 1.2; }
+      .remote-zone { fill: #f1f5f9; stroke: #64748b; stroke-width: 1.2; }
+
+      .shared-node { fill: #e0f2fe; stroke: #0369a1; stroke-width: 1.3; }
+      .daemon-node { fill: #ede9fe; stroke: #6d28d9; stroke-width: 1.3; }
+      .store-node { fill: #dcfce7; stroke: #15803d; stroke-width: 1.3; }
+      .ui-node { fill: #fef3c7; stroke: #b45309; stroke-width: 1.3; }
+      .git-node { fill: #ffe4e6; stroke: #be123c; stroke-width: 1.3; }
+      .intent0-node { fill: #ccfbf1; stroke: #0f766e; stroke-width: 1.3; }
+      .intent1-node { fill: #ffedd5; stroke: #c2410c; stroke-width: 1.3; }
+
+      .line { stroke: #334155; stroke-width: 1.7; fill: none; marker-end: url(#arrow); }
+      .line-bi { stroke: #334155; stroke-width: 1.7; fill: none; marker-start: url(#arrow); marker-end: url(#arrow); }
+      .phase0-line { stroke: #0f766e; stroke-width: 1.7; fill: none; marker-start: url(#arrow-teal); marker-end: url(#arrow-teal); }
+      .phase1-line { stroke: #c2410c; stroke-width: 1.7; fill: none; marker-start: url(#arrow-orange); marker-end: url(#arrow-orange); }
+      .label-bg { fill: #ffffff; stroke: #e2e8f0; stroke-width: 0.7; }
     </style>
   </defs>
 
-  <rect class="bg" width="1800" height="1160"/>
+  <rect class="bg" width="1800" height="1460"/>
 
-  <text x="60" y="70" class="title">Braid Phase 1 Architecture Overlay</text>
-  <text x="60" y="108" class="subtitle">Phase 1 completes the local product loop; remote separation remains the target architecture.</text>
+  <text x="60" y="64" class="title">Braid Phase 0 and Phase 1 Architecture</text>
+  <text x="60" y="98" class="subtitle">One local authority model, first proven as a controlled demo and then hardened for design partners.</text>
 
-  <!-- Implementation legend -->
-  <rect x="970" y="22" width="775" height="108" rx="14" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.1"/>
-  <text x="995" y="46" class="note-title">Implementation status</text>
+  <rect x="1010" y="28" width="730" height="88" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <rect x="1035" y="50" width="24" height="18" rx="4" class="shared-node"/>
+  <text x="1070" y="64" class="legend">Shared local component</text>
+  <rect x="1260" y="50" width="24" height="18" rx="4" class="intent0-node"/>
+  <text x="1295" y="64" class="legend">Phase 0 demo service</text>
+  <rect x="1510" y="50" width="24" height="18" rx="4" class="intent1-node"/>
+  <text x="1545" y="64" class="legend">Phase 1 hardened service</text>
+  <rect x="1035" y="82" width="24" height="18" rx="4" class="remote-zone"/>
+  <text x="1070" y="96" class="legend">Hosted boundary</text>
+  <text x="1260" y="96" class="legend">All lifecycle authority remains local</text>
 
-  <rect x="995" y="57" width="24" height="18" rx="5" class="status-existing"/>
-  <text x="1030" y="71" class="legend-text">Existing</text>
-  <rect x="1135" y="57" width="24" height="18" rx="5" class="status-partial"/>
-  <text x="1170" y="71" class="legend-text">Partially implemented</text>
-  <rect x="1365" y="57" width="24" height="18" rx="5" class="status-phase1"/>
-  <text x="1400" y="71" class="legend-text">Build in Phase 1</text>
+  <!-- Phase 0 -->
+  <rect x="45" y="145" width="1710" height="590" rx="22" class="phase0-panel"/>
+  <text x="75" y="188" class="phase-title">Phase 0 - VC Demo</text>
+  <text x="75" y="218" class="phase-sub">Controlled environment: prove capture, convergence, review, promote and evidence-bounded intent reconstruction.</text>
 
-  <rect x="995" y="91" width="24" height="18" rx="5" class="status-open"/>
-  <text x="1030" y="105" class="legend-text">Open decision</text>
-  <rect x="1175" y="91" width="24" height="18" rx="5" class="status-later"/>
-  <text x="1210" y="105" class="legend-text">Later architecture</text>
-  <rect x="1385" y="91" width="24" height="18" rx="5" class="status-external"/>
-  <text x="1420" y="105" class="legend-text">External platform or actor</text>
+  <rect x="75" y="245" width="1170" height="455" rx="18" class="local-zone"/>
+  <text x="100" y="278" class="zone-title">Local Developer Environment</text>
 
-  <!-- Zones -->
-  <rect x="50" y="150" width="1085" height="835" rx="22" class="zone-local"/>
-  <text x="85" y="195" class="zone-title">Local Dev Box</text>
-  <text x="85" y="222" class="zone-sub">Before PR: local Inbox and SQLite are the working source of truth.</text>
+  <rect x="100" y="325" width="205" height="96" rx="13" class="shared-node"/>
+  <text x="202.5" y="361" class="node-title">Agent Runtime</text>
+  <text x="202.5" y="386" class="node-sub">Claude Code + Codex</text>
+  <text x="202.5" y="407" class="node-small">selected happy paths</text>
 
-  <rect x="1195" y="150" width="550" height="500" rx="22" class="zone-remote"/>
-  <text x="1230" y="195" class="zone-title">Remote Server</text>
-  <text x="1230" y="222" class="zone-sub">After PR: Intent DB becomes the durable source of truth.</text>
+  <rect x="365" y="325" width="190" height="96" rx="13" class="shared-node"/>
+  <text x="460" y="361" class="node-title">Braid CLI</text>
+  <text x="460" y="386" class="node-sub">lifecycle commands</text>
+  <text x="460" y="407" class="node-small">assisted setup</text>
 
-  <rect x="1195" y="700" width="550" height="285" rx="22" class="zone-github"/>
-  <text x="1230" y="745" class="zone-title">GitHub</text>
-  <text x="1230" y="772" class="zone-sub">PR, merge, and pushed Git note refs live here.</text>
+  <rect x="660" y="300" width="350" height="146" rx="15" class="daemon-node"/>
+  <text x="835" y="341" class="node-title">Local Braid Daemon</text>
+  <text x="835" y="368" class="node-sub">admit - verify - fold - gate</text>
+  <text x="835" y="391" class="node-sub">HTTP Review API + note context</text>
+  <text x="835" y="414" class="node-small">existing orchestrator adapted locally</text>
 
-  <!-- Local nodes -->
-  <rect x="95" y="260" width="185" height="82" rx="14" class="node-user status-external"/>
-  <text x="187.5" y="296" class="node-title">User</text>
-  <text x="187.5" y="321" class="node-sub">starts work</text>
+  <rect x="1070" y="325" width="145" height="96" rx="13" class="store-node"/>
+  <text x="1142.5" y="361" class="node-title">SQLite</text>
+  <text x="1142.5" y="386" class="node-sub">events + braids</text>
+  <text x="1142.5" y="407" class="node-small">daemon-owned</text>
 
-  <rect x="350" y="260" width="205" height="82" rx="14" class="node-worker status-phase1"/>
-  <text x="452.5" y="294" class="node-title">Install Packages</text>
-  <text x="452.5" y="319" class="node-sub">platform matrix open</text>
+  <rect x="660" y="520" width="350" height="116" rx="15" class="ui-node"/>
+  <text x="835" y="561" class="node-title">Review UI</text>
+  <text x="835" y="587" class="node-sub">real braid state and evidence</text>
+  <text x="835" y="611" class="node-small">demo-ready workflow</text>
 
-  <rect x="95" y="390" width="430" height="285" rx="18" class="agent-box status-partial"/>
-  <text x="125" y="430" class="zone-title">Agent Runtime</text>
-  <text x="125" y="454" class="zone-sub">Claude Code and Codex adapters only</text>
-  <text x="125" y="477" class="zone-sub">normalized to the same WorkEvent model.</text>
+  <rect x="365" y="520" width="190" height="116" rx="13" class="git-node"/>
+  <text x="460" y="558" class="node-title">Git Repository</text>
+  <text x="460" y="584" class="node-sub">merge + signed note</text>
+  <text x="460" y="608" class="node-small">refs/notes/braid</text>
 
-  <rect x="130" y="495" width="165" height="78" rx="13" class="node-agent status-partial"/>
-  <text x="212.5" y="530" class="node-title">Agent Adapters</text>
-  <text x="212.5" y="555" class="node-sub">Claude + Codex</text>
+  <rect x="1295" y="245" width="425" height="455" rx="18" class="remote-zone"/>
+  <text x="1320" y="278" class="zone-title">Hosted Braid Service</text>
+  <rect x="1335" y="350" width="345" height="206" rx="15" class="intent0-node"/>
+  <text x="1507.5" y="393" class="node-title">Phase 0 Intent Engine</text>
+  <text x="1507.5" y="422" class="node-sub">simple hosted Go service</text>
+  <text x="1507.5" y="446" class="node-sub">Braid-managed LLM key</text>
+  <text x="1507.5" y="470" class="node-sub">structured IntentNoteV1 output</text>
+  <text x="1507.5" y="500" class="node-small">no signing or lifecycle authority</text>
+  <text x="1507.5" y="524" class="node-small">controlled demo operations</text>
 
-  <rect x="330" y="495" width="150" height="78" rx="13" class="node-hook status-open"/>
-  <text x="405" y="530" class="node-title">Hooks</text>
-  <text x="405" y="555" class="node-sub">lifecycle events</text>
+  <!-- Phase 0 lines -->
+  <path d="M305 373 L365 373" class="line"/>
+  <rect x="314" y="345" width="42" height="21" rx="5" class="label-bg"/>
+  <text x="335" y="360" class="edge-label">run</text>
 
-  <rect x="210" y="598" width="210" height="58" rx="13" class="node-skill status-open"/>
-  <text x="315" y="625" class="node-title">Braid Skills</text>
-  <text x="315" y="647" class="node-sub">depends on hooks/note design</text>
+  <path d="M555 373 L660 373" class="line"/>
+  <rect x="580" y="345" width="54" height="21" rx="5" class="label-bg"/>
+  <text x="607" y="360" class="edge-label">gRPC</text>
 
-  <rect x="95" y="760" width="390" height="95" rx="15" class="node-agent status-phase1"/>
-  <text x="290" y="797" class="node-title">Developer Review UI</text>
-  <text x="290" y="822" class="node-sub">session progress, evidence, decisions</text>
-  <text x="290" y="844" class="node-sub">design open; UI + backend are Phase 1</text>
+  <path d="M1010 373 L1070 373" class="line-bi"/>
+  <rect x="1018" y="345" width="44" height="21" rx="5" class="label-bg"/>
+  <text x="1040" y="360" class="edge-label">SQL</text>
 
-  <rect x="635" y="260" width="215" height="85" rx="14" class="node-cli status-partial"/>
-  <text x="742.5" y="297" class="node-title">Braid CLI</text>
-  <text x="742.5" y="322" class="node-sub">complete #24 lifecycle</text>
+  <path d="M835 446 L835 520" class="line-bi"/>
+  <rect x="803" y="472" width="64" height="21" rx="5" class="label-bg"/>
+  <text x="835" y="487" class="edge-label">HTTP</text>
 
-  <rect x="610" y="425" width="315" height="95" rx="15" class="node-daemon status-partial"/>
-  <text x="767.5" y="463" class="node-title">Local Braid</text>
-  <text x="767.5" y="488" class="node-title">Recorder Daemon</text>
-  <text x="767.5" y="510" class="node-sub">Phase 1 orchestrator + review backend</text>
+  <path d="M700 446 C650 476 610 520 555 550" class="line"/>
+  <rect x="586" y="489" width="70" height="21" rx="5" class="label-bg"/>
+  <text x="621" y="504" class="edge-label">sign note</text>
 
-  <rect x="605" y="605" width="225" height="82" rx="14" class="node-store status-existing"/>
-  <text x="717.5" y="640" class="node-title">Inbox / FileStore</text>
-  <text x="717.5" y="665" class="node-sub">pre-attach capture</text>
+  <path d="M1010 335 C1140 265 1200 300 1335 410" class="phase0-line"/>
+  <rect x="1124" y="282" width="174" height="22" rx="5" class="label-bg"/>
+  <text x="1211" y="297" class="edge-label">HTTPS - bounded context</text>
 
-  <path d="M910,615 C910,602 1110,602 1110,615 L1110,675 C1110,688 910,688 910,675 Z" class="node-store status-partial"/>
-  <path d="M910,615 C910,628 1110,628 1110,615" fill="none" stroke="#16a34a" stroke-width="1.5"/>
-  <text x="1010" y="647" class="node-title">Local SQLite</text>
-  <text x="1010" y="672" class="node-sub">daemon DB + migrations</text>
+  <!-- Phase 1 -->
+  <rect x="45" y="770" width="1710" height="640" rx="22" class="phase1-panel"/>
+  <text x="75" y="813" class="phase-title">Phase 1 - Design Partners</text>
+  <text x="75" y="843" class="phase-sub">Same topology, productized for partner repositories with installation, recovery, security and supportable contracts.</text>
 
-  <rect x="742" y="760" width="270" height="82" rx="14" class="node-worker status-later"/>
-  <text x="877" y="795" class="node-title">Sync / Drain Worker</text>
-  <text x="877" y="820" class="node-sub">remote split after Phase 1</text>
+  <rect x="75" y="870" width="1170" height="505" rx="18" class="local-zone"/>
+  <text x="100" y="903" class="zone-title">Partner Developer Environment</text>
 
-  <rect x="742" y="885" width="270" height="70" rx="14" class="node-git status-partial"/>
-  <text x="877" y="916" class="node-title">Local Git Notes</text>
-  <text x="877" y="940" class="node-sub">finalize format + daemon write</text>
+  <rect x="100" y="960" width="205" height="116" rx="13" class="shared-node"/>
+  <text x="202.5" y="998" class="node-title">Agent Runtime</text>
+  <text x="202.5" y="1024" class="node-sub">supported Claude + Codex</text>
+  <text x="202.5" y="1048" class="node-small">documented capture quality</text>
 
-  <!-- Remote nodes -->
-  <rect x="1335" y="285" width="230" height="92" rx="15" class="node-orch status-later"/>
-  <text x="1450" y="323" class="node-title">Orchestrator</text>
-  <text x="1450" y="348" class="node-sub">separate remote authority later</text>
+  <rect x="365" y="960" width="190" height="116" rx="13" class="shared-node"/>
+  <text x="460" y="998" class="node-title">Braid CLI</text>
+  <text x="460" y="1024" class="node-sub">complete lifecycle</text>
+  <text x="460" y="1048" class="node-small">packaged + diagnostics</text>
 
-  <path d="M1335,470 C1335,456 1565,456 1565,470 L1565,555 C1565,569 1335,569 1335,555 Z" class="node-store status-later"/>
-  <path d="M1335,470 C1335,484 1565,484 1565,470" fill="none" stroke="#64748b" stroke-width="1.5"/>
-  <text x="1450" y="506" class="node-title">Intent DB</text>
-  <text x="1450" y="531" class="node-sub">events, braids, SHAs</text>
+  <rect x="660" y="930" width="350" height="176" rx="15" class="daemon-node"/>
+  <text x="835" y="970" class="node-title">Local Braid Daemon</text>
+  <text x="835" y="998" class="node-sub">shared gRPC + HTTP application layer</text>
+  <text x="835" y="1022" class="node-sub">migrations - recovery - authentication</text>
+  <text x="835" y="1046" class="node-sub">validated note context + signing</text>
+  <text x="835" y="1075" class="node-small">managed local user service</text>
 
-  <!-- GitHub nodes -->
-  <rect x="1265" y="820" width="210" height="88" rx="15" class="node-gh status-external"/>
-  <text x="1370" y="856" class="node-title">PR / Merge</text>
-  <text x="1370" y="881" class="node-sub">GitHub boundary</text>
+  <rect x="1070" y="960" width="145" height="116" rx="13" class="store-node"/>
+  <text x="1142.5" y="998" class="node-title">SQLite</text>
+  <text x="1142.5" y="1024" class="node-sub">versioned schema</text>
+  <text x="1142.5" y="1048" class="node-small">recovery + migration</text>
 
-  <rect x="1505" y="820" width="210" height="88" rx="15" class="node-git status-phase1"/>
-  <text x="1610" y="856" class="node-title">Remote Git Notes</text>
-  <text x="1610" y="881" class="node-sub">push refs with retry policy</text>
+  <rect x="660" y="1190" width="350" height="130" rx="15" class="ui-node"/>
+  <text x="835" y="1230" class="node-title">Developer Review UI</text>
+  <text x="835" y="1256" class="node-sub">receipts - refusals - authority actions</text>
+  <text x="835" y="1280" class="node-small">documented daemon HTTP API</text>
 
-  <!-- Local internal arrows -->
-  <path d="M280,301 L350,301" class="line"/>
-  <rect x="283" y="264" width="70" height="26" rx="6" class="label-bg"/>
-  <text x="318" y="282" class="label">install</text>
+  <rect x="365" y="1190" width="190" height="130" rx="13" class="git-node"/>
+  <text x="460" y="1228" class="node-title">Git + Remote</text>
+  <text x="460" y="1254" class="node-sub">signed and pushed notes</text>
+  <text x="460" y="1278" class="node-small">fetch + replay verification</text>
 
-  <path d="M555,301 L635,301" class="line"/>
-  <rect x="560" y="264" width="72" height="26" rx="6" class="label-bg"/>
-  <text x="596" y="282" class="label">provides</text>
+  <rect x="1295" y="870" width="425" height="505" rx="18" class="remote-zone"/>
+  <text x="1320" y="903" class="zone-title">Hosted Braid Service</text>
+  <rect x="1335" y="985" width="345" height="246" rx="15" class="intent1-node"/>
+  <text x="1507.5" y="1028" class="node-title">Phase 1 Intent Engine</text>
+  <text x="1507.5" y="1057" class="node-sub">authenticated partner requests</text>
+  <text x="1507.5" y="1081" class="node-sub">redaction + secret scanning</text>
+  <text x="1507.5" y="1105" class="node-sub">versioned structured generation</text>
+  <text x="1507.5" y="1129" class="node-sub">timeouts - retries - observability</text>
+  <text x="1507.5" y="1159" class="node-small">never receives signing keys</text>
+  <text x="1507.5" y="1183" class="node-small">not a remote lifecycle orchestrator</text>
 
-  <path d="M188,342 C188,365 195,377 212,390" class="muted-line"/>
-  <rect x="210" y="349" width="86" height="26" rx="6" class="label-bg"/>
-  <text x="253" y="367" class="label">uses</text>
+  <!-- Phase 1 lines -->
+  <path d="M305 1018 L365 1018" class="line"/>
+  <rect x="314" y="990" width="42" height="21" rx="5" class="label-bg"/>
+  <text x="335" y="1005" class="edge-label">run</text>
 
-  <path d="M145,342 C70,450 68,700 132,760" class="muted-line"/>
-  <rect x="61" y="650" width="82" height="26" rx="6" class="label-bg"/>
-  <text x="102" y="668" class="label">reviews</text>
+  <path d="M555 1018 L660 1018" class="line"/>
+  <rect x="580" y="990" width="54" height="21" rx="5" class="label-bg"/>
+  <text x="607" y="1005" class="edge-label">gRPC</text>
 
-  <path d="M485,807 C545,792 540,550 610,492" class="line"/>
-  <rect x="491" y="696" width="128" height="26" rx="6" class="label-bg"/>
-  <text x="555" y="714" class="label">review API</text>
+  <path d="M1010 1018 L1070 1018" class="line-bi"/>
+  <rect x="1018" y="990" width="44" height="21" rx="5" class="label-bg"/>
+  <text x="1040" y="1005" class="edge-label">SQL</text>
 
-  <path d="M295,534 L330,534" class="line"/>
-  <rect x="296" y="500" width="72" height="24" rx="6" class="label-bg"/>
-  <text x="332" y="517" class="label">events</text>
+  <path d="M835 1106 L835 1190" class="line-bi"/>
+  <rect x="803" y="1138" width="64" height="21" rx="5" class="label-bg"/>
+  <text x="835" y="1153" class="edge-label">HTTP</text>
 
-  <path d="M405,573 C405,586 375,592 353,598" class="muted-line"/>
-  <rect x="384" y="573" width="98" height="24" rx="6" class="label-bg"/>
-  <text x="433" y="590" class="label">trigger</text>
+  <path d="M700 1106 C650 1140 610 1200 555 1225" class="line"/>
+  <rect x="566" y="1157" width="84" height="21" rx="5" class="label-bg"/>
+  <text x="608" y="1172" class="edge-label">sign + push</text>
 
-  <path d="M315,598 C315,584 342,578 373,573" class="return-line"/>
-  <rect x="228" y="571" width="88" height="24" rx="6" class="label-bg"/>
-  <text x="272" y="588" class="label">result</text>
+  <path d="M1010 965 C1140 895 1200 930 1335 1040" class="phase1-line"/>
+  <rect x="1100" y="912" width="220" height="22" rx="5" class="label-bg"/>
+  <text x="1210" y="927" class="edge-label">HTTPS - authenticated context</text>
 
-  <path d="M480,534 C555,534 588,315 635,315" class="line"/>
-  <rect x="500" y="407" width="118" height="26" rx="6" class="label-bg"/>
-  <text x="559" y="425" class="label">hook via CLI</text>
-
-  <path d="M742,345 L742,425" class="line"/>
-  <rect x="765" y="373" width="116" height="26" rx="6" class="label-bg"/>
-  <text x="823" y="391" class="label">all requests</text>
-
-  <path d="M717,520 L717,605" class="line"/>
-  <rect x="578" y="555" width="126" height="26" rx="6" class="label-bg"/>
-  <text x="641" y="573" class="label">capture first</text>
-
-  <path d="M830,646 C865,600 884,596 910,615" class="line"/>
-  <rect x="842" y="586" width="122" height="26" rx="6" class="label-bg"/>
-  <text x="903" y="604" class="label">attach folds</text>
-
-  <path d="M825,520 C880,587 878,689 877,760" class="line"/>
-  <rect x="882" y="710" width="116" height="26" rx="6" class="label-bg"/>
-  <text x="940" y="728" class="label">start drain</text>
-
-  <path d="M1010,688 L1010,760" class="line"/>
-  <rect x="1027" y="711" width="112" height="26" rx="6" class="label-bg"/>
-  <text x="1083" y="729" class="label">read local</text>
-
-  <path d="M835,520 C790,605 785,792 835,885" class="line"/>
-  <rect x="592" y="807" width="188" height="26" rx="6" class="label-bg"/>
-  <text x="686" y="825" class="label">generate/write note</text>
-
-  <!-- Remote / GitHub arrows -->
-  <path d="M1012,801 C1125,801 1218,331 1335,331" class="return-line"/>
-  <rect x="1110" y="545" width="138" height="26" rx="6" class="label-bg"/>
-  <text x="1179" y="563" class="label">post-Phase 1</text>
-
-  <path d="M1450,377 L1450,456" class="return-line"/>
-  <rect x="1474" y="405" width="138" height="26" rx="6" class="label-bg"/>
-  <text x="1543" y="423" class="label">store remote</text>
-
-  <path d="M925,477 C1085,460 1190,357 1335,333" class="return-line"/>
-  <rect x="1040" y="377" width="170" height="26" rx="6" class="label-bg"/>
-  <text x="1125" y="395" class="label">future projection</text>
-
-  <path d="M1335,349 C1190,407 1090,500 925,500" class="return-line"/>
-  <rect x="1083" y="466" width="130" height="26" rx="6" class="label-bg"/>
-  <text x="1148" y="484" class="label">context/ack</text>
-
-  <path d="M925,493 C1105,550 1195,820 1265,858" class="line"/>
-  <rect x="1118" y="650" width="104" height="26" rx="6" class="label-bg"/>
-  <text x="1170" y="668" class="label">via daemon</text>
-
-  <path d="M1265,881 C1112,895 1030,548 925,512" class="return-line"/>
-  <rect x="1055" y="870" width="126" height="26" rx="6" class="label-bg"/>
-  <text x="1118" y="888" class="label">status/events</text>
-
-  <path d="M1012,920 C1160,968 1360,952 1505,890" class="line"/>
-  <rect x="1235" y="926" width="132" height="26" rx="6" class="label-bg"/>
-  <text x="1301" y="944" class="label">push refs</text>
-
-  <!-- Important constraints -->
-  <rect x="70" y="1000" width="1655" height="112" rx="16" class="footer"/>
-  <text x="100" y="1032" class="note-title">Phase 1 boundary</text>
-  <text x="100" y="1058" class="note">The existing orchestrator is deployed locally as the Braid daemon and owns SQLite, lifecycle queries, and the Developer Review backend.</text>
-  <text x="100" y="1080" class="note">Phase 1 completes Claude/Codex support, the issue #24 command surface, installation packages, review UI, and pushed Git notes.</text>
-  <text x="100" y="1102" class="note">Hooks, Braid Skills, platform coverage, Git-note policy, review design, and nudges remain explicit product decisions.</text>
-
-  <!-- Mini legend -->
-  <rect x="1230" y="582" width="470" height="52" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.1"/>
-  <circle cx="1252" cy="607" r="9" class="badge"/>
-  <text x="1252" y="612" class="badge-text">1</text>
-  <text x="1270" y="604" class="small">Phase 1 keeps authority and persistence local.</text>
-  <text x="1270" y="626" class="small">Remote Orchestrator and Intent DB remain later architecture.</text>
+  <text x="900" y="1440" class="phase-sub" text-anchor="middle">Deferred after Phase 1: remote lifecycle Orchestrator, Intent DB, central event draining and cross-repository convergence.</text>
 </svg>
