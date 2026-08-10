@@ -68,11 +68,11 @@ hide:
 
     ---
 
-    Payload-kind catalog, glossary, and frequently asked questions.
+    Payload-kind catalog and frequently asked questions.
 
     [:octicons-arrow-right-24: Look it up](reference/payload-kinds.md)
 
-    <span class="page-count">3 pages</span>
+    <span class="page-count">2 pages</span>
 
 -   :material-cog-outline:{ .lg .middle } __Operations__
 

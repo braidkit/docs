@@ -102,7 +102,6 @@ nav:
       - Review and Promote: stories/review-and-promote.md
   - Reference:
       - Payload Kinds: reference/payload-kinds.md
-      - Glossary: reference/glossary.md
       - FAQ: reference/faq.md
   - Operations:
       - Phase 1 Scope: phase-1-scope.md
