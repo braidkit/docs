@@ -1,4 +1,4 @@
-site_name: Braid Docs
+site_name: braid docs
 site_url: https://docs.braidkit.io/
 site_description: Braid documentation is coming soon.
 repo_url: https://github.com/braidkit/docs
@@ -21,8 +21,8 @@ exclude_docs: |
 theme:
   name: material
   custom_dir: overrides
-  logo: assets/brand/logo/braid-mark-purple-512.png
-  favicon: assets/brand/logo/braid-avatar-purple-512.png
+  logo: assets/brand/logo/braid-mark.svg
+  favicon: assets/brand/logo/braid-mark.svg
   font: false
   icon:
     repo: fontawesome/brands/github
@@ -37,10 +37,29 @@ theme:
     - content.code.copy
     - content.code.annotate
     - content.tooltips
+  palette:
+    - scheme: default
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
 plugins: []
 
 extra_css:
   - stylesheets/brand.css
+
+extra_javascript:
+  - javascripts/diagrams.js
+  - javascripts/copy-page.js
+  - javascripts/external-links.js
 
 markdown_extensions:
   - admonition
@@ -49,7 +68,8 @@ markdown_extensions:
   - tables
   - footnotes
   - toc:
-      permalink: true
+      # No ¶ marker; heading ids still resolve, so #anchor links keep working.
+      permalink: false
   - pymdownx.details
   - pymdownx.highlight:
       anchor_linenums: true
@@ -70,9 +90,14 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
 
 nav:
+  # External destinations. Any nav entry with an absolute URL renders as
+  # the compact linked group at the top of the sidebar (see brand.css).
+  - GitHub: https://github.com/braidkit
   - Home: index.md
 
 extra:
+  # Marketing tagline; used in the <title> pattern (see overrides/main.html).
+  tagline: the work layer for AI software
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/braidkit

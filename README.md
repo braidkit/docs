@@ -18,30 +18,35 @@ deployment mechanism.
 
 ## How Branding Works
 
-The marketing site owns Braid's shared brand capsule. It publishes static brand
-files at:
+braidkit.io is the source of truth for Braid's colors and type. It does **not**
+publish them as a fetchable file — the tokens are inlined in the marketing
+site's page `<style>` block, and `https://braidkit.io/brand/tokens.css` resolves
+to `index.html` through the Cloudflare Pages SPA fallback (HTTP 200,
+`text/html`). An `@import` of that URL is a silent no-op, so the docs keep a
+local copy of the values instead.
 
-```text
-https://braidkit.io/brand/tokens.css
-https://braidkit.io/brand/manifest.json
-https://braidkit.io/brand/logo/...
-```
+`docs/stylesheets/brand.css` holds that copy at the top of the file: the light
+tokens under `:root`, the dark tokens under `[data-md-color-scheme="slate"]`,
+each annotated with the marketing-side variable it mirrors (`--bg`, `--ink`,
+`--body`, `--muted`, `--faint`, `--line`, `--code-bg`, `--halo`). The rest of
+the file maps those into MkDocs Material variables and adds docs layout styles.
 
-The docs site imports the shared token CSS through
-`docs/stylesheets/brand.css`. That adapter maps Braid tokens into MkDocs
-Material variables, adds docs-specific layout styles, and keeps fallback values
-so local previews still look right when the marketing site has not deployed a
-new capsule yet.
+To resync after a marketing brand change, read the `:root` and
+`[data-theme=dark]` blocks in braidkit.io's served HTML and update the two token
+blocks to match.
+
+Type follows braidkit.io's monospace stack (`ui-monospace, SFMono-Regular,
+Menlo, Consolas`) for the wordmark, headings, nav, and code. Long-form prose is
+the one departure: it uses the system sans, which reads better at
+reference-page length. No webfonts are loaded, and `theme.font` is `false` in
+`mkdocs.yml` so Material does not add its own.
 
 MkDocs needs concrete image paths for its logo and favicon, so this repo keeps
 local copies in `docs/assets/brand/logo/`. Treat those as copies from the
 marketing site's `public/brand/logo/` folder, not as a new source of truth.
 
-The deploy order matters when brand assets change:
-
-1. Merge and deploy the marketing site change that publishes `/brand/...`.
-2. Refresh local logo copies here if the image asset changed.
-3. Merge the docs change that consumes the new brand asset or token.
+When brand assets change, deploy the marketing site first, then refresh the
+local logo copies and token blocks here.
 
 ## Local development
 
