@@ -6,10 +6,9 @@
  * https://braidkit.io/brand/tokens.css does not exist (the Pages SPA fallback
  * answers it with index.html), so importing it is a no-op.
  *
- * Type is a deliberate hybrid. braidkit.io is monospace throughout; the docs
- * use that same stack for brand, headings, nav, and code, but set long-form
- * prose in a system sans, which holds up better over reference-length pages.
- * No webfonts are loaded.
+ * Type is braidkit.io's monospace stack throughout — brand, headings, nav,
+ * prose, and code all share it, as the marketing site does. No webfonts are
+ * loaded; the stack resolves to the platform's own UI monospace face.
  */
 
 :root {
@@ -25,9 +24,9 @@
   --braid-docs-surface: #ffffff; /* docs-only; marketing is single-surface */
   --braid-docs-halo: 150 95 200; /* --halo, as an rgb triplet */
 
-  /* braidkit.io sets everything in this stack; prose is the one exception. */
+  /* One stack for the whole site, as braidkit.io does — prose included. */
   --braid-docs-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  --braid-docs-body: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --braid-docs-body: var(--braid-docs-mono);
   --braid-docs-display: var(--braid-docs-mono);
   --braid-docs-brand: var(--braid-docs-mono);
 
@@ -292,20 +291,22 @@ body {
   }
 }
 
+/* font-size: 0 hides the theme's own title text; the label comes from ::before
+   below. The rail heading matches the nav group headings — ink, normal case. */
 .md-sidebar--secondary .md-nav__title {
-  color: var(--braid-docs-subtle);
-  font-family: var(--braid-docs-display);
+  color: var(--braid-docs-ink);
+  font-family: var(--braid-docs-mono);
   font-size: 0;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-weight: 400;
+  letter-spacing: normal;
 }
 
 /* Rename the right-rail TOC to the familiar "On this page" convention. */
 .md-sidebar--secondary .md-nav__title::before {
   content: "On this page";
-  font-size: 0.62rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-size: 0.78rem;
+  letter-spacing: normal;
+  text-transform: none;
 }
 
 /* Page bar: breadcrumbs left, "Copy page" right (overrides/main.html). */
@@ -407,15 +408,17 @@ body {
   font-weight: 700;
 }
 
-/* Section labels in the primary nav. */
+/* Group headings in the primary nav. They carry the same type as the page links
+   and the external links below them — structure comes from indentation. Only
+   the ink color separates a heading from the pages under it. */
 .md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__link,
 .md-nav__item--section > .md-nav__link {
   color: var(--braid-docs-ink);
-  font-family: var(--braid-docs-display);
-  font-size: 0.64rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-family: var(--braid-docs-mono);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
 }
 
 /* External nav destinations (absolute URLs in mkdocs.yml `nav:`) render as a
@@ -459,6 +462,17 @@ body {
   margin-top: 0.18rem;
   padding: 2px 8px;
   transition: color 0.15s ease, background 0.15s ease;
+}
+
+/* One type treatment across both rails — page links, group headings, the
+   external links, and the right-hand table of contents. Structure comes from
+   indentation and color, not from size or case. The active item keeps its
+   heavier weight, set by a more specific rule below. */
+.md-nav--primary .md-nav__link,
+.md-nav--secondary .md-nav__link {
+  font-family: var(--braid-docs-mono);
+  font-size: 0.78rem;
+  font-weight: 400;
 }
 
 .md-nav__link:hover {
