@@ -84,6 +84,17 @@ hide:
 
     <span class="page-count">2 pages</span>
 
+-   :material-cloud-outline:{ .lg .middle } __Hosting Architecture__
+
+    ---
+
+    Provider-neutral deployment contracts, AWS and GCP candidates, release
+    safety, environment isolation, and recovery requirements for `braid-server`.
+
+    [:octicons-arrow-right-24: Review the hosting design](provider-neutral-hosting.md)
+
+    <span class="page-count">1 page</span>
+
 </div>
 
 <h2 class="hub-section-title">Start with the model</h2>
