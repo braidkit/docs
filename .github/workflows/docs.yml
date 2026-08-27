@@ -21,14 +21,19 @@ jobs:
           cache: pip
       - run: python -m pip install -r requirements.txt
       - run: python -m mkdocs build --strict
-      - name: Verify the pre-launch publishing boundary
+      - name: Verify the publishing boundary
         run: |
           grep --fixed-strings "documentation is coming soon" site/index.html
           test -f site/robots.txt
           test -f site/llms.txt
           test -f site/llms-full.txt
           test -f site/sitemap.xml
-          test ! -d site/getting-started
+          # The installation page is published; everything else, including its
+          # own Getting Started siblings, stays behind the boundary.
+          test -d site/getting-started/installation
+          test ! -d site/getting-started/introduction
+          test ! -d site/getting-started/quickstart
+          test ! -d site/getting-started/concepts-at-a-glance
           test ! -d site/concepts
           test ! -d site/protocol
           test ! -d site/stories
