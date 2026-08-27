@@ -8,8 +8,8 @@ The site is intentionally small and Markdown-first.
 
 Production currently contains only a coming-soon page. Earlier documentation
 remains in this repository, but `exclude_docs` in `mkdocs.yml` prevents MkDocs
-from publishing it. BRA-197 owns the content audit and will remove exclusions
-only as pages are reviewed for Braid V1.
+from publishing it. Re-enable pages only after their content has been reviewed
+and is ready to publish.
 
 The placeholder is intentionally excluded from search indexing through
 `docs/robots.txt` and `docs/_headers`. Remove both indexing restrictions when

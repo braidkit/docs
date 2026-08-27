@@ -4,9 +4,8 @@ site_description: Braid documentation is coming soon.
 repo_url: https://github.com/braidkit/docs
 repo_name: braidkit/docs
 
-# Keep the pre-launch material in source control without publishing it. BRA-197
-# owns the content audit and will remove exclusions page by page as content is
-# reviewed for Braid V1.
+# Keep pre-launch material in source control without publishing it. Remove an
+# exclusion only when that page has been reviewed and is ready to publish.
 exclude_docs: |
   /getting-started/
   /concepts/

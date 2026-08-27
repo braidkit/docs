@@ -1,7 +1,12 @@
-# Documentation deployment runbook
+# Documentation site operations
 
-This runbook operates the static site at `https://docs.braidkit.io/`. It does
-not own documentation content or release artifacts.
+This is for the Braid team member who manages the Cloudflare account and GitHub
+deployment settings for `docs.braidkit.io`. It covers site setup, verification,
+and recovery; it is not a guide for writing documentation.
+
+Record the Cloudflare account and people with production access in the team's
+infrastructure inventory. Do not put credentials or API tokens in this
+repository.
 
 ## Deployment inventory
 
@@ -15,10 +20,6 @@ not own documentation content or release artifacts.
 | Python | `3.12` |
 | Production domain | `docs.braidkit.io` |
 | Marketing redirect | `https://braidkit.io/docs` → `https://docs.braidkit.io/` |
-
-Record the owning Cloudflare account and the people with production access in
-the team's password manager or infrastructure inventory. Do not put account
-credentials or API tokens in this repository.
 
 ## Create the Pages project
 
@@ -44,8 +45,6 @@ commit that produced each Cloudflare build.
 3. Wait for the domain and certificate to become active.
 4. Deploy the marketing repository change that redirects `/docs` and `/docs/`
    to the canonical documentation domain.
-5. Add the GitHub repository variable `DOCS_PRODUCTION_URL` with the value
-   `https://docs.braidkit.io` to enable the scheduled production smoke check.
 
 ## Verify a deployment
 
@@ -67,12 +66,9 @@ curl --fail https://docs.braidkit.io/llms-full.txt
 curl --head https://braidkit.io/docs
 ```
 
-The same production checks run every six hours from
-`.github/workflows/production-smoke.yml` once `DOCS_PRODUCTION_URL` is set.
-
-During the placeholder stage, production must return `X-Robots-Tag: noindex`
-and `robots.txt` must disallow crawling. BRA-197 removes those restrictions
-when reviewed content replaces the placeholder.
+While the site is a coming-soon page, production must return
+`X-Robots-Tag: noindex` and `robots.txt` must disallow crawling. Change those
+settings only when reviewed documentation is ready to be published.
 
 ## Roll back
 
