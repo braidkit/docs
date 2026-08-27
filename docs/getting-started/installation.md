@@ -1,7 +1,7 @@
 # Installation
 
 Braid installs as two binaries from one archive: `braid`, the CLI you drive, and
-`orchestrator`, the server it talks to. Both come out of the same build, so they
+`braid-daemon`, the server it talks to. Both come out of the same build, so they
 are version-matched by construction. Install them together.
 
 !!! warning "The preview is access-gated"
@@ -64,7 +64,8 @@ from the releases page in a signed-in browser works too.
 
     ```sh
     tar -xzf "braid_${VERSION}_darwin_${ARCH}.tar.gz"
-    sudo install -m 0755 braid orchestrator /usr/local/bin/
+    sudo install -m 0755 braid /usr/local/bin/braid
+    sudo install -m 0755 orchestrator /usr/local/bin/braid-daemon
     ```
 
 === "Linux"
@@ -98,12 +99,18 @@ from the releases page in a signed-in browser works too.
 
     ```sh
     tar -xzf "braid_${VERSION}_linux_${ARCH}.tar.gz"
-    sudo install -m 0755 braid orchestrator /usr/local/bin/
+    sudo install -m 0755 braid /usr/local/bin/braid
+    sudo install -m 0755 orchestrator /usr/local/bin/braid-daemon
     ```
+
+!!! note "The archive still names the server binary `orchestrator`"
+    `braid-daemon` is the name it ships under from the next release. Installing
+    it under that name now makes the upgrade a plain overwrite, and nothing
+    resolves the server by filename, so the rename costs nothing.
 
 The archive also carries a copy of the repository `README.md`. Nothing else is
 written anywhere: installing puts two binaries on your `PATH`, does not start
-the orchestrator, and does not install agent hooks.
+the daemon, and does not install agent hooks.
 
 ## Verify the installation
 
@@ -117,8 +124,8 @@ braid --version
 braid v0.1.0-alpha.1 (01fb0e8)
 ```
 
-`braid version` prints the same client build in full, then probes the
-orchestrator it is configured to reach:
+`braid version` prints the same client build in full, then probes the daemon it
+is configured to reach:
 
 ```sh
 braid version
@@ -137,20 +144,19 @@ Server (localhost:8080):
 
 The client half is read from build information compiled into the binary, so it
 is what tells you the install worked. The server half is a live probe. With no
-orchestrator running it reports `unreachable` and the command still exits `0`,
-which is the expected result on a fresh install rather than a failure. Add
-`--json` for machine-readable output, or `--addr` to probe a specific
-orchestrator.
+daemon running it reports `unreachable` and the command still exits `0`, which
+is the expected result on a fresh install rather than a failure. Add `--json`
+for machine-readable output, or `--addr` to probe a specific daemon.
 
-The orchestrator binary in this release takes no `--version` flag, so confirm it
+The server binary in this release takes no `--version` flag, so confirm it
 landed by looking for it on your `PATH`:
 
 ```sh
-command -v orchestrator
+command -v braid-daemon
 ```
 
 ```text
-/usr/local/bin/orchestrator
+/usr/local/bin/braid-daemon
 ```
 
 ## Shell completion
@@ -215,10 +221,14 @@ version. Download and verify the new archive, then overwrite both binaries in
 place:
 
 ```sh
-sudo install -m 0755 braid orchestrator /usr/local/bin/
+sudo install -m 0755 braid /usr/local/bin/braid
+sudo install -m 0755 orchestrator /usr/local/bin/braid-daemon
 ```
 
-Upgrade the pair together. A `braid` and an `orchestrator` from different
+From the release after `v0.1.0-alpha.1` the extracted server binary is itself
+named `braid-daemon`, so the second line loses its rename.
+
+Upgrade the pair together. A `braid` and a `braid-daemon` from different
 releases are not a supported combination. Run `braid --version` afterwards to
 confirm the new build is the one being resolved on your `PATH`. Upgrading
 touches binaries only and leaves your Braid data where it is.
@@ -228,7 +238,7 @@ touches binaries only and leaves your Braid data where it is.
 Remove the two binaries you installed:
 
 ```sh
-sudo rm /usr/local/bin/braid /usr/local/bin/orchestrator
+sudo rm /usr/local/bin/braid /usr/local/bin/braid-daemon
 ```
 
 If you wrote a completion script to a directory on your `fpath` or to
