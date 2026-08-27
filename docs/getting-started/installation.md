@@ -15,18 +15,18 @@ are version-matched by construction. Install them together.
 
 | | |
 |---|---|
-| **Operating system** | macOS or Linux |
+| **Operating system** | macOS |
 | **Architecture** | `arm64` or `amd64` |
 | **Git** | 2.25 or later, on your `PATH` |
 | **Shell** | bash or zsh |
 
 Both binaries are built with cgo disabled and are statically linked, so they
-carry no runtime library dependency and run on any distribution at the
-architectures above.
+carry no runtime library dependency.
 
-!!! note "No Windows build"
-    The release pipeline builds `darwin` and `linux` only. Native Windows
-    support is tracked separately and has not shipped.
+!!! note "macOS is the supported platform"
+    The release pipeline builds `darwin` only. `v0.1.0-alpha.1` also carries
+    Linux archives, covered below with the caveat that applies to them. Native
+    Windows support has not shipped.
 
 ## Install
 
@@ -68,6 +68,12 @@ from the releases page in a signed-in browser works too.
     ```
 
 === "Linux"
+
+    !!! warning "Linux is not part of V1 install support"
+        `v0.1.0-alpha.1` carries `linux_amd64` and `linux_arm64` archives and
+        they install and run the same way. The release pipeline no longer
+        builds them, so a later release may have no Linux archive at all.
+        Restoring Linux to the build matrix is tracked as post-V1 work.
 
     ```sh
     VERSION=0.1.0-alpha.1   # no leading "v"; that is the archive naming
