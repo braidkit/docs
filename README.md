@@ -2,8 +2,19 @@
 
 Source for `docs.braidkit.io`.
 
-The site is intentionally small and Markdown-first. The current focus is the
-Braid protocol: entity relationships, event stories, and the `WorkEvent` model.
+The site is intentionally small and Markdown-first.
+
+## Pre-launch state
+
+Production currently contains only a coming-soon page. Earlier documentation
+remains in this repository, but `exclude_docs` in `mkdocs.yml` prevents MkDocs
+from publishing it. Re-enable pages only after their content has been reviewed
+and is ready to publish.
+
+The placeholder is intentionally excluded from search indexing through
+`docs/robots.txt` and `docs/_headers`. Remove both indexing restrictions when
+the reviewed documentation launches; do not remove them merely to test the
+deployment mechanism.
 
 ## How Branding Works
 
@@ -47,14 +58,19 @@ Build the static site:
 mkdocs build --strict
 ```
 
+The build must contain the placeholder and its discovery files, and must not
+contain any excluded pre-launch documentation.
+
 ## Cloudflare Pages
 
 Use the Git integration for this repository.
 
 ```text
-Build command: mkdocs build
+Build command: python -m pip install -r requirements.txt && python -m mkdocs build --strict
 Build output directory: site
 Production branch: main
 Custom domain: docs.braidkit.io
 Environment variable: PYTHON_VERSION=3.12
 ```
+
+See `DEPLOYMENT.md` for project setup, verification, rollback, and recovery.

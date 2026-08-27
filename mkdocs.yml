@@ -1,8 +1,22 @@
 site_name: Braid Docs
 site_url: https://docs.braidkit.io/
-site_description: Protocol and product docs for Braid — the accountability layer for software work across humans and agents.
+site_description: Braid documentation is coming soon.
 repo_url: https://github.com/braidkit/docs
 repo_name: braidkit/docs
+
+# Keep pre-launch material in source control without publishing it. Remove an
+# exclusion only when that page has been reviewed and is ready to publish.
+exclude_docs: |
+  /getting-started/
+  /concepts/
+  /protocol/
+  /stories/
+  /reference/
+  /assets/phase-1/
+  /javascripts/
+  /phase-1-scope.md
+  /keeping-docs-current.md
+  /deploying.md
 
 theme:
   name: material
@@ -20,34 +34,13 @@ theme:
     - navigation.top
     - navigation.footer
     - toc.follow
-    - search.suggest
-    - search.highlight
-    - search.share
     - content.code.copy
     - content.code.annotate
     - content.tooltips
-  palette:
-    - scheme: default
-      primary: deep purple
-      accent: teal
-      toggle:
-        icon: material/weather-night
-        name: Switch to dark mode
-    - scheme: slate
-      primary: deep purple
-      accent: teal
-      toggle:
-        icon: material/weather-sunny
-        name: Switch to light mode
-
-plugins:
-  - search
+plugins: []
 
 extra_css:
   - stylesheets/brand.css
-
-extra_javascript:
-  - javascripts/diagrams.js
 
 markdown_extensions:
   - admonition
@@ -78,35 +71,6 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Getting Started:
-      - Introduction: getting-started/introduction.md
-      - Quickstart: getting-started/quickstart.md
-      - Concepts at a Glance: getting-started/concepts-at-a-glance.md
-  - Concepts:
-      - Braids: concepts/braids.md
-      - Threads: concepts/threads.md
-      - Contributors: concepts/contributors.md
-      - Events: concepts/events.md
-      - Reviews: concepts/reviews.md
-      - Decisions: concepts/decisions.md
-  - Protocol:
-      - Overview: protocol/overview.md
-      - Entity Relations: protocol/entity-relations.md
-      - WorkEvent Reference: protocol/work-event.md
-      - Event Stories: protocol/event-stories.md
-      - Capture & Provenance: protocol/capture-and-provenance.md
-  - Walkthroughs:
-      - Human Thread: stories/human-thread.md
-      - Agent Thread: stories/agent-thread.md
-      - Sub-Agent Delegation: stories/sub-agent-delegation.md
-      - Review and Promote: stories/review-and-promote.md
-  - Reference:
-      - Payload Kinds: reference/payload-kinds.md
-      - FAQ: reference/faq.md
-  - Operations:
-      - Phase 1 Scope: phase-1-scope.md
-      - Keeping Docs Current: keeping-docs-current.md
-      - Deploying: deploying.md
 
 extra:
   social:
