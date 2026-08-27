@@ -52,7 +52,7 @@ commit that produced each Cloudflare build.
 For a preview deployment:
 
 * open the preview URL from the pull request;
-* confirm the page contains `Documentation is coming soon`;
+* confirm the page contains `documentation is coming soon`;
 * confirm an old documentation URL returns `404`;
 * confirm the response includes `X-Robots-Tag: noindex`.
 

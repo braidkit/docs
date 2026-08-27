@@ -1,5 +1,5 @@
 ---
-title: Braid documentation
+title: braid documentation
 hide:
   - navigation
   - toc
@@ -8,12 +8,8 @@ hide:
 
 <div class="braid-placeholder" markdown>
 
-<span class="braid-placeholder__eyebrow">Braid documentation</span>
+<span class="braid-placeholder__eyebrow">braid documentation</span>
 
-# Documentation is coming soon.
-
-<p class="braid-placeholder__lead">We're preparing clear, trustworthy guides for installing, using, and integrating Braid—for people and coding agents.</p>
-
-[Visit Braid](https://braidkit.io/){ .md-button .md-button--primary }
+# documentation is coming soon.
 
 </div>

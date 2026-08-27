@@ -9,7 +9,7 @@ trap 'rm -f "$page_file" "$headers_file"' EXIT
 
 curl --fail --silent --show-error --location \
   --max-time 20 --output "$page_file" "$base_url/"
-grep --fixed-strings --quiet "Documentation is coming soon" "$page_file"
+grep --fixed-strings --quiet "documentation is coming soon" "$page_file"
 
 curl --fail --silent --show-error --head \
   --max-time 20 --output "$headers_file" "$base_url/"

@@ -23,7 +23,7 @@ jobs:
       - run: python -m mkdocs build --strict
       - name: Verify the pre-launch publishing boundary
         run: |
-          grep --fixed-strings "Documentation is coming soon" site/index.html
+          grep --fixed-strings "documentation is coming soon" site/index.html
           test -f site/robots.txt
           test -f site/llms.txt
           test -f site/llms-full.txt
