@@ -1,5 +1,52 @@
 {% extends "base.html" %}
 
+{% block extrahead %}
+  {{ super() }}
+  {# Match the marketing site's theme preference before the page is painted. #}
+  <script>
+    (() => {
+      let saved = null;
+      try {
+        saved = localStorage.getItem("braid-theme");
+      } catch (e) {}
+      document.documentElement.dataset.theme = saved || "light";
+    })();
+  </script>
+{% endblock %}
+
+{% block header %}
+  <div class="docs-wrap">
+    <header class="masthead">
+      <div>
+        <a class="brand" href="{{ nav.homepage.url | url }}">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">braid</span>
+        </a>
+        <div class="tagline">the work layer for AI software</div>
+      </div>
+      <button class="theme-btn" id="theme-btn" title="toggle theme" aria-label="toggle theme">●</button>
+    </header>
+  </div>
+  <script>
+    (() => {
+      const applyTheme = (theme) => {
+        document.documentElement.dataset.theme = theme;
+        document.body.dataset.mdColorScheme = theme === "dark" ? "slate" : "default";
+      };
+
+      applyTheme(document.documentElement.dataset.theme || "light");
+
+      document.getElementById("theme-btn")?.addEventListener("click", () => {
+        const next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+        applyTheme(next);
+        try {
+          localStorage.setItem("braid-theme", next);
+        } catch (e) {}
+      });
+    })();
+  </script>
+{% endblock %}
+
 <!-- Breadcrumbs: the open-source Material theme has no breadcrumb feature, so we
      render them from the page's nav ancestors. Shown on every page except the
      top-level home page. -->
