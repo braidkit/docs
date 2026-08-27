@@ -1,6 +1,3 @@
-# Braid documentation
+# braid documentation
 
-> Braid V1 documentation is being prepared and is not yet published.
-
-- [Braid](https://braidkit.io/): Product website
-- [Braid on GitHub](https://github.com/braidkit): Public source repositories
+> braid V1 documentation is being prepared and is not yet published.
