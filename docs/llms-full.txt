@@ -1,0 +1,5 @@
+# Braid documentation
+
+Braid V1 documentation is being prepared and is not yet published. The future documentation will cover installation, product workflows, concepts, operations, and reference material for people and coding agents.
+
+Until then, use the [Braid product website](https://braidkit.io/) for public product information and the [Braid GitHub organization](https://github.com/braidkit) for public source repositories.
