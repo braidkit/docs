@@ -7,7 +7,6 @@ repo_name: braidkit/docs
 # Keep pre-launch material in source control without publishing it. Remove an
 # exclusion only when that page has been reviewed and is ready to publish.
 exclude_docs: |
-  /getting-started/
   /concepts/
   /protocol/
   /stories/
@@ -71,6 +70,11 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - Getting Started:
+      - Introduction: getting-started/introduction.md
+      - Installation: getting-started/installation.md
+      - Quickstart: getting-started/quickstart.md
+      - Concepts at a Glance: getting-started/concepts-at-a-glance.md
 
 extra:
   social:
