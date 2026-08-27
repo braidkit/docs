@@ -28,8 +28,12 @@ jobs:
           test -f site/llms.txt
           test -f site/llms-full.txt
           test -f site/sitemap.xml
-          # Getting Started is published; the rest stays behind the boundary.
-          test -d site/getting-started
+          # The installation page is published; everything else, including its
+          # own Getting Started siblings, stays behind the boundary.
+          test -d site/getting-started/installation
+          test ! -d site/getting-started/introduction
+          test ! -d site/getting-started/quickstart
+          test ! -d site/getting-started/concepts-at-a-glance
           test ! -d site/concepts
           test ! -d site/protocol
           test ! -d site/stories

@@ -275,7 +275,7 @@ per repository you have initialized:
 rm -rf .braid
 ```
 
-## Next steps
+<!-- The "Next steps" list pointed at Quickstart and Concepts at a Glance.
+     Both are still excluded from the built site, so the links were dead ends.
+     Restore the section when those pages are published. -->
 
-- [Quickstart](quickstart.md) — claim work and walk a braid through to a decision
-- [Concepts at a Glance](concepts-at-a-glance.md) — the vocabulary in one page
