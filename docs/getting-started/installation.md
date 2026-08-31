@@ -162,43 +162,83 @@ command -v braid-daemon
 ## Shell completion
 
 `braid completion <shell>` writes a completion script to standard output for
-bash, zsh, fish, or PowerShell. Run `braid completion <shell> --help` for that
-shell's full instructions.
+bash, zsh, fish, or PowerShell. The command itself never writes files or changes
+shell profiles. Run `braid completion <shell> --help` for that shell's full
+instructions.
+
+!!! note "Automatic setup is not published yet"
+    The installer integration described below is a source change that still
+    needs to be merged and published with a receipt-capable release. The public
+    `v0.2.0-alpha.1` preview keeps shell profiles unchanged. Use the manual
+    activation instructions below until a compatible release is published.
+
+For receipt-capable releases, the installer configures the shell selected by
+the exported `SHELL` environment variable:
+
+| Shell | Startup file |
+| --- | --- |
+| Bash | `$HOME/.bashrc` |
+| Zsh | `${ZDOTDIR:-$HOME}/.zshrc` |
+| Fish | `${XDG_CONFIG_HOME:-$HOME/.config}/fish/conf.d/braid-completion.fish` |
+
+When automatic completion setup is enabled, PATH setup for detected Zsh/Fish
+uses the same exported directories: `${ZDOTDIR:-$HOME}/.zprofile` and
+`${XDG_CONFIG_HOME:-$HOME/.config}/fish/conf.d/braid.fish`, respectively.
+
+On interactive startup, the hook generates completion from the exact installed
+binary, so it follows upgrades. The installation receipt tracks these changes
+for repeat installs, rollback, and `braid uninstall`; unrelated user content is
+preserved. Setup is skipped with `--no-modify-path`, a nonempty `CI`,
+`--dry-run`, or the legacy alpha.1 preview. Unsupported or unset shells and
+PowerShell require manual activation.
+
+The installer cannot change the shell already running in your terminal. After
+PATH setup, restart it or source the startup file shown by the installer.
+
+### Manual activation
+
+These commands enable completion in the current shell. Saving them in a shell
+profile is optional and is a separate user action.
 
 === "Bash"
 
-    Load completions in the current shell:
+    Load the `bash-completion` dependency first, then load Braid completion:
 
     ```sh
-    source <(braid completion bash)
+    eval "$(braid completion bash)"
     ```
 
-    Add that line to `~/.bashrc` to load them in every new session.
+    The installer does not install `bash-completion`. To activate manually on
+    future starts, add the command to `~/.bashrc` after that dependency loads.
+    Existing login startup is preserved: `~/.bash_profile`, or a previous
+    `~/.bash_login`/`~/.profile` fallback. Whichever file controls login startup
+    must load `~/.bashrc`; if it does not already do so, add this guarded line
+    there yourself after PATH setup:
+
+    ```sh
+    [ -f "$HOME/.bashrc" ] && . "$HOME/.bashrc"
+    ```
+
+    A new installer-owned `.bash_profile` adds a guarded, interactive `.bashrc`
+    source only when there is no previous `.bash_login` or `.profile` to
+    preserve. Otherwise it sources only that previous login file, which may
+    already load `.bashrc`, to avoid loading it twice.
 
 === "Zsh"
 
-    If completion is not enabled in your environment yet, enable it once:
+    Initialize completion only if `compdef` is not already available, keeping
+    `compinit`'s security checks enabled:
 
-    ```sh
-    echo "autoload -U compinit; compinit" >> ~/.zshrc
+    ```zsh
+    autoload -Uz compinit
+    if (( $+functions[compdef] )) || compinit; then
+      source <(braid completion zsh)
+    fi
     ```
 
-    Load completions in the current shell:
-
-    ```sh
-    source <(braid completion zsh)
-    ```
-
-    To load them for every new session, write the script into a directory on
-    your `fpath` and start a new shell:
-
-    ```sh
-    # Linux
-    braid completion zsh > "${fpath[1]}/_braid"
-
-    # macOS, Homebrew zsh
-    braid completion zsh > $(brew --prefix)/share/zsh/site-functions/_braid
-    ```
+    For future starts, add the block to `${ZDOTDIR:-$HOME}/.zshrc`. A custom
+    `ZDOTDIR` must be exported before running the installer; it cannot discover
+    an unexported assignment inside a shell startup file.
 
 === "Fish"
 
@@ -208,11 +248,27 @@ shell's full instructions.
     braid completion fish | source
     ```
 
-    To load them for every new session:
+    For future starts, add this block to
+    `${XDG_CONFIG_HOME:-$HOME/.config}/fish/conf.d/braid-completion.fish`
+    (normally `~/.config/fish/conf.d/braid-completion.fish`):
 
     ```fish
-    braid completion fish > ~/.config/fish/completions/braid.fish
+    if status is-interactive
+        braid completion fish | source
+    end
     ```
+
+=== "PowerShell"
+
+    Automatic profile setup is not part of the Bash installer. Activate
+    completion in the current PowerShell session:
+
+    ```powershell
+    braid completion powershell | Out-String | Invoke-Expression
+    ```
+
+    To activate it in future sessions, add that line to your PowerShell
+    `$PROFILE` yourself. The completion command does not edit `$PROFILE`.
 
 ## Upgrading
 
