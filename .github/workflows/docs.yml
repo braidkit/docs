@@ -23,14 +23,19 @@ jobs:
       - run: python -m mkdocs build --strict
       - name: Verify the publishing boundary
         run: |
-          grep --fixed-strings "documentation is coming soon" site/index.html
           test -f site/robots.txt
           test -f site/llms.txt
           test -f site/llms-full.txt
           test -f site/sitemap.xml
-          # The placeholder home page and the installation page are the whole
-          # published site until the V1 pages land.
+          # Every V1 page is published. The placeholder is gone; assert it does
+          # not come back.
+          grep --fixed-strings --invert-match "documentation is coming soon" site/index.html > /dev/null
+          test -d site/how-braid-works
+          test -d site/lifecycle
+          test -d site/what-braid-records
+          test -d site/braid-on-your-machine
           test -d site/getting-started/installation
+          test -d site/get-help
       - name: Upload the rendered site
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
