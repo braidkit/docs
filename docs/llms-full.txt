@@ -596,6 +596,21 @@ from the releases page in a signed-in browser works too.
     sudo install -m 0755 braid-daemon /usr/local/bin/braid-daemon
     ```
 
+!!! warning "macOS will refuse to run these binaries if you download them in a browser"
+    The binaries are ad-hoc signed. They are not signed with a Developer ID and
+    they are not notarized, so Gatekeeper rejects them. A browser download
+    attaches a quarantine attribute and macOS then refuses to run the binary at
+    all. Downloading with the GitHub CLI, as above, does not set that attribute,
+    which is the reason to prefer it. If you did download in a browser, clear
+    the attribute on the extracted binaries yourself:
+
+    ```sh
+    xattr -d com.apple.quarantine braid braid-daemon
+    ```
+
+    Signing and notarization are tracked separately and are not part of this
+    release.
+
 The archive also carries `README.md`, `LICENSE.txt`, and
 `configs/orchestrator.example.yaml`, which is a starting point for the daemon's
 configuration file. Nothing else is written anywhere. Installing puts two
@@ -616,7 +631,11 @@ braid --version
 ```
 
 ```text
-braid v0.2.0-alpha.1 (7b2d4ef)
+braid:
+  Version:   v0.2.0-alpha.1
+  Commit:    7b2d4ef
+  Built:     2026-08-28T19:43:00Z
+  Go:        go1.25.13
 ```
 
 `braid version` prints the same client build in full, then probes the daemon it
@@ -630,11 +649,11 @@ braid version
 Client:
   Version:   v0.2.0-alpha.1
   Commit:    7b2d4ef
-  Built:     2026-07-14T17:03:41Z
-  Go:        go1.25.12
+  Built:     2026-08-28T19:43:00Z
+  Go:        go1.25.13
   Platform:  darwin/arm64
 Server (127.0.0.1:8080):
-  unreachable: context deadline exceeded
+  unreachable: connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:8080: connect: connection refused"
 ```
 
 The client half is read from build information compiled into the binary, so it
