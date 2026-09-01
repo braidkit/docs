@@ -28,6 +28,8 @@ failure.
 
 ## Running the daemon
 
+This page describes `v0.2.0-alpha.1`, the release you can install.
+
 There is no service registration yet. No launchd or systemd unit ships with
 Braid, and there is no command that starts or stops it for you. Run the
 `braid-daemon` binary yourself and keep it running, under whatever process
@@ -37,8 +39,12 @@ The daemon takes its listener addresses and database path from a configuration
 file rather than process flags. That boundary is deliberate, so a machine has
 one consistent configuration rather than a set of per-invocation overrides.
 
-The file is optional. With no file present the daemon starts on built-in
-defaults. When you do want one, the default location on macOS is:
+The file is required. The daemon will not start without one, and the file must
+set `database.path`. A relative database path resolves from the configuration
+file's own directory, never from the directory you launched from. The release
+archive carries `configs/orchestrator.example.yaml` as a starting point.
+
+The packaged location on macOS is:
 
 ```
 ~/Library/Application Support/Braid/orchestrator.yaml
@@ -47,19 +53,20 @@ defaults. When you do want one, the default location on macOS is:
 On Linux it resolves under `$XDG_CONFIG_HOME`, normally
 `~/.config/Braid/orchestrator.yaml`.
 
-The daemon opens three loopback listeners:
+Two listeners come up with defaults:
 
 | Purpose | Key | Default |
 | --- | --- | --- |
-| CLI connections | `grpc.address` | `127.0.0.1:18082` |
-| Review UI | `visualization.address` | `127.0.0.1:18446` |
-| Health and metrics | `admin.address` | `127.0.0.1:19092` |
+| CLI connections | `grpc.address` | `127.0.0.1:8080` |
+| Health and metrics | `admin.address` | `127.0.0.1:9090` |
 
 The admin listener serves liveness, readiness, and Prometheus metrics. It has no
-authentication, which is why all three stay on loopback.
+authentication. Neither does the gRPC listener. Both are validated as loopback
+addresses and rejected if you point them at a wildcard or a LAN interface.
 
-The database is `<braid home>/daemon/braid.db` unless `database.path` overrides
-it. A relative override resolves from the configuration file's own directory.
+The Review UI is off unless you configure it. It needs `visualization.address`
+together with a TLS certificate and private key, set as a group, and it is
+HTTPS only.
 
 ## Where Braid puts things
 
