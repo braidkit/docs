@@ -1,6 +1,6 @@
 site_name: Braid Docs
 site_url: https://docs.braidkit.io/
-site_description: Braid documentation is coming soon.
+site_description: Documentation for Braid, which records the decisions and reasoning behind a change and keeps that record with the code.
 repo_url: https://github.com/braidkit/docs
 repo_name: braidkit/docs
 
@@ -24,12 +24,6 @@ theme:
     - content.code.annotate
     - content.tooltips
 plugins: []
-
-# Written but not yet launched. The launch PR removes these and adds them
-# to the nav.
-exclude_docs: |
-  /how-braid-works.md
-  /lifecycle.md
 
 extra_css:
   - stylesheets/brand.css
@@ -63,7 +57,12 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - How Braid works: how-braid-works.md
+  - Braid and thread lifecycle: lifecycle.md
+  - What Braid records: what-braid-records.md
+  - Braid on your machine: braid-on-your-machine.md
   - Installation: getting-started/installation.md
+  - Get help: get-help.md
 
 extra:
   social:
