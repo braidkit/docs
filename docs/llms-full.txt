@@ -1,3 +1,783 @@
-# braid documentation
+# Braid documentation
 
-braid V1 documentation is being prepared and is not yet published.
+> Braid records the decisions and reasoning behind a change, from people and agents alike, and keeps that record with the code.
+
+The complete text of every published page follows, in navigation order.
+
+## Home
+
+Source: https://docs.braidkit.io/
+
+# Braid
+
+AI can produce large amounts of code. Owning that software still requires people to understand and maintain it. When an agent writes code, the context behind the work can leave with the agent. That context includes why an approach was chosen, what was rejected, and what was checked.
+
+During the work, Braid records reasoning and decisions contributed by people and agents. It keeps this history with the code. A later contributor can see what was intended, how the decisions were reached, and what was verified.
+
+## Private preview
+
+Braid is in private preview. It is being used by a small number of invited developers. Parts of it are rough.
+
+## Documentation
+
+- [How Braid works](how-braid-works.md). The model: braids, threads, contributors, scope, signed events, and how state is derived.
+- [Braid and thread lifecycle](lifecycle.md). The states and what moves between them.
+- [What Braid records](what-braid-records.md). Identity, signed events, and what leaves your machine.
+- [Braid on your machine](braid-on-your-machine.md). The daemon and what Braid writes to disk.
+- [Installation](getting-started/installation.md).
+- [Get help](get-help.md).
+
+## How Braid works
+
+Source: https://docs.braidkit.io/how-braid-works/
+
+# How Braid works
+
+Braid keeps a record of how a change was made. While work happens, contributors
+record signed events describing what was decided and what was checked. Braid
+derives the state of the work from those events.
+
+This page describes the model. [Braid and thread lifecycle](lifecycle.md)
+describes the states that model produces.
+
+## Braids, threads, and contributors
+
+A braid holds the work for one issue. A thread holds the work of one contributor
+inside that braid. A contributor is a person or an agent.
+
+Each thread has a scope, which is the set of files that thread holds. Scopes must
+be disjoint. Two threads in the same braid cannot hold the same file. Braid
+checks this when a thread is added.
+
+## The event log is the source of truth
+
+Braid derives braid state, thread state, violations, and anomalies from the event
+log. It keeps no second copy of that state to edit. The same events in the same
+order produce the same result on every replay. The record is permanent, and
+nothing in it is removed.
+
+## Signed events
+
+Each event is signed. Its envelope carries a signing payload, a signature, and a
+public key, together with an event id and the braid and thread it addresses. The
+contributor's identity and the event's kind decide whether that contributor is
+allowed to record it.
+
+Only some event kinds move state. They are `braid_started`, `thread_dispatched`,
+`thread_attached`, `agent_start`, `decision`, `thread_dropped`,
+`goal_reconfirmed`, `review_boundary_reached`, `promote`, `dismiss`,
+`abort_requested`, `scope_violation`, and `scope_violation_resolved`.
+
+The events captured while an agent works, such as prompts, reasoning, and tool
+calls, are not in that list. They are evidence. They stay in the record and they
+never move braid or thread state.
+
+## Ingest and fold
+
+Braid computes state in two layers. Ingest admits an event. The fold interprets
+the events that were admitted.
+
+### Ingest is the only place an event is rejected
+
+Ingest checks authentication and integrity. It rejects an event for a bad
+signature, an identity mismatch, a malformed envelope, missing braid or thread
+addressing, a duplicate event id, or an action the contributor has no authority
+to record. A rejected event is never recorded and never reaches the fold. Because
+it was never recorded, a later valid event carrying the same event id can still
+be admitted.
+
+Envelope validation runs earlier still, before these two layers, and reports its
+own separate failures.
+
+### The fold interprets and never rejects
+
+Once ingest admits an event, it is a true fact about what happened. The fold
+cannot reject it. The fold can:
+
+- advance the derived state
+- change nothing, when the braid has already reached a terminal state
+- sort events by their logical sequence, so events that arrive out of order still
+  replay the same way
+- record an anomaly, when a well formed event does not fit the current state
+
+An anomaly leaves the event in the log and leaves the derived state unchanged.
+The derived view never overrules the log it comes from.
+
+## The two gates
+
+### Gate 1, scope disjointness
+
+Gate 1 applies when a thread is added. The new thread's scope must be disjoint
+from the scope of every thread that already holds one. On an overlap Braid
+records a scope violation and the thread is not added. A scope that cannot be
+validated, such as one naming an absolute path or a path outside the repository,
+fails the same gate.
+
+A `scope_violation_resolved` event is the only thing that clears a violation.
+Ingest accepts that event from a human contributor only, so an agent cannot
+dismiss the gate that constrains it.
+
+An unresolved violation blocks the braid from surfacing for review and from being
+promoted.
+
+### Gate 2, goal reconfirmation
+
+Gate 2 applies when a thread is dropped. Dropping a thread shrinks the braid's
+scope, so Braid marks the braid as pending goal reconfirmation. While that mark
+is set the braid cannot surface for review. A `goal_reconfirmed` event clears it.
+
+## Braid and thread lifecycle
+
+Source: https://docs.braidkit.io/lifecycle/
+
+# Braid and thread lifecycle
+
+A braid holds the work for one issue. A thread holds the work of one contributor
+inside that braid. [How Braid works](how-braid-works.md) describes that model.
+This page describes the states it produces.
+
+Every state here is derived from the signed event log. No state is stored or
+edited separately from that log.
+
+Only the event kinds named on this page move state. The events captured while an
+agent works, such as prompts, reasoning, and tool calls, are evidence and never
+appear as transitions.
+
+## Braid states
+
+A braid is in one of six states: `claimed`, `dispatched`, `active`, `surfaced`,
+`promoted`, or `dropped`.
+
+| From | Event | To |
+| --- | --- | --- |
+| no braid yet | `braid_started` | `claimed` |
+| no braid yet | `thread_attached` | `active` |
+| `claimed` | `thread_dispatched` | `dispatched` |
+| `claimed` | `thread_attached` | `active` |
+| `dispatched` | `agent_start` | `active` |
+| `dispatched` | `thread_attached` | `active` |
+| `active` | `review_boundary_reached` | `surfaced` |
+| `surfaced` | `promote` | `promoted` |
+| `surfaced` | `dismiss` | `dropped` |
+| `surfaced` | `thread_dispatched` or `thread_attached` | `active` |
+| any non-terminal | `abort_requested` | `dropped` |
+
+`claimed` and `dispatched` are optional. They belong to the intentional path,
+where the braid is declared before the work starts. On the discovery path the
+first `thread_attached` event creates the braid directly in `active`.
+
+`promoted` and `dropped` are terminal. An admitted event on a terminal braid
+stays in the log and changes nothing.
+
+## When a braid can surface
+
+A `review_boundary_reached` event moves a braid from `active` to `surfaced` only
+when all of the following hold:
+
+- the braid has at least one thread
+- every thread is in a terminal state
+- at least one thread is in `verify_passed`
+- the braid is not pending goal reconfirmation
+- the braid has no unresolved scope violations
+
+If the braid is only waiting on goal reconfirmation, the braid stays `active` and
+Braid records nothing, because a further boundary is expected once the goal is
+reconfirmed. If any other condition fails, the braid stays `active` and Braid
+records an anomaly naming the condition that was not met.
+
+A `promote` event requires the braid to be `surfaced` with no unresolved scope
+violations. Otherwise the braid stays where it is and Braid records an anomaly.
+
+## Thread states
+
+A thread is in one of six states: `opened`, `working`, `needs_human`,
+`verify_passed`, `verify_failed`, or `thread_dropped`.
+
+The table below is normative. A thread-mutating event that matches no row records
+an anomaly and leaves the thread's state unchanged.
+
+| From | Event | To |
+| --- | --- | --- |
+| `opened` | `agent_start` | `working` |
+| `opened` | `thread_dropped` | `thread_dropped` |
+| `working` | `decision` | `verify_passed`, `verify_failed`, or `needs_human` |
+| `working` | `thread_dropped` | `thread_dropped` |
+| `needs_human` | `agent_start` | `working` |
+| `needs_human` | `decision` | `verify_passed` or `verify_failed` |
+| `needs_human` | `thread_dropped` | `thread_dropped` |
+| `verify_failed` | `agent_start` | `working` |
+
+The `thread_dropped` event and the `thread_dropped` state share one name. The
+event is what a contributor records. The state is what the thread derives from
+it.
+
+A `decision` event carries the verdict. From `working` it records a pass, a
+failure, or a need for human attention. From `needs_human` it records a pass or a
+failure.
+
+## Terminal thread states
+
+`verify_passed`, `verify_failed`, and `thread_dropped` are terminal at the thread
+level only. A terminal thread does not make the braid terminal.
+
+`verify_passed` and `thread_dropped` are immutable. Every thread-mutating event
+on them records an anomaly and changes nothing. A `thread_dropped` event on a
+thread that is already dropped does nothing at all.
+
+`verify_failed` has the one sanctioned reopen. An `agent_start` event moves it
+back to `working` so the work can be retried. A `thread_dropped` event on
+`verify_passed` or `verify_failed` records an anomaly, because a drop does not
+override a recorded verdict.
+
+A failed thread stays in the braid as evidence. It never drops the braid on its
+own.
+
+## When a braid drops on its own
+
+A braid moves to `dropped` on its own only when it is dead: every thread is
+terminal and no thread passed. A `verify_failed` thread beside a thread that is
+still working, or beside a thread that passed, never drops the braid.
+
+## What Braid records
+
+Source: https://docs.braidkit.io/what-braid-records/
+
+# What Braid records
+
+Read this before pointing Braid at a codebase you care about. It covers what
+Braid captures, where that lands, and the points at which it leaves your
+machine.
+
+## Contributor identity
+
+GitHub proves the person. A local Ed25519 key proves the device. Braid issues
+its own opaque session tokens.
+
+The stable identity is GitHub's numeric user ID. A Braid user ID is an opaque
+alphanumeric value such as `usr_008J4CT4ANK7F24SNAXWSQFEZW`. GitHub usernames,
+email addresses, names, and avatars are stored as current profile data only, so
+a renamed GitHub account is still the same Braid user.
+
+A contributor fingerprint is derived from a signing key and identifies the
+contributor instance that signed an event. It is not the Braid user ID. One
+Braid user can hold several device keys, each with its own fingerprint.
+
+The GitHub App is used only to identify and authenticate the person. It does not
+require a repository permission or an App installation.
+
+## Device credentials
+
+Registering a device links its key to the signed-in Braid user and proves the
+device holds the matching private key. Later sessions for that device are tied
+to that key.
+
+Revoking a device revokes every session tied to it. Revoking the GitHub App
+authorization revokes every Braid session for that GitHub identity.
+
+## What a signed work event contains
+
+Each event carries:
+
+- an event ID
+- the braid ID and the thread ID it belongs to
+- the contributor instance that acted
+- the time the action happened
+- the capture method
+- exactly one payload
+- an Ed25519 signature
+
+The signing key is at `~/.braid/key.pem`. To sign, the client clears the
+signature field, renders the rest as Protobuf JSON using proto field names and
+enum strings with unset fields omitted, canonicalizes that JSON with RFC 8785,
+hashes it with SHA-256, and signs the digest. The signature covers every other
+field in the event. An event with an invalid signature is rejected.
+
+## What is captured while an agent works
+
+The payloads include tool use, agent reasoning, prompts, intent declarations,
+attempt boundaries, commits, reviews, decisions, agent start and end, context
+snapshots, and scope violations. Lifecycle transitions are also events.
+
+Tool arguments and tool results are recorded as they occurred. The schema
+reserves fields for marking a tool argument or result as redacted or truncated,
+and nothing sets them today, so no redaction happens. A captured prompt, a
+captured tool call, and a captured result can therefore contain source code,
+file contents, diffs, and anything else passed to or returned from a tool.
+
+## What leaves your machine
+
+There are three points to know about, and they are different.
+
+**Capture writes to disk only.** While an agent runs, each event is signed with
+your local key and appended to a file in the local inbox. Capture opens no
+network connection.
+
+**Adding a session to a braid sends its events to the local daemon.** The
+captured events are drained over a loopback gRPC connection, by default
+`127.0.0.1:18082`. They stay on the machine.
+
+**Intent reconstruction sends a braid's evidence to a model provider.** The
+evidence is that braid's captured events, which includes the prompts, the
+reasoning, and the tool calls with their arguments and results. It is sent to
+the configured intent endpoint, and that service invokes a model provider. This
+is the point at which captured work leaves the machine.
+
+Two things trigger it:
+
+- asking for intent to be reconstructed for a braid while preparing a review
+- finalizing a braid, which sends the evidence automatically by default when an
+  endpoint is configured
+
+The second is worth restating. Finalizing a braid sends its evidence without a
+separate confirmation step. It can be turned off per invocation, and it is
+skipped when no endpoint is configured.
+
+There is no endpoint compiled into Braid. Until a machine configuration sets
+one, nothing is sent and the finalize step skips it. The example configuration
+Braid ships sets it to Braid's hosted server, so a machine set up from that
+example does send evidence there. The endpoint can point at a service you run
+instead.
+
+**The identity service does not receive your work.** It stores user, provider
+identity, device, session, transaction, and audit records, and it stores hashes
+of session tokens rather than the tokens. It does not receive source code,
+diffs, prompts, Braid work records, or reconstructed intent.
+
+**The local surfaces have no user authentication.** The daemon and the intent
+server have no server-side user authentication and are meant to stay on
+loopback. Anything else running on the machine that can reach those ports can
+read captured work.
+
+## Losing the signing key
+
+Events already signed with a lost key stay in the record and their signatures
+stay valid. They remain attributed to a key you no longer hold.
+
+A new key produces a new contributor fingerprint, so work signed after the loss
+is attributed to a different contributor instance than work signed before it.
+
+## Braid on your machine
+
+Source: https://docs.braidkit.io/braid-on-your-machine/
+
+# Braid on your machine
+
+Braid installs two binaries. `braid` is a thin client. `braid-daemon` is the
+local service it talks to. Installing them does not start the daemon.
+
+## What needs the daemon
+
+The daemon holds lifecycle authority. It derives braid and thread state from the
+record and answers the CLI. Lifecycle state belongs to the daemon and is never
+copied into the Braid home.
+
+Commands that read or change a braid need a reachable daemon. That includes
+claiming an issue, adding captured sessions to a braid, reviewing, verifying,
+shipping, and asking for a braid's authoritative state.
+
+Other commands do not. Reporting the resolved home, initializing a repository,
+capturing a session, and listing what has been captured locally all work with
+the daemon stopped. Asking for the version probes the daemon, reports it as
+unreachable when it is not running, and still exits successfully.
+
+So an unreachable daemon on a fresh installation is the expected state, not a
+failure.
+
+## Running the daemon
+
+There is no service registration yet. No launchd or systemd unit ships with
+Braid, and there is no command that starts or stops it for you. Run the
+`braid-daemon` binary yourself and keep it running, under whatever process
+supervision you already use. It will not come back on its own after a reboot.
+
+The daemon takes its listener addresses and database path from a configuration
+file rather than process flags. That boundary is deliberate, so a machine has
+one consistent configuration rather than a set of per-invocation overrides.
+
+The file is optional. With no file present the daemon starts on built-in
+defaults. When you do want one, the default location on macOS is:
+
+```
+~/Library/Application Support/Braid/orchestrator.yaml
+```
+
+On Linux it resolves under `$XDG_CONFIG_HOME`, normally
+`~/.config/Braid/orchestrator.yaml`.
+
+The daemon opens three loopback listeners:
+
+| Purpose | Key | Default |
+| --- | --- | --- |
+| CLI connections | `grpc.address` | `127.0.0.1:18082` |
+| Review UI | `visualization.address` | `127.0.0.1:18446` |
+| Health and metrics | `admin.address` | `127.0.0.1:19092` |
+
+The admin listener serves liveness, readiness, and Prometheus metrics. It has no
+authentication, which is why all three stay on loopback.
+
+The database is `<braid home>/daemon/braid.db` unless `database.path` overrides
+it. A relative override resolves from the configuration file's own directory.
+
+## Where Braid puts things
+
+The Braid home is the user-global location for Braid data. It resolves in this
+order:
+
+1. an explicit application override
+2. the `BRAID_HOME` environment variable
+3. `<OS user home>/.braid`
+
+An invalid override is an error rather than a fallback to the next entry.
+Reporting the resolved home does not create the directory.
+
+Entries appear as the feature that owns them needs them:
+
+- `key.pem`, the signing key
+- `inbox/` and `braids/`, for sessions captured outside a Git repository
+- `daemon/braid.db`, the default daemon database
+- `auth-*` files and their locks, for file-backed session state
+- `home-version`, the layout marker
+
+Default authentication secrets live in the operating system credential store,
+outside the Braid home. `<braid home>/config.yaml` is reserved for a future
+layout and is not the daemon configuration file today.
+
+## What Braid writes into a repository
+
+An initialized repository has a `.braid/` directory inside the working tree:
+
+- `config.yaml`, the repository configuration
+- `pubkey.txt`, your signing key fingerprint
+- `inbox/<session>/`, sessions captured in this repository
+- `braids/`, evidence added to a braid
+
+All of it is untracked, and Braid adds no ignore rule for it. A reflexive
+`git add -A` will sweep it into a commit. Captured sessions carry prompts, agent
+reasoning, and tool calls, so committing that directory publishes the contents
+of your work to everyone who can read the repository.
+
+Ignore it before you capture anything:
+
+```
+.braid/
+```
+
+Put that in `.gitignore` to share the rule, or in `.git/info/exclude` to keep it
+local. The `.gitignore` entry itself is safe to commit.
+
+An ignore rule does not affect files Git is already tracking. If `.braid/` was
+committed before you added the rule, stop tracking it and commit that removal:
+
+```
+git rm -r --cached .braid
+```
+
+That leaves the files on disk and removes them from future commits. It does not
+remove them from history. If the directory was already pushed, the contents are
+in the history of a shared branch and an ignore rule will not retract them.
+Treat anything sensitive in those captures as disclosed, and rewrite history
+only with the agreement of everyone working on that branch.
+
+Promoted evidence does not live in the working tree. It lives in signed Git
+notes under `refs/notes/braid`.
+
+## The installation receipt
+
+The standalone installer records what it installed in a receipt. The receipt
+lives outside the Braid home, in account-scoped platform state. Setting
+`BRAID_HOME` does not move it and does not help locate it.
+
+## Installation
+
+Source: https://docs.braidkit.io/getting-started/installation/
+
+# Installation
+
+Braid installs as two binaries from one archive: `braid`, the CLI you drive, and
+`braid-daemon`, the server it talks to. Both come out of the same build, so they
+are version-matched by construction. Install them together.
+
+!!! warning "The preview is access-gated"
+    Release archives are published to
+    [braidkit/braid](https://github.com/braidkit/braid/releases), which is a
+    private repository. That link and every download on this page resolve only
+    for a GitHub account that has been granted access to it. There is no public
+    download, no `install.sh`, no Homebrew cask, and no Scoop bucket yet.
+
+## System requirements
+
+| | |
+|---|---|
+| **Operating system** | macOS |
+| **Architecture** | `arm64` or `amd64` |
+| **Git** | 2.25 or later, on your `PATH` |
+| **Shell** | bash or zsh |
+
+Both binaries are built with cgo disabled and are statically linked, so they
+carry no runtime library dependency.
+
+!!! note "macOS is the supported platform"
+    The release pipeline builds `darwin` only. `v0.1.0-alpha.1` also carries
+    Linux archives, covered below with the caveat that applies to them. Native
+    Windows support has not shipped.
+
+## Install
+
+The current release is `v0.1.0-alpha.1`. Every release is created as a draft and
+none is marked as latest, so `releases/latest` does not resolve. Take the
+version explicitly from the
+[releases page](https://github.com/braidkit/braid/releases).
+
+The commands below use the [GitHub CLI](https://cli.github.com) because the
+repository is private; run `gh auth login` first. Downloading the same files
+from the releases page in a signed-in browser works too.
+
+=== "macOS"
+
+    ```sh
+    VERSION=0.1.0-alpha.1   # no leading "v"; that is the archive naming
+    ARCH=arm64              # arm64 on Apple silicon, amd64 on Intel
+
+    gh release download "v${VERSION}" --repo braidkit/braid \
+      --pattern "braid_${VERSION}_darwin_${ARCH}.tar.gz" \
+      --pattern checksums.txt
+    ```
+
+    Check the archive against the published checksum before extracting it:
+
+    ```sh
+    shasum -a 256 --ignore-missing --check checksums.txt
+    ```
+
+    ```text
+    braid_0.1.0-alpha.1_darwin_arm64.tar.gz: OK
+    ```
+
+    Extract, then put both binaries on your `PATH`:
+
+    ```sh
+    tar -xzf "braid_${VERSION}_darwin_${ARCH}.tar.gz"
+    sudo install -m 0755 braid /usr/local/bin/braid
+    sudo install -m 0755 orchestrator /usr/local/bin/braid-daemon
+    ```
+
+=== "Linux"
+
+    !!! warning "Linux is not part of V1 install support"
+        `v0.1.0-alpha.1` carries `linux_amd64` and `linux_arm64` archives and
+        they install and run the same way. The release pipeline no longer
+        builds them, so a later release may have no Linux archive at all.
+        Restoring Linux to the build matrix is tracked as post-V1 work.
+
+    ```sh
+    VERSION=0.1.0-alpha.1   # no leading "v"; that is the archive naming
+    ARCH=amd64              # amd64 or arm64
+
+    gh release download "v${VERSION}" --repo braidkit/braid \
+      --pattern "braid_${VERSION}_linux_${ARCH}.tar.gz" \
+      --pattern checksums.txt
+    ```
+
+    Check the archive against the published checksum before extracting it:
+
+    ```sh
+    sha256sum --ignore-missing --check checksums.txt
+    ```
+
+    ```text
+    braid_0.1.0-alpha.1_linux_amd64.tar.gz: OK
+    ```
+
+    Extract, then put both binaries on your `PATH`:
+
+    ```sh
+    tar -xzf "braid_${VERSION}_linux_${ARCH}.tar.gz"
+    sudo install -m 0755 braid /usr/local/bin/braid
+    sudo install -m 0755 orchestrator /usr/local/bin/braid-daemon
+    ```
+
+!!! note "The archive still names the server binary `orchestrator`"
+    `braid-daemon` is the name it ships under from the next release. Installing
+    it under that name now makes the upgrade a plain overwrite, and nothing
+    resolves the server by filename, so the rename costs nothing.
+
+The archive also carries a copy of the repository `README.md`. Nothing else is
+written anywhere: installing puts two binaries on your `PATH`, does not start
+the daemon, and does not install agent hooks.
+
+## Verify the installation
+
+`braid --version` prints the build the binary was stamped with:
+
+```sh
+braid --version
+```
+
+```text
+braid v0.1.0-alpha.1 (01fb0e8)
+```
+
+`braid version` prints the same client build in full, then probes the daemon it
+is configured to reach:
+
+```sh
+braid version
+```
+
+```text
+Client:
+  Version:   v0.1.0-alpha.1
+  Commit:    01fb0e8
+  Built:     2026-07-14T17:03:41Z
+  Go:        go1.25.12
+  Platform:  darwin/arm64
+Server (localhost:8080):
+  unreachable: context deadline exceeded
+```
+
+The client half is read from build information compiled into the binary, so it
+is what tells you the install worked. The server half is a live probe. With no
+daemon running it reports `unreachable` and the command still exits `0`, which
+is the expected result on a fresh install rather than a failure. Add `--json`
+for machine-readable output, or `--addr` to probe a specific daemon.
+
+The server binary in this release takes no `--version` flag, so confirm it
+landed by looking for it on your `PATH`:
+
+```sh
+command -v braid-daemon
+```
+
+```text
+/usr/local/bin/braid-daemon
+```
+
+## Shell completion
+
+`braid completion <shell>` writes a completion script to standard output for
+bash, zsh, fish, or PowerShell. Run `braid completion <shell> --help` for that
+shell's full instructions.
+
+=== "Bash"
+
+    Load completions in the current shell:
+
+    ```sh
+    source <(braid completion bash)
+    ```
+
+    Add that line to `~/.bashrc` to load them in every new session.
+
+=== "Zsh"
+
+    If completion is not enabled in your environment yet, enable it once:
+
+    ```sh
+    echo "autoload -U compinit; compinit" >> ~/.zshrc
+    ```
+
+    Load completions in the current shell:
+
+    ```sh
+    source <(braid completion zsh)
+    ```
+
+    To load them for every new session, write the script into a directory on
+    your `fpath` and start a new shell:
+
+    ```sh
+    # Linux
+    braid completion zsh > "${fpath[1]}/_braid"
+
+    # macOS, Homebrew zsh
+    braid completion zsh > $(brew --prefix)/share/zsh/site-functions/_braid
+    ```
+
+=== "Fish"
+
+    Load completions in the current shell:
+
+    ```fish
+    braid completion fish | source
+    ```
+
+    To load them for every new session:
+
+    ```fish
+    braid completion fish > ~/.config/fish/completions/braid.fish
+    ```
+
+## Upgrading
+
+There is one channel, so upgrading is the install flow again with a newer
+version. Download and verify the new archive, then overwrite both binaries in
+place:
+
+```sh
+sudo install -m 0755 braid /usr/local/bin/braid
+sudo install -m 0755 orchestrator /usr/local/bin/braid-daemon
+```
+
+From the release after `v0.1.0-alpha.1` the extracted server binary is itself
+named `braid-daemon`, so the second line loses its rename.
+
+Upgrade the pair together. A `braid` and a `braid-daemon` from different
+releases are not a supported combination. Run `braid --version` afterwards to
+confirm the new build is the one being resolved on your `PATH`. Upgrading
+touches binaries only and leaves your Braid data where it is.
+
+## Uninstalling
+
+Remove the two binaries you installed:
+
+```sh
+sudo rm /usr/local/bin/braid /usr/local/bin/braid-daemon
+```
+
+If you wrote a completion script to a directory on your `fpath` or to
+`~/.config/fish/completions/`, delete that file too, and drop the
+`source <(braid completion …)` line from your shell profile.
+
+That is the whole removal. Braid data is separate, and nothing above deletes it.
+
+## Removing Braid data
+
+!!! danger "This is not part of uninstalling"
+    Removing the binaries leaves your data intact so a reinstall picks up where
+    you left off. Only run the commands in this section if you have decided you
+    want the data gone. There is no undo, and no `braid` command performs these
+    deletions for you.
+
+`~/.braid` is your user-global Braid state. It holds the signing key at
+`key.pem`, sessions captured outside a repository under `inbox/`, and braid
+records under `braids/`.
+
+```sh
+rm -rf ~/.braid
+```
+
+Deleting `key.pem` destroys your contributor identity. Events you already signed
+stay in the record signed by a key you no longer hold, and a new key means a new
+contributor fingerprint.
+
+`<repo>/.braid` is the per-repository directory that `braid init` creates. It
+holds that repository's configuration and its local records, and there is one
+per repository you have initialized:
+
+```sh
+rm -rf .braid
+```
+
+<!-- The "Next steps" list pointed at Quickstart and Concepts at a Glance.
+     Both are still excluded from the built site, so the links were dead ends.
+     Restore the section when those pages are published. -->
+
+## Get help
+
+Source: https://docs.braidkit.io/get-help/
+
+# Get help
+
+Reach us on [Discord](https://discord.gg/gzUevjYD9).
+
+We would rather hear about a rough edge than have you work around it silently.

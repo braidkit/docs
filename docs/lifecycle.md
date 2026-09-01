@@ -1,3 +1,8 @@
+---
+title: Braid and thread lifecycle
+description: The braid and thread states, the events that move between them, and the rules for terminal states and automatic drops.
+---
+
 # Braid and thread lifecycle
 
 A braid holds the work for one issue. A thread holds the work of one contributor
