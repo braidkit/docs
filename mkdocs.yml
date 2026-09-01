@@ -23,6 +23,9 @@ theme:
     - content.code.copy
     - content.code.annotate
     - content.tooltips
+exclude_docs: |
+  /braid-on-your-machine.md
+
 plugins: []
 
 extra_css:
