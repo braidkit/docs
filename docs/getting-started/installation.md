@@ -29,15 +29,15 @@ Both binaries are built with cgo disabled and are statically linked, so they
 carry no runtime library dependency.
 
 !!! note "macOS is the supported platform"
-    The release pipeline builds `darwin` only. `v0.1.0-alpha.1` also carries
-    Linux archives, covered below with the caveat that applies to them. Native
-    Windows support has not shipped.
+    The release pipeline builds `darwin` and `linux`, each for `amd64` and
+    `arm64`. V1 install support covers macOS only. The Linux archives are
+    covered below with the caveat that applies to them. Native Windows support
+    has not shipped.
 
 ## Install
 
-The current release is `v0.1.0-alpha.1`. Every release is created as a draft and
-none is marked as latest, so `releases/latest` does not resolve. Take the
-version explicitly from the
+The current release is `v0.2.0-alpha.1`. No release is marked as latest, so
+`releases/latest` does not resolve. Take the version explicitly from the
 [releases page](https://github.com/braidkit/braid/releases).
 
 The commands below use the [GitHub CLI](https://cli.github.com) because the
@@ -47,7 +47,7 @@ from the releases page in a signed-in browser works too.
 === "macOS"
 
     ```sh
-    VERSION=0.1.0-alpha.1   # no leading "v"; that is the archive naming
+    VERSION=0.2.0-alpha.1   # no leading "v"; that is the archive naming
     ARCH=arm64              # arm64 on Apple silicon, amd64 on Intel
 
     gh release download "v${VERSION}" --repo braidkit/braid \
@@ -62,7 +62,7 @@ from the releases page in a signed-in browser works too.
     ```
 
     ```text
-    braid_0.1.0-alpha.1_darwin_arm64.tar.gz: OK
+    braid_0.2.0-alpha.1_darwin_arm64.tar.gz: OK
     ```
 
     Extract, then put both binaries on your `PATH`:
@@ -70,19 +70,19 @@ from the releases page in a signed-in browser works too.
     ```sh
     tar -xzf "braid_${VERSION}_darwin_${ARCH}.tar.gz"
     sudo install -m 0755 braid /usr/local/bin/braid
-    sudo install -m 0755 orchestrator /usr/local/bin/braid-daemon
+    sudo install -m 0755 braid-daemon /usr/local/bin/braid-daemon
     ```
 
 === "Linux"
 
-    !!! warning "Linux is not part of V1 install support"
-        `v0.1.0-alpha.1` carries `linux_amd64` and `linux_arm64` archives and
-        they install and run the same way. The release pipeline no longer
-        builds them, so a later release may have no Linux archive at all.
-        Restoring Linux to the build matrix is tracked as post-V1 work.
+    !!! note "Linux builds exist but are not part of V1 install support"
+        `v0.2.0-alpha.1` carries `linux_amd64` and `linux_arm64` archives, built
+        from the same sources as the macOS ones, and they install the same way.
+        V1 install support is macOS only, so the Linux archives are not tested
+        or supported as part of it.
 
     ```sh
-    VERSION=0.1.0-alpha.1   # no leading "v"; that is the archive naming
+    VERSION=0.2.0-alpha.1   # no leading "v"; that is the archive naming
     ARCH=amd64              # amd64 or arm64
 
     gh release download "v${VERSION}" --repo braidkit/braid \
@@ -97,7 +97,7 @@ from the releases page in a signed-in browser works too.
     ```
 
     ```text
-    braid_0.1.0-alpha.1_linux_amd64.tar.gz: OK
+    braid_0.2.0-alpha.1_linux_amd64.tar.gz: OK
     ```
 
     Extract, then put both binaries on your `PATH`:
@@ -105,17 +105,19 @@ from the releases page in a signed-in browser works too.
     ```sh
     tar -xzf "braid_${VERSION}_linux_${ARCH}.tar.gz"
     sudo install -m 0755 braid /usr/local/bin/braid
-    sudo install -m 0755 orchestrator /usr/local/bin/braid-daemon
+    sudo install -m 0755 braid-daemon /usr/local/bin/braid-daemon
     ```
 
-!!! note "The archive still names the server binary `orchestrator`"
-    `braid-daemon` is the name it ships under from the next release. Installing
-    it under that name now makes the upgrade a plain overwrite, and nothing
-    resolves the server by filename, so the rename costs nothing.
+The archive also carries `README.md`, `LICENSE.txt`, and
+`configs/orchestrator.example.yaml`, which is a starting point for the daemon's
+configuration file. Nothing else is written anywhere. Installing puts two
+binaries on your `PATH`. It does not start the daemon, create any Braid state,
+edit a shell profile, or install agent hooks.
 
-The archive also carries a copy of the repository `README.md`. Nothing else is
-written anywhere: installing puts two binaries on your `PATH`, does not start
-the daemon, and does not install agent hooks.
+!!! note "`braid-intent` is a separate archive"
+    The release also publishes `braid-intent_<version>_<os>_<arch>.tar.gz`. That
+    is the intent reconstruction server, installed separately and not required
+    to use the CLI. This page does not cover it.
 
 ## Verify the installation
 
@@ -126,7 +128,7 @@ braid --version
 ```
 
 ```text
-braid v0.1.0-alpha.1 (01fb0e8)
+braid v0.2.0-alpha.1 (7b2d4ef)
 ```
 
 `braid version` prints the same client build in full, then probes the daemon it
@@ -138,12 +140,12 @@ braid version
 
 ```text
 Client:
-  Version:   v0.1.0-alpha.1
-  Commit:    01fb0e8
+  Version:   v0.2.0-alpha.1
+  Commit:    7b2d4ef
   Built:     2026-07-14T17:03:41Z
   Go:        go1.25.12
   Platform:  darwin/arm64
-Server (localhost:8080):
+Server (127.0.0.1:8080):
   unreachable: context deadline exceeded
 ```
 
@@ -153,8 +155,7 @@ daemon running it reports `unreachable` and the command still exits `0`, which
 is the expected result on a fresh install rather than a failure. Add `--json`
 for machine-readable output, or `--addr` to probe a specific daemon.
 
-The server binary in this release takes no `--version` flag, so confirm it
-landed by looking for it on your `PATH`:
+Confirm the server binary landed too:
 
 ```sh
 command -v braid-daemon
@@ -167,43 +168,49 @@ command -v braid-daemon
 ## Shell completion
 
 `braid completion <shell>` writes a completion script to standard output for
-bash, zsh, fish, or PowerShell. Run `braid completion <shell> --help` for that
-shell's full instructions.
+bash, zsh, fish, or PowerShell. The command never writes a file and never
+changes a shell profile. Run `braid completion <shell> --help` for that shell's
+own instructions.
+
+!!! note "Nothing is set up for you in this release"
+    Installer-driven completion setup exists in the source but is in no
+    published release, so `v0.2.0-alpha.1` leaves your shell profiles untouched.
+    Activate completion yourself with the instructions below.
+
+Each command below enables completion in the current shell. Saving it in a shell
+profile is a separate step, described with it.
 
 === "Bash"
 
-    Load completions in the current shell:
+    Braid completion depends on `bash-completion`, which Braid does not install.
+    Load that first, then load Braid completion in the current shell:
 
     ```sh
-    source <(braid completion bash)
+    eval "$(braid completion bash)"
     ```
 
-    Add that line to `~/.bashrc` to load them in every new session.
+    For future shells, add that line to `~/.bashrc`, after `bash-completion`
+    loads. On macOS a login shell reads `~/.bash_profile` rather than
+    `~/.bashrc`, so make sure whichever file controls login startup loads
+    `~/.bashrc`:
+
+    ```sh
+    [ -f "$HOME/.bashrc" ] && . "$HOME/.bashrc"
+    ```
 
 === "Zsh"
 
-    If completion is not enabled in your environment yet, enable it once:
+    Initialize completion only when `compdef` is not already available, which
+    keeps `compinit`'s security checks in place:
 
-    ```sh
-    echo "autoload -U compinit; compinit" >> ~/.zshrc
+    ```zsh
+    autoload -Uz compinit
+    if (( $+functions[compdef] )) || compinit; then
+      source <(braid completion zsh)
+    fi
     ```
 
-    Load completions in the current shell:
-
-    ```sh
-    source <(braid completion zsh)
-    ```
-
-    To load them for every new session, write the script into a directory on
-    your `fpath` and start a new shell:
-
-    ```sh
-    # Linux
-    braid completion zsh > "${fpath[1]}/_braid"
-
-    # macOS, Homebrew zsh
-    braid completion zsh > $(brew --prefix)/share/zsh/site-functions/_braid
-    ```
+    For future shells, add that block to `${ZDOTDIR:-$HOME}/.zshrc`.
 
 === "Fish"
 
@@ -213,11 +220,25 @@ shell's full instructions.
     braid completion fish | source
     ```
 
-    To load them for every new session:
+    For future shells, add this to
+    `${XDG_CONFIG_HOME:-$HOME/.config}/fish/conf.d/braid-completion.fish`:
 
     ```fish
-    braid completion fish > ~/.config/fish/completions/braid.fish
+    if status is-interactive
+        braid completion fish | source
+    end
     ```
+
+=== "PowerShell"
+
+    Activate completion in the current session:
+
+    ```powershell
+    braid completion powershell | Out-String | Invoke-Expression
+    ```
+
+    For future sessions, add that line to your PowerShell `$PROFILE`. The
+    completion command does not edit `$PROFILE` for you.
 
 ## Upgrading
 
@@ -227,11 +248,8 @@ place:
 
 ```sh
 sudo install -m 0755 braid /usr/local/bin/braid
-sudo install -m 0755 orchestrator /usr/local/bin/braid-daemon
+sudo install -m 0755 braid-daemon /usr/local/bin/braid-daemon
 ```
-
-From the release after `v0.1.0-alpha.1` the extracted server binary is itself
-named `braid-daemon`, so the second line loses its rename.
 
 Upgrade the pair together. A `braid` and a `braid-daemon` from different
 releases are not a supported combination. Run `braid --version` afterwards to
@@ -240,7 +258,8 @@ touches binaries only and leaves your Braid data where it is.
 
 ## Uninstalling
 
-Remove the two binaries you installed:
+This release has no `braid uninstall` command, so removal is manual. Remove the
+two binaries you installed:
 
 ```sh
 sudo rm /usr/local/bin/braid /usr/local/bin/braid-daemon
@@ -280,7 +299,10 @@ per repository you have initialized:
 rm -rf .braid
 ```
 
-<!-- The "Next steps" list pointed at Quickstart and Concepts at a Glance.
-     Both are still excluded from the built site, so the links were dead ends.
-     Restore the section when those pages are published. -->
+## Next steps
+
+- [Braid on your machine](../braid-on-your-machine.md) covers the daemon and
+  what Braid writes to disk.
+- [How Braid works](../how-braid-works.md) covers the model.
+- [Get help](../get-help.md) if something here does not work.
 
