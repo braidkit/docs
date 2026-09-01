@@ -23,6 +23,10 @@ theme:
     - content.code.copy
     - content.code.annotate
     - content.tooltips
+
+exclude_docs: |
+  /what-braid-records.md
+
 plugins: []
 
 extra_css:
