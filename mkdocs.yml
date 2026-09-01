@@ -25,6 +25,12 @@ theme:
     - content.tooltips
 plugins: []
 
+# Written but not yet launched. The launch PR removes these and adds them
+# to the nav.
+exclude_docs: |
+  /how-braid-works.md
+  /lifecycle.md
+
 extra_css:
   - stylesheets/brand.css
 
