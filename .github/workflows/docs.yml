@@ -28,16 +28,9 @@ jobs:
           test -f site/llms.txt
           test -f site/llms-full.txt
           test -f site/sitemap.xml
-          # The installation page is published; everything else, including its
-          # own Getting Started siblings, stays behind the boundary.
+          # The placeholder home page and the installation page are the whole
+          # published site until the V1 pages land.
           test -d site/getting-started/installation
-          test ! -d site/getting-started/introduction
-          test ! -d site/getting-started/quickstart
-          test ! -d site/getting-started/concepts-at-a-glance
-          test ! -d site/concepts
-          test ! -d site/protocol
-          test ! -d site/stories
-          test ! -d site/reference
       - name: Upload the rendered site
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:

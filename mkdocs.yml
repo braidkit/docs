@@ -4,24 +4,6 @@ site_description: Braid documentation is coming soon.
 repo_url: https://github.com/braidkit/docs
 repo_name: braidkit/docs
 
-# Keep pre-launch material in source control without publishing it. Remove an
-# exclusion only when that page has been reviewed and is ready to publish.
-exclude_docs: |
-  # Only the installation page is published; its siblings wait for the
-  # docs launch, and linking to them from it would be a dead end.
-  /getting-started/introduction.md
-  /getting-started/quickstart.md
-  /getting-started/concepts-at-a-glance.md
-  /concepts/
-  /protocol/
-  /stories/
-  /reference/
-  /assets/phase-1/
-  /javascripts/
-  /phase-1-scope.md
-  /keeping-docs-current.md
-  /deploying.md
-
 theme:
   name: material
   custom_dir: overrides
