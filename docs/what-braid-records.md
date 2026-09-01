@@ -7,7 +7,7 @@ description: What Braid captures about your work, where it is stored, and the po
 
 Read this before pointing Braid at a codebase you care about. It covers what
 Braid captures, where that lands, and the points at which it leaves your
-machine.
+machine. It describes `v0.2.0-alpha.1`, the release you can install.
 
 ## Contributor identity
 
@@ -75,7 +75,7 @@ network connection.
 
 **Adding a session to a braid sends its events to the local daemon.** The
 captured events are drained over a loopback gRPC connection, by default
-`127.0.0.1:18082`. They stay on the machine.
+`127.0.0.1:8080`. They stay on the machine.
 
 **Intent reconstruction sends a braid's evidence to a model provider.** The
 evidence is that braid's captured events, which includes the prompts, the
@@ -93,11 +93,10 @@ The second is worth restating. Finalizing a braid sends its evidence without a
 separate confirmation step. It can be turned off per invocation, and it is
 skipped when no endpoint is configured.
 
-There is no endpoint compiled into Braid. Until a machine configuration sets
-one, nothing is sent and the finalize step skips it. The example configuration
-Braid ships sets it to Braid's hosted server, so a machine set up from that
-example does send evidence there. The endpoint can point at a service you run
-instead.
+There is no endpoint compiled into Braid. In `v0.2.0-alpha.1` it comes from a
+`--intent-url` flag, the `BRAID_INTENT_URL` environment variable, or the
+repository configuration. Until one of those sets it, nothing is sent and the
+finalize step skips it. The endpoint can point at a service you run.
 
 **The identity service does not receive your work.** It stores user, provider
 identity, device, session, transaction, and audit records, and it stores hashes
