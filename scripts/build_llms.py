@@ -4,8 +4,10 @@
 The published set is the mkdocs nav. A page that is not in the nav is not
 published, so it does not belong in either file.
 
-Run with --check to verify the committed files match what the pages produce.
-CI uses that mode so the corpus cannot drift from the documentation.
+CI runs this before every build, so the corpus is regenerated from the pages
+rather than committed. The outputs are gitignored. Nothing can drift.
+
+Run with --check to compare without writing, which is useful locally.
 """
 
 import argparse

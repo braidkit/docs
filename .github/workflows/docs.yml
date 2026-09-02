@@ -20,8 +20,8 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: python -m pip install -r requirements.txt
-      - name: Verify llms.txt and llms-full.txt are current
-        run: python scripts/build_llms.py --check
+      - name: Generate llms.txt and llms-full.txt
+        run: python scripts/build_llms.py
       - run: python -m mkdocs build --strict
       - name: Verify the publishing boundary
         run: |
