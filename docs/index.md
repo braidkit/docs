@@ -1,3 +1,8 @@
+---
+title: Braid documentation
+description: What Braid is, who it is for, and where to start. Braid is in private preview.
+---
+
 # Braid
 
 AI can produce large amounts of code. Owning that software still requires people to understand and maintain it. When an agent writes code, the context behind the work can leave with the agent. That context includes why an approach was chosen, what was rejected, and what was checked.

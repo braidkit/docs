@@ -1,3 +1,8 @@
+---
+title: How Braid works
+description: The model behind Braid: braids, threads, contributors, scope, signed events, and how state is derived from the event log.
+---
+
 # How Braid works
 
 Braid exists to preserve the intent and cognitive model of code. It does so by keeping a record of the activities taking place as the work is done via an AI Agent. Braid will record signed events describing the actions taken, decisions made, observations recorded, and checks performed. Braid further derives the work's state from the events so that humans and agents have a shared, verifiable understanding of the intent and cognitive model of the code that was produced. This enables reviewers, other contributors, and future you to further engage with the work and take ownership of the code.
