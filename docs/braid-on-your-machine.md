@@ -5,22 +5,21 @@ description: What the Braid daemon is for, how to run it, and what Braid writes 
 
 # Braid on your machine
 
-Braid installs two binaries. `braid` is a thin client. `braid-daemon` is the
-local service it talks to. Installing them does not start the daemon.
+Braid installs two binaries.
 
-## At a glance
+`braid` is the command line tool. You run it to capture an agent session, add
+that session to a braid, ask for a braid's state, and record a review. It writes
+captured sessions and local records to disk itself.
 
-| Question | Answer |
-| --- | --- |
-| Do I need to run something? | Yes, for commands that read or change a braid |
-| How do I run it? | Run the `braid-daemon` binary yourself; nothing starts it for you |
-| Where does Braid write data? | A user-global Braid home, and a `.braid/` directory in each initialized repository |
-| Should I commit `.braid/`? | No |
+`braid-daemon` is a local background service. It derives the state of every
+braid and thread from the signed event log, keeps that state in a database on
+your machine, and serves the Review UI. It is the authority on lifecycle state.
+When the CLI cannot reach it, commands that can fall back to their local records
+do so, and say when they have.
 
 ## What needs the daemon
 
-The daemon holds lifecycle state for braids and threads. That state lives only
-in the daemon. It is never copied into the Braid home.
+Lifecycle state lives in the daemon.
 
 Commands that read or change a braid need a reachable daemon: claiming an
 issue, adding captured sessions to a braid, reviewing, verifying, shipping,
@@ -36,22 +35,19 @@ failure.
 
 ## Running the daemon
 
-There is no service registration yet. No launchd or systemd unit ships with
-Braid, and there is no command that starts or stops it for you. Run the
-`braid-daemon` binary yourself and keep it running, under whatever process
-supervision you already use. It will not come back on its own after a reboot.
+Today, the daemon needs to start up manually by running the `braid-daemon` binary.
 
 The daemon reads its listener addresses and database path from a
 configuration file, not from process flags.
 
 The file is optional. With no file present the daemon starts on built-in
-defaults. When you do want one, the default location on macOS is:
+defaults. On macOS, the default location is:
 
 ```
 ~/Library/Application Support/Braid/orchestrator.yaml
 ```
 
-On Linux it resolves under `$XDG_CONFIG_HOME`, normally
+On Linux, it is `$XDG_CONFIG_HOME/Braid/orchestrator.yaml`, normally
 `~/.config/Braid/orchestrator.yaml`.
 
 The daemon opens three loopback listeners:
@@ -62,8 +58,15 @@ The daemon opens three loopback listeners:
 | Review UI | `visualization.address` | `127.0.0.1:18446` |
 | Health and metrics | `admin.address` | `127.0.0.1:19092` |
 
-The admin listener serves liveness, readiness, and Prometheus metrics. It has
-no authentication. Do not expose it beyond loopback.
+The admin listener serves liveness, readiness, and Prometheus metrics. The other
+two carry the CLI's traffic and the Review UI.
+
+These listeners do not provide user authentication and stay on loopback. The
+daemon refuses to bind them anywhere else, and it still verifies signatures on
+submitted work events.
+
+Any other process on your machine that can reach these ports can read your
+captured work. The same is true of a local intent server if you run one.
 
 The database is `<braid home>/daemon/braid.db` unless `database.path`
 overrides it. A relative override resolves from the configuration file's own
@@ -85,7 +88,8 @@ Entries appear as the feature that owns them needs them:
 
 - `key.pem`, the signing key
 - `inbox/` and `braids/`, for sessions captured outside a Git repository
-- `daemon/braid.db`, the default daemon database
+- `daemon/braid.db`, the daemon's database. It owns this file, so nothing else
+  writes it and editing it by hand is not supported.
 - `auth-*` files and their locks, for file-backed session state
 - `home-version`, the layout marker
 
