@@ -1,0 +1,12 @@
+# Local preview only. Never deployed.
+#
+# The published site is built from mkdocs.yml, which holds pages back until they
+# are ready. This config renders everything in docs/ instead, and builds its nav
+# from the file tree so it works on any branch whatever pages exist there.
+#
+#   mkdocs serve -f mkdocs.preview.yml
+#
+# Nothing here changes what gets published. CI builds mkdocs.yml.
+INHERIT: ./mkdocs.yml
+exclude_docs: ""
+nav: null
