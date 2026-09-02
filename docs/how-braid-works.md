@@ -42,12 +42,18 @@ events in its record. Given the same record, it always derives the same state.
 ### Admitting events
 
 Before Braid adds an event to the record, it checks the event's envelope,
-authentication, and integrity. It rejects an event for a bad signature, an
-identity mismatch, a malformed envelope, missing braid or thread addressing, a
-duplicate event id, or an action the contributor has no authority to record. A
-rejected event is never recorded and never contributes to derived state. Because
-it was never recorded, a later valid event carrying the same event id can still
-be admitted.
+authentication, and integrity. It rejects an event for:
+
+- a bad signature
+- an identity mismatch
+- a malformed envelope
+- missing braid or thread addressing
+- a duplicate event id
+- an action the contributor has no authority to record
+
+A rejected event is never recorded and never contributes to derived state.
+Because it was never recorded, a later valid event carrying the same event id
+can still be admitted.
 
 Envelope validation runs first and reports its own separate failures.
 
