@@ -5,7 +5,7 @@
 - [Home](https://docs.braidkit.io/): What Braid is, who it is for, and where to start. Braid is in private preview.
 - [How Braid works](https://docs.braidkit.io/how-braid-works/): The model behind Braid: braids, threads, contributors, scope, signed events, and how state is derived from the event log.
 - [Braid and thread lifecycle](https://docs.braidkit.io/lifecycle/): The braid and thread states, the events that move between them, and the rules for terminal states and automatic drops.
-- [What Braid records](https://docs.braidkit.io/what-braid-records/): What Braid captures about your work, where it is stored, and the points at which it leaves your machine.
+- [What Braid records](https://docs.braidkit.io/what-braid-records/): What Braid records, how it identifies you, and when it sends data to external services.
 - [Braid on your machine](https://docs.braidkit.io/braid-on-your-machine/): What the Braid daemon is for, how to run it, and what Braid writes to your disk.
 - [Installation](https://docs.braidkit.io/getting-started/installation/): System requirements and how to install, verify, upgrade, and remove Braid on macOS.
 - [Get help](https://docs.braidkit.io/get-help/): How to reach the Braid team while you are using the private preview.

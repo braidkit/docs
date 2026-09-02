@@ -33,9 +33,7 @@ Source: https://docs.braidkit.io/how-braid-works/
 
 # How Braid works
 
-Braid keeps a record of how a change was made. While work happens, contributors
-record signed events describing what was decided and what was checked. Braid
-derives the state of the work from those events.
+Braid exists to preserve the intent and cognitive model of code. It does so by keeping a record of the activities taking place as the work is done via an AI Agent. Braid will record signed events describing the actions taken, decisions made, observations recorded, and checks performed. Braid further derives the work's state from the events so that humans and agents have a shared, verifiable understanding of the intent and cognitive model of the code that was produced. This enables reviewers, other contributors, and future you to further engage with the work and take ownership of the code.
 
 This page describes the model. [Braid and thread lifecycle](lifecycle.md)
 describes the states that model produces.
@@ -58,10 +56,7 @@ nothing in it is removed.
 
 ## Signed events
 
-Each event is signed. Its envelope carries a signing payload, a signature, and a
-public key, together with an event id and the braid and thread it addresses. The
-contributor's identity and the event's kind decide whether that contributor is
-allowed to record it.
+Each event is signed. Its envelope carries a signing payload, signature, public key, event ID, and the braid and thread it addresses. When Braid receives an event, it verifies that the public key matches the claimed contributor ID and that the signature covers the event before storing it. It also checks the event's kind against the contributor it is attributed to, because some kinds are accepted only from a human contributor.
 
 Only some event kinds move state. They are `braid_started`, `thread_dispatched`,
 `thread_attached`, `agent_start`, `decision`, `thread_dropped`,
@@ -72,32 +67,38 @@ The events captured while an agent works, such as prompts, reasoning, and tool
 calls, are not in that list. They are evidence. They stay in the record and they
 never move braid or thread state.
 
-## Ingest and fold
+## How Braid derives state
 
-Braid computes state in two layers. Ingest admits an event. The fold interprets
-the events that were admitted.
+Braid derives the current state of a braid and its threads by replaying the
+events in its record. Given the same record, it always derives the same state.
 
-### Ingest is the only place an event is rejected
+### Admitting events
 
-Ingest checks authentication and integrity. It rejects an event for a bad
-signature, an identity mismatch, a malformed envelope, missing braid or thread
-addressing, a duplicate event id, or an action the contributor has no authority
-to record. A rejected event is never recorded and never reaches the fold. Because
-it was never recorded, a later valid event carrying the same event id can still
-be admitted.
+Before Braid adds an event to the record, it checks the event's envelope,
+authentication, and integrity. It rejects an event for:
 
-Envelope validation runs earlier still, before these two layers, and reports its
-own separate failures.
+- a bad signature
+- an identity mismatch
+- a malformed envelope
+- missing braid or thread addressing
+- a duplicate event id
+- an action the contributor has no authority to record
 
-### The fold interprets and never rejects
+A rejected event is never recorded and never contributes to derived state.
+Because it was never recorded, a later valid event carrying the same event id
+can still be admitted.
 
-Once ingest admits an event, it is a true fact about what happened. The fold
-cannot reject it. The fold can:
+Envelope validation runs first and reports its own separate failures.
+
+### Interpreting the record
+
+Once Braid admits an event, it is a true fact about what happened. While deriving
+state, Braid does not reject it. It can:
 
 - advance the derived state
 - change nothing, when the braid has already reached a terminal state
-- sort events by their logical sequence, so events that arrive out of order still
-  replay the same way
+- replay events in their logical sequence, so events that arrive out of order
+  still produce the same state
 - record an anomaly, when a well formed event does not fit the current state
 
 An anomaly leaves the event in the log and leaves the derived state unchanged.
@@ -114,7 +115,7 @@ validated, such as one naming an absolute path or a path outside the repository,
 fails the same gate.
 
 A `scope_violation_resolved` event is the only thing that clears a violation.
-Ingest accepts that event from a human contributor only, so an agent cannot
+Braid accepts that event from a human contributor only, so an agent cannot
 dismiss the gate that constrains it.
 
 An unresolved violation blocks the braid from surfacing for review and from being
@@ -136,8 +137,8 @@ A braid holds the work for one issue. A thread holds the work of one contributor
 inside that braid. [How Braid works](how-braid-works.md) describes that model.
 This page describes the states it produces.
 
-Every state here is derived from the signed event log. No state is stored or
-edited separately from that log.
+Every state here is derived from the signed event log. The log is authoritative;
+Braid derives state from it rather than editing state separately.
 
 Only the event kinds named on this page move state. The events captured while an
 agent works, such as prompts, reasoning, and tool calls, are evidence and never
@@ -145,8 +146,16 @@ appear as transitions.
 
 ## Braid states
 
-A braid is in one of six states: `claimed`, `dispatched`, `active`, `surfaced`,
-`promoted`, or `dropped`.
+A braid is in one of six states.
+
+| State | Meaning |
+| --- | --- |
+| `claimed` | The braid exists for an issue. No thread has been added yet. |
+| `dispatched` | Threads have been added with declared scopes. No agent has started on any of them. |
+| `active` | Work has started, a thread has been attached from an existing session, or new work was added after review. The braid has not yet surfaced or reached a terminal state. |
+| `surfaced` | Every thread has finished and the braid is ready to be reviewed. |
+| `promoted` | The braid is finalized. Terminal. |
+| `dropped` | The braid was abandoned, declined, or ended with no thread passing. Terminal. |
 
 | From | Event | To |
 | --- | --- | --- |
@@ -175,14 +184,15 @@ A `review_boundary_reached` event moves a braid from `active` to `surfaced` only
 when all of the following hold:
 
 - the braid has at least one thread
-- every thread is in a terminal state
+- every thread has reached a terminal state, meaning `verify_passed`,
+  `verify_failed`, or `thread_dropped`
 - at least one thread is in `verify_passed`
 - the braid is not pending goal reconfirmation
 - the braid has no unresolved scope violations
 
 If the braid is only waiting on goal reconfirmation, the braid stays `active` and
-Braid records nothing, because a further boundary is expected once the goal is
-reconfirmed. If any other condition fails, the braid stays `active` and Braid
+Braid records no anomaly, because a further boundary is expected once the goal
+is reconfirmed. If any other condition fails, the braid stays `active` and Braid
 records an anomaly naming the condition that was not met.
 
 A `promote` event requires the braid to be `surfaced` with no unresolved scope
@@ -190,8 +200,16 @@ violations. Otherwise the braid stays where it is and Braid records an anomaly.
 
 ## Thread states
 
-A thread is in one of six states: `opened`, `working`, `needs_human`,
-`verify_passed`, `verify_failed`, or `thread_dropped`.
+A thread is in one of six states.
+
+| State | Meaning |
+| --- | --- |
+| `opened` | The thread exists with its scope. No agent has started on it. |
+| `working` | An agent has started and the thread has no verdict yet. |
+| `needs_human` | A decision recorded that the thread needs human attention before it can finish. |
+| `verify_passed` | A decision recorded a passing verdict. Final. |
+| `verify_failed` | A decision recorded a failing verdict. The attempt ended and the thread can be reopened. |
+| `thread_dropped` | The thread was abandoned. Final. |
 
 The table below is normative. A thread-mutating event that matches no row records
 an anomaly and leaves the thread's state unchanged.
@@ -208,29 +226,29 @@ an anomaly and leaves the thread's state unchanged.
 | `verify_failed` | `agent_start` | `working` |
 
 The `thread_dropped` event and the `thread_dropped` state share one name. The
-event is what a contributor records. The state is what the thread derives from
-it.
+event records that a thread was dropped. The state is what Braid derives from
+that event.
 
 A `decision` event carries the verdict. From `working` it records a pass, a
 failure, or a need for human attention. From `needs_human` it records a pass or a
 failure.
 
-## Terminal thread states
+## Completed and reopenable thread states
 
-`verify_passed`, `verify_failed`, and `thread_dropped` are terminal at the thread
-level only. A terminal thread does not make the braid terminal.
+`verify_passed` and `thread_dropped` are final. `verify_failed` ends the current
+attempt but can be reopened by `agent_start`. None of these states makes the
+braid terminal.
 
 `verify_passed` and `thread_dropped` are immutable. Every thread-mutating event
 on them records an anomaly and changes nothing. A `thread_dropped` event on a
 thread that is already dropped does nothing at all.
 
-`verify_failed` has the one sanctioned reopen. An `agent_start` event moves it
-back to `working` so the work can be retried. A `thread_dropped` event on
-`verify_passed` or `verify_failed` records an anomaly, because a drop does not
-override a recorded verdict.
+An `agent_start` event is the one sanctioned reopen for `verify_failed`. A
+`thread_dropped` event on `verify_passed` or `verify_failed` records an anomaly,
+because a drop does not override a recorded verdict.
 
-A failed thread stays in the braid as evidence. It never drops the braid on its
-own.
+A failed thread stays in the braid as evidence. It does not by itself drop the
+braid; the braid drops only when every thread is terminal and none has passed.
 
 ## When a braid drops on its own
 
@@ -244,117 +262,105 @@ Source: https://docs.braidkit.io/what-braid-records/
 
 # What Braid records
 
-Read this before pointing Braid at a codebase you care about. It covers what
-Braid captures, where that lands, and the points at which it leaves your
-machine.
+Braid keeps a local record of agent work. It records the prompt that starts a
+captured session, along with agent messages, reasoning, tool calls, and tool
+results. It can contain source code, file contents, diffs, and other data
+passed to or returned from a tool.
 
-## Contributor identity
+Braid does not send that record to an external service while it captures work or
+moves events to its local daemon. Today, it sends evidence only when intent
+reconstruction or finalization runs with an intent endpoint configured.
 
-GitHub proves the person. A local Ed25519 key proves the device. Braid issues
-its own opaque session tokens.
+## Your identity and device
 
-The stable identity is GitHub's numeric user ID. A Braid user ID is an opaque
-alphanumeric value such as `usr_008J4CT4ANK7F24SNAXWSQFEZW`. GitHub usernames,
-email addresses, names, and avatars are stored as current profile data only, so
-a renamed GitHub account is still the same Braid user.
+Braid associates work with your account and the device that signed it. At launch,
+you sign in through GitHub. GitHub identifies you to Braid; it does not give
+Braid repository permissions and does not require a GitHub App installation.
+Braid is designed to support additional sign-in providers later.
 
-A contributor fingerprint is derived from a signing key and identifies the
-contributor instance that signed an event. It is not the Braid user ID. One
-Braid user can hold several device keys, each with its own fingerprint.
+Each device has a local signing key. Braid uses that key to sign work events and
+distinguish the device or agent session that signed them. You can use more than
+one device with the same account; each retains its own signer history.
 
-The GitHub App is used only to identify and authenticate the person. It does not
-require a repository permission or an App installation.
+## At a glance
 
-## Device credentials
+| Action | Where the data goes | Leaves your machine? |
+| --- | --- | --- |
+| Sign in | Braid's identity service | Your identity, never your work |
+| Capture agent work | Local inbox | No |
+| Add a captured session to a braid | Local Braid daemon, over loopback | No |
+| Reconstruct intent for review | Braid's intent service, which calls a model provider | Yes, when configured |
+| Finalize a braid | Braid's intent service, which calls a model provider | Yes by default, when configured |
 
-Registering a device links its key to the signed-in Braid user and proves the
-device holds the matching private key. Later sessions for that device are tied
-to that key.
+## What Braid records
 
-Revoking a device revokes every session tied to it. Revoking the GitHub App
-authorization revokes every Braid session for that GitHub identity.
+Braid records the prompt that starts a captured session, along with session
+boundaries, agent messages, reasoning, and tool calls with their arguments and
+results.
 
-## What a signed work event contains
+Some context is cooperative. Braid asks the agent to mark attempts, changes in
+understanding, and final decisions in its output. Braid records those markers
+only when the agent emits them.
 
-Each event carries:
+Capture is best effort. Unsupported or malformed output, or a capture error,
+can result in a partial record. Capture does not interrupt the agent.
 
-- an event ID
-- the braid ID and the thread ID it belongs to
-- the contributor instance that acted
-- the time the action happened
-- the capture method
-- exactly one payload
-- an Ed25519 signature
+Each record is signed with the local Braid key, so Braid can verify the event
+has not changed and identify the key that signed it.
 
-The signing key is at `~/.braid/key.pem`. To sign, the client clears the
-signature field, renders the rest as Protobuf JSON using proto field names and
-enum strings with unset fields omitted, canonicalizes that JSON with RFC 8785,
-hashes it with SHA-256, and signs the digest. The signature covers every other
-field in the event. An event with an invalid signature is rejected.
+## Redaction
 
-## What is captured while an agent works
+Braid does not redact or truncate anything yet. Tool arguments and results are
+recorded as they occurred, so if an agent reads a file that holds credentials,
+those values are in the record too.
 
-The payloads include tool use, agent reasoning, prompts, intent declarations,
-attempt boundaries, commits, reviews, decisions, agent start and end, context
-snapshots, and scope violations. Lifecycle transitions are also events.
+The record stays on your machine until you reconstruct intent or finalize a
+braid, so what it contains is yours to manage until then. Automatic redaction is
+planned for a future release.
 
-Tool arguments and tool results are recorded as they occurred. The schema
-reserves fields for marking a tool argument or result as redacted or truncated,
-and nothing sets them today, so no redaction happens. A captured prompt, a
-captured tool call, and a captured result can therefore contain source code,
-file contents, diffs, and anything else passed to or returned from a tool.
+## When Braid sends data
 
-## What leaves your machine
+Capture writes its record to disk and sends no part of it off your machine.
+Commands that need a signed-in identity, capture among them, do contact the
+Braid identity service to prove that identity. It receives your GitHub identity
+and your device key, stores hashes of session tokens rather than the tokens, and
+never receives your code, your prompts, or your captured work.
 
-There are three points to know about, and they are different.
+Adding a captured session to a braid sends its events only to the local daemon,
+over loopback (`127.0.0.1:18082` by default).
 
-**Capture writes to disk only.** While an agent runs, each event is signed with
-your local key and appended to a file in the local inbox. Capture opens no
-network connection.
+Braid sends a braid's evidence off your machine only when an intent endpoint is
+configured and you:
 
-**Adding a session to a braid sends its events to the local daemon.** The
-captured events are drained over a loopback gRPC connection, by default
-`127.0.0.1:18082`. They stay on the machine.
+- reconstruct intent while preparing a review
+- finalize a braid; this sends evidence automatically by default
 
-**Intent reconstruction sends a braid's evidence to a model provider.** The
-evidence is that braid's captured events, which includes the prompts, the
-reasoning, and the tool calls with their arguments and results. It is sent to
-the configured intent endpoint, and that service invokes a model provider. This
-is the point at which captured work leaves the machine.
+The evidence includes the braid's captured events, such as prompts, agent
+messages, reasoning, and tool calls with their arguments and results.
+Finalization can disable this send for an individual invocation.
 
-Two things trigger it:
+Braid sends no evidence when no intent endpoint is configured. The example
+configuration uses Braid's hosted service, and you can point the endpoint at a
+service you operate instead.
 
-- asking for intent to be reconstructed for a braid while preparing a review
-- finalizing a braid, which sends the evidence automatically by default when an
-  endpoint is configured
+## Whose services these are
 
-The second is worth restating. Finalizing a braid sends its evidence without a
-separate confirmation step. It can be turned off per invocation, and it is
-skipped when no endpoint is configured.
+The identity service and the intent service are both Braid's own. Neither is a
+third party.
 
-There is no endpoint compiled into Braid. Until a machine configuration sets
-one, nothing is sent and the finalize step skips it. The example configuration
-Braid ships sets it to Braid's hosted server, so a machine set up from that
-example does send evidence there. The endpoint can point at a service you run
-instead.
+The intent service reconstructs the intent behind a braid and returns it. It
+stores nothing. Reconstruction needs a model, so the service passes the evidence
+to a model provider, and that provider is the only third party in the path.
 
-**The identity service does not receive your work.** It stores user, provider
-identity, device, session, transaction, and audit records, and it stores hashes
-of session tokens rather than the tokens. It does not receive source code,
-diffs, prompts, Braid work records, or reconstructed intent.
+Braid keeps the result rather than the service keeping it. The reconstructed
+intent is archived on your machine and attached to your repository's Git notes,
+which is what lets someone read a braid later.
 
-**The local surfaces have no user authentication.** The daemon and the intent
-server have no server-side user authentication and are meant to stay on
-loopback. Anything else running on the machine that can reach those ports can
-read captured work.
+## Local services
 
-## Losing the signing key
-
-Events already signed with a lost key stay in the record and their signatures
-stay valid. They remain attributed to a key you no longer hold.
-
-A new key produces a new contributor fingerprint, so work signed after the loss
-is attributed to a different contributor instance than work signed before it.
+The local daemon and local intent server are designed to run only on loopback.
+They do not provide server-side user authentication. Other processes on the same
+machine that can reach those ports can read captured work.
 
 ## Braid on your machine
 
@@ -362,46 +368,49 @@ Source: https://docs.braidkit.io/braid-on-your-machine/
 
 # Braid on your machine
 
-Braid installs two binaries. `braid` is a thin client. `braid-daemon` is the
-local service it talks to. Installing them does not start the daemon.
+Braid installs two binaries.
+
+`braid` is the command line tool. You run it to capture an agent session, add
+that session to a braid, ask for a braid's state, and record a review. It writes
+captured sessions and local records to disk itself.
+
+`braid-daemon` is a local background service. It derives the state of every
+braid and thread from the signed event log, keeps that state in a database on
+your machine, and serves the Review UI. It is the authority on lifecycle state.
+When the CLI cannot reach it, commands that can fall back to their local records
+do so, and say when they have.
 
 ## What needs the daemon
 
-The daemon holds lifecycle authority. It derives braid and thread state from the
-record and answers the CLI. Lifecycle state belongs to the daemon and is never
-copied into the Braid home.
+Lifecycle state lives in the daemon.
 
-Commands that read or change a braid need a reachable daemon. That includes
-claiming an issue, adding captured sessions to a braid, reviewing, verifying,
-shipping, and asking for a braid's authoritative state.
+Commands that read or change a braid need a reachable daemon: claiming an
+issue, adding captured sessions to a braid, reviewing, verifying, shipping,
+and asking for a braid's authoritative state.
 
-Other commands do not. Reporting the resolved home, initializing a repository,
-capturing a session, and listing what has been captured locally all work with
-the daemon stopped. Asking for the version probes the daemon, reports it as
-unreachable when it is not running, and still exits successfully.
+Other commands do not: reporting the resolved home, initializing a repository,
+capturing a session, and listing what has been captured locally. Asking for
+the version probes the daemon, reports it as unreachable when it is not
+running, and still exits successfully.
 
-So an unreachable daemon on a fresh installation is the expected state, not a
+An unreachable daemon on a fresh installation is expected. It is not a
 failure.
 
 ## Running the daemon
 
-There is no service registration yet. No launchd or systemd unit ships with
-Braid, and there is no command that starts or stops it for you. Run the
-`braid-daemon` binary yourself and keep it running, under whatever process
-supervision you already use. It will not come back on its own after a reboot.
+Today, the daemon needs to start up manually by running the `braid-daemon` binary.
 
-The daemon takes its listener addresses and database path from a configuration
-file rather than process flags. That boundary is deliberate, so a machine has
-one consistent configuration rather than a set of per-invocation overrides.
+The daemon reads its listener addresses and database path from a
+configuration file, not from process flags.
 
 The file is optional. With no file present the daemon starts on built-in
-defaults. When you do want one, the default location on macOS is:
+defaults. On macOS, the default location is:
 
 ```
 ~/Library/Application Support/Braid/orchestrator.yaml
 ```
 
-On Linux it resolves under `$XDG_CONFIG_HOME`, normally
+On Linux, it is `$XDG_CONFIG_HOME/Braid/orchestrator.yaml`, normally
 `~/.config/Braid/orchestrator.yaml`.
 
 The daemon opens three loopback listeners:
@@ -412,16 +421,24 @@ The daemon opens three loopback listeners:
 | Review UI | `visualization.address` | `127.0.0.1:18446` |
 | Health and metrics | `admin.address` | `127.0.0.1:19092` |
 
-The admin listener serves liveness, readiness, and Prometheus metrics. It has no
-authentication, which is why all three stay on loopback.
+The admin listener serves liveness, readiness, and Prometheus metrics. The other
+two carry the CLI's traffic and the Review UI.
 
-The database is `<braid home>/daemon/braid.db` unless `database.path` overrides
-it. A relative override resolves from the configuration file's own directory.
+These listeners do not provide user authentication and stay on loopback. The
+daemon refuses to bind them anywhere else, and it still verifies signatures on
+submitted work events.
+
+Any other process on your machine that can reach these ports can read your
+captured work. The same is true of a local intent server if you run one.
+
+The database is `<braid home>/daemon/braid.db` unless `database.path`
+overrides it. A relative override resolves from the configuration file's own
+directory.
 
 ## Where Braid puts things
 
-The Braid home is the user-global location for Braid data. It resolves in this
-order:
+The Braid home is the user-global location for Braid data. It resolves in
+this order:
 
 1. an explicit application override
 2. the `BRAID_HOME` environment variable
@@ -434,7 +451,8 @@ Entries appear as the feature that owns them needs them:
 
 - `key.pem`, the signing key
 - `inbox/` and `braids/`, for sessions captured outside a Git repository
-- `daemon/braid.db`, the default daemon database
+- `daemon/braid.db`, the daemon's database. It owns this file, so nothing else
+  writes it and editing it by hand is not supported.
 - `auth-*` files and their locks, for file-backed session state
 - `home-version`, the layout marker
 
@@ -451,10 +469,14 @@ An initialized repository has a `.braid/` directory inside the working tree:
 - `inbox/<session>/`, sessions captured in this repository
 - `braids/`, evidence added to a braid
 
-All of it is untracked, and Braid adds no ignore rule for it. A reflexive
-`git add -A` will sweep it into a commit. Captured sessions carry prompts, agent
-reasoning, and tool calls, so committing that directory publishes the contents
-of your work to everyone who can read the repository.
+Braid adds no ignore rule for `.braid/`, and everything in it starts
+untracked. A reflexive `git add -A` will sweep it into a commit.
+
+!!! warning
+
+    Captured sessions carry prompts, agent reasoning, and tool calls.
+    Committing `.braid/` publishes the contents of your work to everyone who
+    can read the repository.
 
 Ignore it before you capture anything:
 
@@ -462,21 +484,22 @@ Ignore it before you capture anything:
 .braid/
 ```
 
-Put that in `.gitignore` to share the rule, or in `.git/info/exclude` to keep it
-local. The `.gitignore` entry itself is safe to commit.
+Put that in `.gitignore` to share the rule, or in `.git/info/exclude` to keep
+it local. The `.gitignore` entry itself is safe to commit.
 
-An ignore rule does not affect files Git is already tracking. If `.braid/` was
-committed before you added the rule, stop tracking it and commit that removal:
+An ignore rule does not affect files Git is already tracking. If `.braid/`
+was committed before you added the rule, stop tracking it and commit that
+removal:
 
 ```
 git rm -r --cached .braid
 ```
 
-That leaves the files on disk and removes them from future commits. It does not
-remove them from history. If the directory was already pushed, the contents are
-in the history of a shared branch and an ignore rule will not retract them.
-Treat anything sensitive in those captures as disclosed, and rewrite history
-only with the agreement of everyone working on that branch.
+That leaves the files on disk and removes them from future commits. It does
+not remove them from history. If the directory was already pushed, the
+contents are in the history of a shared branch, and an ignore rule will not
+retract them. Treat anything sensitive in those captures as disclosed.
+Rewrite history only with the agreement of everyone working on that branch.
 
 Promoted evidence does not live in the working tree. It lives in signed Git
 notes under `refs/notes/braid`.
