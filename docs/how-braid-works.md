@@ -1,8 +1,6 @@
 # How Braid works
 
-Braid keeps a record of how a change was made. While work happens, contributors
-record signed events describing what was decided and what was checked. Braid
-derives the state of the work from those events.
+Braid exists to preserve the intent and cognitive model of code. It does so by keeping a record of the activities taking place as the work is done via an AI Agent. Braid will record signed events describing the actions taken, decisions made, observations recorded, and checks performed. Braid further derives the work's state from the events so that humans and agents have a shared, verifiable understanding of the intent and cognitive model of the code that was produced. This enables reviewers, other contributors, and future you to further engage with the work and take ownership of the code.
 
 This page describes the model. [Braid and thread lifecycle](lifecycle.md)
 describes the states that model produces.
@@ -25,10 +23,7 @@ nothing in it is removed.
 
 ## Signed events
 
-Each event is signed. Its envelope carries a signing payload, a signature, and a
-public key, together with an event id and the braid and thread it addresses. The
-contributor's identity and the event's kind decide whether that contributor is
-allowed to record it.
+Each event is signed. Its envelope carries a signing payload, signature, public key, event ID, and the braid and thread it addresses. When Braid receives an event, it verifies that the public key matches the claimed contributor ID and that the signature covers the event before storing it. It also checks the event's kind against the contributor it is attributed to, because some kinds are accepted only from a human contributor.
 
 Only some event kinds move state. They are `braid_started`, `thread_dispatched`,
 `thread_attached`, `agent_start`, `decision`, `thread_dropped`,
@@ -39,32 +34,38 @@ The events captured while an agent works, such as prompts, reasoning, and tool
 calls, are not in that list. They are evidence. They stay in the record and they
 never move braid or thread state.
 
-## Ingest and fold
+## How Braid derives state
 
-Braid computes state in two layers. Ingest admits an event. The fold interprets
-the events that were admitted.
+Braid derives the current state of a braid and its threads by replaying the
+events in its record. Given the same record, it always derives the same state.
 
-### Ingest is the only place an event is rejected
+### Admitting events
 
-Ingest checks authentication and integrity. It rejects an event for a bad
-signature, an identity mismatch, a malformed envelope, missing braid or thread
-addressing, a duplicate event id, or an action the contributor has no authority
-to record. A rejected event is never recorded and never reaches the fold. Because
-it was never recorded, a later valid event carrying the same event id can still
-be admitted.
+Before Braid adds an event to the record, it checks the event's envelope,
+authentication, and integrity. It rejects an event for:
 
-Envelope validation runs earlier still, before these two layers, and reports its
-own separate failures.
+- a bad signature
+- an identity mismatch
+- a malformed envelope
+- missing braid or thread addressing
+- a duplicate event id
+- an action the contributor has no authority to record
 
-### The fold interprets and never rejects
+A rejected event is never recorded and never contributes to derived state.
+Because it was never recorded, a later valid event carrying the same event id
+can still be admitted.
 
-Once ingest admits an event, it is a true fact about what happened. The fold
-cannot reject it. The fold can:
+Envelope validation runs first and reports its own separate failures.
+
+### Interpreting the record
+
+Once Braid admits an event, it is a true fact about what happened. While deriving
+state, Braid does not reject it. It can:
 
 - advance the derived state
 - change nothing, when the braid has already reached a terminal state
-- sort events by their logical sequence, so events that arrive out of order still
-  replay the same way
+- replay events in their logical sequence, so events that arrive out of order
+  still produce the same state
 - record an anomaly, when a well formed event does not fit the current state
 
 An anomaly leaves the event in the log and leaves the derived state unchanged.
@@ -81,7 +82,7 @@ validated, such as one naming an absolute path or a path outside the repository,
 fails the same gate.
 
 A `scope_violation_resolved` event is the only thing that clears a violation.
-Ingest accepts that event from a human contributor only, so an agent cannot
+Braid accepts that event from a human contributor only, so an agent cannot
 dismiss the gate that constrains it.
 
 An unresolved violation blocks the braid from surfacing for review and from being
