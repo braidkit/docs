@@ -31,6 +31,7 @@ jobs:
           # The placeholder home page and the installation page are the whole
           # published site until the V1 pages land.
           test -d site/getting-started/installation
+          test -d site/get-help
       - name: Upload the rendered site
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
