@@ -58,6 +58,7 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Installation: getting-started/installation.md
+  - Get help: get-help.md
 
 extra:
   social:
