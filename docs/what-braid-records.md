@@ -1,118 +1,106 @@
 ---
 title: What Braid records
-description: What Braid captures about your work, where it is stored, and the points at which it leaves your machine.
+description: What Braid records, how it identifies you, and when it sends data to external services.
 ---
 
 # What Braid records
 
-Read this before pointing Braid at a codebase you care about. It covers what
-Braid captures, where that lands, and the points at which it leaves your
-machine.
+Braid keeps a local record of agent work. It records the prompt that starts a
+captured session, along with agent messages, reasoning, tool calls, and tool
+results. It can contain source code, file contents, diffs, and other data
+passed to or returned from a tool.
 
-## Contributor identity
+Braid does not send that record to an external service while it captures work or
+moves events to its local daemon. Today, it sends evidence only when intent
+reconstruction or finalization runs with an intent endpoint configured.
 
-GitHub proves the person. A local Ed25519 key proves the device. Braid issues
-its own opaque session tokens.
+## Your identity and device
 
-The stable identity is GitHub's numeric user ID. A Braid user ID is an opaque
-alphanumeric value such as `usr_008J4CT4ANK7F24SNAXWSQFEZW`. GitHub usernames,
-email addresses, names, and avatars are stored as current profile data only, so
-a renamed GitHub account is still the same Braid user.
+Braid associates work with your account and the device that signed it. At launch,
+you sign in through GitHub. GitHub identifies you to Braid; it does not give
+Braid repository permissions and does not require a GitHub App installation.
+Braid is designed to support additional sign-in providers later.
 
-A contributor fingerprint is derived from a signing key and identifies the
-contributor instance that signed an event. It is not the Braid user ID. One
-Braid user can hold several device keys, each with its own fingerprint.
+Each device has a local signing key. Braid uses that key to sign work events and
+distinguish the device or agent session that signed them. You can use more than
+one device with the same account; each retains its own signer history.
 
-The GitHub App is used only to identify and authenticate the person. It does not
-require a repository permission or an App installation.
+## At a glance
 
-## Device credentials
+| Action | Where the data goes | Leaves your machine? |
+| --- | --- | --- |
+| Sign in | Braid's identity service | Your identity, never your work |
+| Capture agent work | Local inbox | No |
+| Add a captured session to a braid | Local Braid daemon, over loopback | No |
+| Reconstruct intent for review | Braid's intent service, which calls a model provider | Yes, when configured |
+| Finalize a braid | Braid's intent service, which calls a model provider | Yes by default, when configured |
 
-Registering a device links its key to the signed-in Braid user and proves the
-device holds the matching private key. Later sessions for that device are tied
-to that key.
+## What Braid records
 
-Revoking a device revokes every session tied to it. Revoking the GitHub App
-authorization revokes every Braid session for that GitHub identity.
+Braid records the prompt that starts a captured session, along with session
+boundaries, agent messages, reasoning, and tool calls with their arguments and
+results.
 
-## What a signed work event contains
+Some context is cooperative. Braid asks the agent to mark attempts, changes in
+understanding, and final decisions in its output. Braid records those markers
+only when the agent emits them.
 
-Each event carries:
+Capture is best effort. Unsupported or malformed output, or a capture error,
+can result in a partial record. Capture does not interrupt the agent.
 
-- an event ID
-- the braid ID and the thread ID it belongs to
-- the contributor instance that acted
-- the time the action happened
-- the capture method
-- exactly one payload
-- an Ed25519 signature
+Each record is signed with the local Braid key, so Braid can verify the event
+has not changed and identify the key that signed it.
 
-The signing key is at `~/.braid/key.pem`. To sign, the client clears the
-signature field, renders the rest as Protobuf JSON using proto field names and
-enum strings with unset fields omitted, canonicalizes that JSON with RFC 8785,
-hashes it with SHA-256, and signs the digest. The signature covers every other
-field in the event. An event with an invalid signature is rejected.
+## Redaction
 
-## What is captured while an agent works
+Braid does not redact or truncate anything yet. Tool arguments and results are
+recorded as they occurred, so if an agent reads a file that holds credentials,
+those values are in the record too.
 
-The payloads include tool use, agent reasoning, prompts, intent declarations,
-attempt boundaries, commits, reviews, decisions, agent start and end, context
-snapshots, and scope violations. Lifecycle transitions are also events.
+The record stays on your machine until you reconstruct intent or finalize a
+braid, so what it contains is yours to manage until then. Automatic redaction is
+planned for a future release.
 
-Tool arguments and tool results are recorded as they occurred. The schema
-reserves fields for marking a tool argument or result as redacted or truncated,
-and nothing sets them today, so no redaction happens. A captured prompt, a
-captured tool call, and a captured result can therefore contain source code,
-file contents, diffs, and anything else passed to or returned from a tool.
+## When Braid sends data
 
-## What leaves your machine
+Capture writes its record to disk and sends no part of it off your machine.
+Commands that need a signed-in identity, capture among them, do contact the
+Braid identity service to prove that identity. It receives your GitHub identity
+and your device key, stores hashes of session tokens rather than the tokens, and
+never receives your code, your prompts, or your captured work.
 
-There are three points to know about, and they are different.
+Adding a captured session to a braid sends its events only to the local daemon,
+over loopback (`127.0.0.1:18082` by default).
 
-**Capture writes to disk only.** While an agent runs, each event is signed with
-your local key and appended to a file in the local inbox. Capture opens no
-network connection.
+Braid sends a braid's evidence off your machine only when an intent endpoint is
+configured and you:
 
-**Adding a session to a braid sends its events to the local daemon.** The
-captured events are drained over a loopback gRPC connection, by default
-`127.0.0.1:18082`. They stay on the machine.
+- reconstruct intent while preparing a review
+- finalize a braid; this sends evidence automatically by default
 
-**Intent reconstruction sends a braid's evidence to a model provider.** The
-evidence is that braid's captured events, which includes the prompts, the
-reasoning, and the tool calls with their arguments and results. It is sent to
-the configured intent endpoint, and that service invokes a model provider. This
-is the point at which captured work leaves the machine.
+The evidence includes the braid's captured events, such as prompts, agent
+messages, reasoning, and tool calls with their arguments and results.
+Finalization can disable this send for an individual invocation.
 
-Two things trigger it:
+Braid sends no evidence when no intent endpoint is configured. The example
+configuration uses Braid's hosted service, and you can point the endpoint at a
+service you operate instead.
 
-- asking for intent to be reconstructed for a braid while preparing a review
-- finalizing a braid, which sends the evidence automatically by default when an
-  endpoint is configured
+## Whose services these are
 
-The second is worth restating. Finalizing a braid sends its evidence without a
-separate confirmation step. It can be turned off per invocation, and it is
-skipped when no endpoint is configured.
+The identity service and the intent service are both Braid's own. Neither is a
+third party.
 
-There is no endpoint compiled into Braid. Until a machine configuration sets
-one, nothing is sent and the finalize step skips it. The example configuration
-Braid ships sets it to Braid's hosted server, so a machine set up from that
-example does send evidence there. The endpoint can point at a service you run
-instead.
+The intent service reconstructs the intent behind a braid and returns it. It
+stores nothing. Reconstruction needs a model, so the service passes the evidence
+to a model provider, and that provider is the only third party in the path.
 
-**The identity service does not receive your work.** It stores user, provider
-identity, device, session, transaction, and audit records, and it stores hashes
-of session tokens rather than the tokens. It does not receive source code,
-diffs, prompts, Braid work records, or reconstructed intent.
+Braid keeps the result rather than the service keeping it. The reconstructed
+intent is archived on your machine and attached to your repository's Git notes,
+which is what lets someone read a braid later.
 
-**The local surfaces have no user authentication.** The daemon and the intent
-server have no server-side user authentication and are meant to stay on
-loopback. Anything else running on the machine that can reach those ports can
-read captured work.
+## Local services
 
-## Losing the signing key
-
-Events already signed with a lost key stay in the record and their signatures
-stay valid. They remain attributed to a key you no longer hold.
-
-A new key produces a new contributor fingerprint, so work signed after the loss
-is attributed to a different contributor instance than work signed before it.
+The local daemon and local intent server are designed to run only on loopback.
+They do not provide server-side user authentication. Other processes on the same
+machine that can reach those ports can read captured work.
