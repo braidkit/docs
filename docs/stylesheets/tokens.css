@@ -68,13 +68,11 @@
   --font-display: var(--font-sans);
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
-  /* Loaded weights — see the <link> in overrides/main.html:
-   *   Hanken Grotesk  400 500 600 700 (+400 italic)
-   *   JetBrains Mono  400 500
-   * These are static faces, not a variable axis. Any other value snaps to the
-   * nearest loaded one with no warning: `font-weight: 650` renders as 700, so
-   * a heading set to 650 is indistinguishable from one set to 700. Use only
-   * the numbers above, or add the face to the <link> first. */
+  /* Loaded faces — see fonts.css and FONTS.md:
+   *   Hanken Grotesk  variable 400–700 upright, static 400 italic
+   *   JetBrains Mono  static 400
+   * Use the upright variable range freely. Adding another italic or mono
+   * weight requires vendoring that face and declaring it in fonts.css. */
 
   /* Modular scale, ratio ~1.25.
    *

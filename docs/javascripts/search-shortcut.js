@@ -48,26 +48,51 @@
     });
   }
 
-  function onKeydown(event) {
-    if (event.defaultPrevented || typeof event.key !== "string") return;
+  function syncDrawerButton() {
+    var drawer = document.getElementById("__drawer");
+    if (!drawer) return;
 
-    // Enter/Space on a label we have given button semantics.
+    document.querySelectorAll(".braid-header__menu").forEach(function (button) {
+      button.setAttribute("aria-expanded", String(drawer.checked));
+      button.setAttribute("aria-label", drawer.checked ? "Close navigation" : "Open navigation");
+    });
+  }
+
+  function toggleDrawer() {
+    var drawer = document.getElementById("__drawer");
+    if (!drawer) return;
+
+    setToggle("__drawer", !drawer.checked);
+    syncDrawerButton();
+  }
+
+  function onKeydown(event) {
+    if (typeof event.key !== "string") return;
+
+    /* Material consumes Enter on its drawer trigger before this delegated
+       listener runs. Handle the native button before respecting that flag;
+       preventing the default also avoids a second synthetic click. */
     var target = event.target;
+    var menuButton = target && target.closest
+      ? target.closest(".braid-header__menu")
+      : null;
+
+    if (menuButton && (event.key === "Enter" || event.key === " ")) {
+      event.preventDefault();
+      toggleDrawer();
+      return;
+    }
+
+    if (event.defaultPrevented) return;
+
+    // Enter/Space on the search label we have given button semantics.
     var trigger = target && target.closest
-      ? target.closest(".braid-search-trigger, .braid-header__menu")
+      ? target.closest(".braid-search-trigger")
       : null;
 
     if (trigger && (event.key === "Enter" || event.key === " ")) {
       event.preventDefault();
-      if (trigger.classList.contains("braid-search-trigger")) {
-        openSearch();
-      } else {
-        // The drawer button is a toggle, so keyboard activation has to close it
-        // as well as open it — a pointer user gets that from the label, but
-        // forcing `true` here would trap a keyboard user in an open drawer.
-        var drawer = document.getElementById(trigger.htmlFor);
-        if (drawer) setToggle(trigger.htmlFor, !drawer.checked);
-      }
+      openSearch();
       return;
     }
 
@@ -80,11 +105,18 @@
   }
 
   document.addEventListener("keydown", onKeydown);
+  document.addEventListener("change", function (event) {
+    if (event.target && event.target.id === "__drawer") syncDrawerButton();
+  });
 
   localizeShortcutHint();
+  syncDrawerButton();
 
   // Material re-renders the header on instant navigation; re-apply after each.
   if (window.document$ && window.document$.subscribe) {
-    window.document$.subscribe(localizeShortcutHint);
+    window.document$.subscribe(function () {
+      localizeShortcutHint();
+      syncDrawerButton();
+    });
   }
 })();
