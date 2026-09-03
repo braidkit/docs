@@ -69,9 +69,11 @@
   function onKeydown(event) {
     if (typeof event.key !== "string") return;
 
-    /* Material consumes Enter on its drawer trigger before this delegated
-       listener runs. Handle the native button before respecting that flag;
-       preventing the default also avoids a second synthetic click. */
+    /* The drawer trigger is a <label>, so a pointer toggles #__drawer natively
+       and nothing here needs to handle click. Keyboard is the gap: labels are
+       not activated by Enter or Space, so the button semantics the markup
+       advertises have to be implemented. Because activation is not native
+       there is no synthetic click to collide with, and this toggles once. */
     var target = event.target;
     var menuButton = target && target.closest
       ? target.closest(".braid-header__menu")

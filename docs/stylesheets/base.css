@@ -291,3 +291,23 @@ body {
   margin: 0 0 var(--space-6);
   max-width: 34rem;
 }
+
+/* --------------------------------------------------------- empty states */
+
+.md-typeset .braid-empty-state {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin-top: var(--space-6);
+  padding: var(--space-5);
+}
+
+.md-typeset .braid-empty-state h2 {
+  font-size: var(--text-xl);
+  margin: 0 0 var(--space-2);
+}
+
+.md-typeset .braid-empty-state p {
+  color: var(--text-muted);
+  margin: 0;
+}
