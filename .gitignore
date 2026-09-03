@@ -4,3 +4,6 @@ site/
 __pycache__/
 *.pyc
 
+# Generated from the published pages at build time by scripts/build_llms.py.
+docs/llms.txt
+docs/llms-full.txt

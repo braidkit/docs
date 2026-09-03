@@ -1,3 +1,8 @@
+---
+title: Installation
+description: System requirements and how to install, verify, upgrade, and remove Braid on macOS.
+---
+
 # Installation
 
 Braid installs as two binaries from one archive: `braid`, the CLI you drive, and
