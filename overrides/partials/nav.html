@@ -1,0 +1,45 @@
+{#
+  Primary navigation.
+
+  Identical to Material's own nav.html apart from the support link appended
+  after the list. The title block is Material's — it is the drawer header on
+  mobile and the per-level back button, so it must keep its markup.
+
+  The support link is configured under `extra.support` in mkdocs.yml rather
+  than hard-coded here, so moving or renaming the help page does not require a
+  template edit. It is omitted entirely when unconfigured.
+#}
+{% import "partials/nav-item.html" as item with context %}
+{% set class = "md-nav md-nav--primary braid-nav" %}
+{% if "navigation.tabs" in features %}
+  {% set class = class ~ " md-nav--lifted" %}
+{% endif %}
+<nav class="{{ class }}" aria-label="{{ lang.t('nav') }}" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <span class="md-nav__button md-logo" aria-label="{{ config.site_name }}" data-md-component="logo">
+      {% include "partials/logo.html" %}
+    </span>
+    {{ config.site_name }}
+  </label>
+
+  <ul class="md-nav__list braid-nav__list" data-md-scrollfix>
+    {% for nav_item in nav %}
+      {% set path = "__nav_" ~ loop.index %}
+      {{ item.render(nav_item, path, 1) }}
+    {% endfor %}
+  </ul>
+
+  {% if config.extra.support and config.extra.support.link %}
+    <div class="braid-nav__footer">
+      <a href="{{ config.extra.support.link | url }}" class="braid-nav__support">
+        <span class="braid-nav__support-icon" aria-hidden="true">
+          {% include ".icons/material/message-question-outline.svg" %}
+        </span>
+        <span>
+          <strong>{{ config.extra.support.title }}</strong>
+          <small>{{ config.extra.support.description }}</small>
+        </span>
+      </a>
+    </div>
+  {% endif %}
+</nav>

@@ -1,0 +1,25 @@
+{#
+  Material's social links are normally global. The GitHub mark in this site is
+  a page-source affordance instead: `edit_uri` in mkdocs.yml makes
+  `page.edit_url` resolve to the current Markdown file on GitHub.
+
+  Other social entries keep Material's normal configured link behavior, and
+  the repository URL remains a safe fallback for pages without a source file.
+#}
+<div class="md-social">
+  {% for social in config.extra.social %}
+    {% set rel = "noopener" %}
+    {% if "mastodon" in social.icon %}
+      {% set rel = rel ~ " me" %}
+    {% endif %}
+    {% set link = page.edit_url if social.page_source and page and page.edit_url else social.link %}
+    {% set title = social.name %}
+    {% if not title and "//" in link %}
+      {% set _, url = link.split("//") %}
+      {% set title = url.split("/")[0] %}
+    {% endif %}
+    <a href="{{ link }}" target="_blank" rel="{{ rel }}" title="{{ title | e }}" aria-label="{{ title | e }}" class="md-social__link">
+      {% include ".icons/" ~ social.icon ~ ".svg" %}
+    </a>
+  {% endfor %}
+</div>

@@ -1,0 +1,57 @@
+{#
+  Braid's documentation header: product identity, search, theme control.
+
+  Two details are load-bearing:
+
+  * Material's header-title observer marks the page-title chip active once the
+    H1 leaves the viewport. Its nested header-topic remains present on every
+    page so instant navigation can swap the current title without retaining the
+    previous page's title.
+  * The search trigger is a <label> because Material's search overlay is driven
+    by the `#__search` checkbox. It is given button semantics here and the
+    Enter/Space handling it therefore needs lives in search-shortcut.js.
+#}
+<header class="md-header braid-header" data-md-component="header">
+  <nav class="md-header__inner braid-header__inner" aria-label="Header">
+    <div class="braid-header__brand">
+      <button class="md-header__button md-icon braid-header__menu" type="button" aria-controls="__drawer" aria-expanded="false" aria-label="Open navigation">
+        {% set icon = config.theme.icon.menu or "material/menu" %}
+        {% include ".icons/" ~ icon ~ ".svg" %}
+      </button>
+      <a href="{{ config.extra.homepage | d(nav.homepage.url, true) | url }}" class="braid-header__home" aria-label="{{ config.site_name }} home">
+        <span class="braid-header__logo">{% include "partials/logo.html" %}</span>
+        <span class="braid-header__divider" aria-hidden="true"></span>
+        <span class="braid-header__product">Docs</span>
+      </a>
+    </div>
+
+    {# Kept in the DOM on every page, empty or not: instant navigation can only
+       swap a component that exists on both the old and the new page. #}
+    <div class="md-header__title braid-header__context" data-md-component="header-title">
+      <div data-md-component="header-topic">
+        {%- if page and not page.is_homepage -%}
+          <span class="braid-header__page">{{ page.title }}</span>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="braid-header__tools">
+      {% if "material/search" in config.plugins %}
+        <label class="braid-search-trigger" for="__search" aria-label="Search documentation" role="button" tabindex="0">
+          {% set icon = config.theme.icon.search or "material/magnify" %}
+          {% include ".icons/" ~ icon ~ ".svg" %}
+          <span class="braid-search-trigger__label">Search docs</span>
+          <kbd data-braid-shortcut>Ctrl K</kbd>
+        </label>
+        {% include "partials/search.html" %}
+      {% endif %}
+
+      {% if config.theme.palette %}
+        {% include "partials/palette.html" %}
+      {% endif %}
+      {% if not config.theme.palette is mapping %}
+        {% include "partials/javascripts/palette.html" %}
+      {% endif %}
+    </div>
+  </nav>
+</header>

@@ -1,0 +1,293 @@
+/* Braid Docs — content styles
+ *
+ * Everything inside the article: typography, links, code, tables, callouts,
+ * buttons. Page chrome lives in shell.css.
+ *
+ * All values come from tokens.css. No raw colours, no raw sizes, no
+ * per-theme branches.
+ */
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--brand) var(--tint-strong), transparent);
+}
+
+/* --------------------------------------------------------------- typography */
+
+.md-typeset {
+  color: var(--text);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+}
+
+.md-typeset :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--text);
+  font-family: var(--font-display);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+}
+
+.md-typeset h1 {
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  margin: 0 0 var(--space-5);
+}
+
+/* Space is the section separator, not a rule. 64px above and 12px below is a
+   ~5:1 split, so the gap unambiguously belongs to the heading beneath it —
+   a near-symmetric gap leaves the reader unsure which section it opens. */
+.md-typeset h2 {
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  margin: var(--space-8) 0 var(--space-3);
+}
+
+.md-typeset h3 {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  margin: var(--space-6) 0 var(--space-3);
+}
+
+.md-typeset h4 {
+  font-size: var(--text-base);
+  font-weight: 600;
+  margin: var(--space-5) 0 var(--space-2);
+}
+
+/* Lead paragraph: the first paragraph after the page title. */
+.md-typeset h1 + p {
+  color: var(--text-muted);
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+  margin-bottom: var(--space-5);
+}
+
+.md-typeset hr {
+  border-bottom: 1px solid var(--border);
+}
+
+.md-typeset a {
+  color: var(--brand);
+  text-decoration-color: color-mix(in srgb, var(--brand) 40%, transparent);
+  text-underline-offset: 0.18em;
+  transition: text-decoration-color var(--duration) var(--ease);
+}
+
+.md-typeset a:hover {
+  text-decoration-color: currentcolor;
+}
+
+/* Heading anchors stay out of the way until the heading is hovered or the
+   anchor itself is keyboard-focused. */
+.md-typeset :is(h1, h2, h3, h4, h5, h6) .headerlink {
+  color: var(--text-subtle);
+  opacity: 0;
+  transition: opacity var(--duration) var(--ease);
+}
+
+.md-typeset :is(h1, h2, h3, h4, h5, h6):hover .headerlink,
+.md-typeset .headerlink:focus-visible {
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------------- code */
+
+.md-typeset code {
+  background: var(--code-bg);
+  border-radius: var(--radius-sm);
+  color: var(--code-fg);
+  font-size: 0.875em;
+  padding: 0.1em 0.4em;
+}
+
+.md-typeset pre > code {
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+  padding: var(--space-4);
+}
+
+.md-typeset pre {
+  border-radius: var(--radius-md);
+}
+
+.md-typeset .highlight {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------------- tables */
+
+/* Material makes both the table and its wrapper `inline-block` so tables
+   shrink-wrap their content, which leaves a narrow ragged box in a wide
+   column. Both have to become block/table boxes: `width: 100%` on an
+   inline-block table stretches the element but not its columns, so the header
+   band would stop short of the border. The scrollwrap around it still handles
+   tables too wide to fit. */
+.md-typeset__table {
+  display: block;
+}
+
+.md-typeset table:not([class]) {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  display: table;
+  font-size: var(--text-sm);
+  width: 100%;
+}
+
+.md-typeset table:not([class]) th {
+  background: var(--surface-sunken);
+  color: var(--text);
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+.md-typeset table:not([class]) td {
+  border-top: 1px solid var(--border);
+}
+
+/* Material lets code break mid-token (`word-break: break-word`). In a narrow
+   table column that splits identifiers across lines — `thread_dropped` renders
+   as "thread_droppe / d". Keep them whole and let the column size to them; the
+   scrollwrap handles a table that then exceeds the measure. */
+.md-typeset table:not([class]) code {
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------- callouts */
+
+.md-typeset .admonition,
+.md-typeset details {
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--callout) var(--mix-border), var(--border));
+  border-radius: var(--radius-md);
+  box-shadow: none;
+  font-size: var(--text-md);
+
+  /* Every callout resolves one variable. Adding a severity below is one line,
+     not a new block of border/background/icon rules. */
+  --callout: var(--brand);
+}
+
+/* Callout severities.
+ *
+ * Each severity resolves one variable; adding one below is a single line.
+ *
+ * The re-assert rules that follow are not redundant. Material colours every
+ * severity with literal hex values at (0,3,0) and (0,3,1) — border-color, the
+ * title tint, the icon, and the fold arrow. A token-driven rule at lower
+ * specificity loses silently: the callouts render in Material's stock orange,
+ * blue and green with no warning. These selectors mirror Material's own shape
+ * so ours win on source order rather than on !important.
+ */
+.md-typeset :is(.admonition, details):is(.note, .abstract, .summary, .tldr, .info, .todo, .question, .help, .faq) {
+  --callout: var(--callout-info);
+}
+
+.md-typeset :is(.admonition, details):is(.tip, .hint, .important, .success, .check, .done) {
+  --callout: var(--callout-tip);
+}
+
+.md-typeset :is(.admonition, details):is(.warning, .caution, .attention) {
+  --callout: var(--callout-warn);
+}
+
+.md-typeset :is(.admonition, details):is(.failure, .fail, .missing, .danger, .error, .bug) {
+  --callout: var(--callout-danger);
+}
+
+.md-typeset :is(.admonition, details):is(.note, .abstract, .summary, .tldr, .info, .todo, .question, .help, .faq, .tip, .hint, .important, .success, .check, .done, .warning, .caution, .attention, .failure, .fail, .missing, .danger, .error, .bug, .example, .quote, .cite) {
+  border-color: color-mix(in srgb, var(--callout) var(--mix-border), var(--border));
+}
+
+.md-typeset :is(.admonition, details):is(.note, .abstract, .summary, .tldr, .info, .todo, .question, .help, .faq, .tip, .hint, .important, .success, .check, .done, .warning, .caution, .attention, .failure, .fail, .missing, .danger, .error, .bug, .example, .quote, .cite) > :is(.admonition-title, summary) {
+  background-color: color-mix(in srgb, var(--callout) var(--tint-weak), transparent);
+}
+
+.md-typeset :is(.admonition, details):is(.note, .abstract, .summary, .tldr, .info, .todo, .question, .help, .faq, .tip, .hint, .important, .success, .check, .done, .warning, .caution, .attention, .failure, .fail, .missing, .danger, .error, .bug, .example, .quote, .cite) > :is(.admonition-title, summary)::before {
+  background-color: var(--callout);
+}
+
+.md-typeset :is(.admonition, details):is(.note, .abstract, .summary, .tldr, .info, .todo, .question, .help, .faq, .tip, .hint, .important, .success, .check, .done, .warning, .caution, .attention, .failure, .fail, .missing, .danger, .error, .bug, .example, .quote, .cite) > :is(.admonition-title, summary)::after {
+  color: var(--callout);
+}
+
+/* ------------------------------------------------------------------ buttons */
+
+.md-typeset .md-button {
+  border-color: color-mix(in srgb, var(--brand) var(--mix-border), transparent);
+  border-radius: var(--radius-md);
+  border-width: 1px;
+  color: var(--brand);
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 600;
+  padding: var(--space-2) var(--space-4);
+  transition: background var(--duration) var(--ease),
+              border-color var(--duration) var(--ease),
+              color var(--duration) var(--ease);
+}
+
+.md-typeset .md-button:hover {
+  background: color-mix(in srgb, var(--brand) var(--tint-weak), transparent);
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+.md-typeset .md-button--primary {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: var(--brand-contrast);
+}
+
+.md-typeset .md-button--primary:hover {
+  background: var(--brand-strong);
+  border-color: var(--brand-strong);
+  color: var(--brand-contrast);
+}
+
+/* ------------------------------------------------------- launch placeholder */
+/* Used by the pre-launch home page (docs/index.md). */
+
+.braid-placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 60vh;
+  padding: var(--space-7) 0 var(--space-8);
+}
+
+.braid-placeholder__eyebrow {
+  color: var(--brand);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+}
+
+.md-typeset .braid-placeholder h1 {
+  font-size: clamp(2.5rem, 7vw, 4.5rem);
+  margin: var(--space-4) 0;
+  max-width: 14ch;
+}
+
+.braid-placeholder__lead {
+  color: var(--text-muted);
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+  margin: 0 0 var(--space-6);
+  max-width: 34rem;
+}
