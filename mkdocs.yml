@@ -46,13 +46,6 @@ theme:
 plugins:
   - search
 
-# Prototype pages exercise the complete documentation shell in local previews.
-# Production keeps them out of the build until their content is reviewed, along
-# with the stylesheet that only dresses them. mkdocs.preview.yml clears this.
-exclude_docs: |
-  prototype/
-  stylesheets/prototype.css
-
 # Order matters: tokens define the variables the other two consume.
 extra_css:
   - stylesheets/fonts.css

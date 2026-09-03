@@ -1,7 +1,0 @@
-# Top-level order for the local preview only. Production's order lives in
-# mkdocs.yml. Anything not listed is appended alphabetically.
-nav:
-  - index.md
-  - getting-started
-  - prototype
-  - get-help.md
