@@ -1,0 +1,44 @@
+{# Braid's documentation header keeps the product identity, search, and theme
+   controls available without introducing empty top-level product areas. #}
+<header class="md-header braid-header" data-md-component="header">
+  <nav class="md-header__inner braid-header__inner" aria-label="Header">
+    <div class="braid-header__brand">
+      <label class="md-header__button md-icon braid-header__menu" for="__drawer" aria-label="Open navigation" role="button" tabindex="0">
+        {% set icon = config.theme.icon.menu or "material/menu" %}
+        {% include ".icons/" ~ icon ~ ".svg" %}
+      </label>
+      <a href="{{ config.extra.homepage | d(nav.homepage.url, true) | url }}" class="braid-header__home" aria-label="Braid Docs home">
+        <span class="braid-header__logo">{% include "partials/logo.html" %}</span>
+        <span class="braid-header__divider" aria-hidden="true"></span>
+        <span class="braid-header__product">Docs</span>
+      </a>
+    </div>
+
+    <div class="braid-header__tools">
+      <div class="braid-header__context" aria-label="Current page">
+        <span>Docs</span>
+        {% if not page.is_homepage %}
+          <span class="braid-header__slash" aria-hidden="true">/</span>
+          <span class="braid-header__page">{{ page.title }}</span>
+        {% endif %}
+      </div>
+
+      {% if "material/search" in config.plugins %}
+        <label class="braid-search-trigger" for="__search" aria-label="Search documentation" role="button" tabindex="0">
+          {% set icon = config.theme.icon.search or "material/magnify" %}
+          {% include ".icons/" ~ icon ~ ".svg" %}
+          <span>Search docs</span>
+          <kbd>⌘ K</kbd>
+        </label>
+        {% include "partials/search.html" %}
+      {% endif %}
+
+      {% if config.theme.palette %}
+        {% include "partials/palette.html" %}
+      {% endif %}
+      {% if not config.theme.palette is mapping %}
+        {% include "partials/javascripts/palette.html" %}
+      {% endif %}
+    </div>
+  </nav>
+</header>

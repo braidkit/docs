@@ -1,12 +1,10 @@
 {% extends "base.html" %}
 
-{% block header %}{% endblock %}
-
 <!-- Breadcrumbs: the open-source Material theme has no breadcrumb feature, so we
      render them from the page's nav ancestors. Shown on every page except the
      top-level home page. -->
 {% block content %}
-  {% if page and page.ancestors %}
+  {% if page and page.ancestors and not page.is_homepage %}
     <nav class="braid-crumbs" aria-label="Breadcrumb">
       <ol>
         <li><a href="{{ nav.homepage.url | url }}">Home</a></li>

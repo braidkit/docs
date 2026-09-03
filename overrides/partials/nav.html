@@ -1,0 +1,31 @@
+{% import "partials/nav-item.html" as item with context %}
+{% set class = "md-nav md-nav--primary braid-nav" %}
+{% if "navigation.tabs" in features %}
+  {% set class = class ~ " md-nav--lifted" %}
+{% endif %}
+<nav class="{{ class }}" aria-label="Documentation navigation" data-md-level="0">
+  <label class="md-nav__title braid-nav__title" for="__drawer">
+    <span class="md-nav__button md-logo">{% include "partials/logo.html" %}</span>
+    <span>Docs</span>
+    <span class="braid-nav__close" aria-hidden="true">×</span>
+  </label>
+
+  <ul class="md-nav__list braid-nav__list" data-md-scrollfix>
+    {% for nav_item in nav %}
+      {% set path = "__nav_" ~ loop.index %}
+      {{ item.render(nav_item, path, 1) }}
+    {% endfor %}
+  </ul>
+
+  <div class="braid-nav__footer">
+    <a href="{{ 'get-help/' | url }}" class="braid-nav__support">
+      <span class="braid-nav__support-icon" aria-hidden="true">
+        {% include ".icons/material/message-question-outline.svg" %}
+      </span>
+      <span>
+        <strong>Contact support</strong>
+        <small>Get help on Discord</small>
+      </span>
+    </a>
+  </div>
+</nav>

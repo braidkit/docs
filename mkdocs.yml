@@ -10,6 +10,21 @@ theme:
   logo: assets/brand/logo/braid-mark-purple-512.png
   favicon: assets/brand/logo/braid-avatar-purple-512.png
   font: false
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Use light theme
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Use dark theme
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Use system theme
   icon:
     repo: fontawesome/brands/github
   features:
@@ -23,10 +38,21 @@ theme:
     - content.code.copy
     - content.code.annotate
     - content.tooltips
-plugins: []
+    - search.suggest
+    - search.highlight
+plugins:
+  - search
+
+# Prototype pages exercise the complete documentation shell in local previews.
+# Production keeps them out of the build until their content is reviewed.
+exclude_docs: |
+  prototype/
 
 extra_css:
   - stylesheets/brand.css
+
+extra_javascript:
+  - javascripts/search-shortcut.js
 
 markdown_extensions:
   - admonition
@@ -36,6 +62,7 @@ markdown_extensions:
   - footnotes
   - toc:
       permalink: true
+      title: On this page
   - pymdownx.details
   - pymdownx.highlight:
       anchor_linenums: true

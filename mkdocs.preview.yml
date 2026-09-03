@@ -9,4 +9,35 @@
 # Nothing here changes what gets published. CI builds mkdocs.yml.
 INHERIT: ./mkdocs.yml
 exclude_docs: ""
-nav: null
+nav:
+  - Getting started:
+      - Home: prototype/index.md
+      - Overview: prototype/overview.md
+      - Installation: getting-started/installation.md
+      - Quickstart: prototype/quickstart.md
+  - Workflows:
+      - Agent sessions:
+          - Capture:
+              - Capture agent work: prototype/capture.md
+              - Inspect a session: prototype/inspect-session.md
+      - Review and governance:
+          - Human review:
+              - Review and verify: prototype/review.md
+              - Approval boundaries: prototype/approval-boundaries.md
+          - Automated checks:
+              - Verification evidence: prototype/verification-evidence.md
+  - Concepts:
+      - Work model:
+          - Core objects:
+              - Braids and threads: prototype/concepts.md
+      - Provenance:
+          - Event model:
+              - Signed events: prototype/signed-events.md
+  - CLI reference:
+      - Command groups:
+          - Workflow:
+              - Commands: prototype/cli.md
+          - Identity:
+              - Authentication commands: prototype/auth-commands.md
+  - Help:
+      - Get help: get-help.md
