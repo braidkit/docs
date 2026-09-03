@@ -52,6 +52,7 @@ exclude_docs: |
 
 # Order matters: tokens define the variables the other two consume.
 extra_css:
+  - stylesheets/fonts.css
   - stylesheets/tokens.css
   - stylesheets/base.css
   - stylesheets/shell.css

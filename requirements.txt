@@ -1,3 +1,5 @@
 mkdocs==1.6.1
 mkdocs-material==9.5.50
-
+# Preview only: lets each directory define its own nav order in a .pages
+# file, so preview order is authored without a second copy of the nav.
+mkdocs-awesome-pages-plugin==2.10.1
