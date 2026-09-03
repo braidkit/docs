@@ -3,6 +3,9 @@ site_url: https://docs.braidkit.io/
 site_description: Braid documentation is coming soon.
 repo_url: https://github.com/braidkit/docs
 repo_name: braidkit/docs
+# Used by the footer's GitHub icon to resolve each rendered page back to its
+# source Markdown file on the default branch.
+edit_uri: blob/main/docs/
 
 theme:
   name: material
@@ -102,6 +105,7 @@ extra:
     link: get-help/
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/braidkit
-      name: Braid on GitHub
+      link: https://github.com/braidkit/docs
+      name: View this page on GitHub
+      page_source: true
   generator: false
