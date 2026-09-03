@@ -58,12 +58,23 @@
   --tint: 10%;
   --tint-strong: 16%;
 
+  /* How much of a hue a border carries. Recurs on callouts and buttons. */
+  --mix-border: 35%;
+
   /* -- type -------------------------------------------------------------- *
    * Two families. `--font-display` is a seam: point it at a separate display
    * face here and every heading and UI label follows, with no other edits. */
   --font-sans: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-display: var(--font-sans);
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* Loaded weights — see the <link> in overrides/main.html:
+   *   Hanken Grotesk  400 500 600 700 (+400 italic)
+   *   JetBrains Mono  400 500
+   * These are static faces, not a variable axis. Any other value snaps to the
+   * nearest loaded one with no warning: `font-weight: 650` renders as 700, so
+   * a heading set to 650 is indistinguishable from one set to 700. Use only
+   * the numbers above, or add the face to the <link> first. */
 
   /* Modular scale, ratio ~1.25.
    *

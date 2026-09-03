@@ -23,7 +23,10 @@
   {% if page and page.ancestors and not page.is_homepage %}
     <nav class="braid-crumbs" aria-label="Breadcrumb">
       <ol>
-        {% if nav.homepage and nav.homepage.url %}
+        {# The homepage's own url is the empty string, which is falsy — test for
+           the page, not its url, or Home silently drops off every crumb. The
+           `url` filter turns "" into a correct relative link. #}
+        {% if nav.homepage %}
           <li><a href="{{ nav.homepage.url | url }}">Home</a></li>
           <li class="braid-crumbs__sep" aria-hidden="true">/</li>
         {% endif %}

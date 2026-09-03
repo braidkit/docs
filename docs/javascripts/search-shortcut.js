@@ -62,7 +62,11 @@
       if (trigger.classList.contains("braid-search-trigger")) {
         openSearch();
       } else {
-        setToggle(trigger.htmlFor, true);
+        // The drawer button is a toggle, so keyboard activation has to close it
+        // as well as open it — a pointer user gets that from the label, but
+        // forcing `true` here would trap a keyboard user in an open drawer.
+        var drawer = document.getElementById(trigger.htmlFor);
+        if (drawer) setToggle(trigger.htmlFor, !drawer.checked);
       }
       return;
     }

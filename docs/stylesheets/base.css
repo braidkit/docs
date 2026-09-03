@@ -48,19 +48,19 @@ body {
    a near-symmetric gap leaves the reader unsure which section it opens. */
 .md-typeset h2 {
   font-size: var(--text-2xl);
-  font-weight: 650;
+  font-weight: 600;
   margin: var(--space-8) 0 var(--space-3);
 }
 
 .md-typeset h3 {
   font-size: var(--text-xl);
-  font-weight: 650;
+  font-weight: 600;
   margin: var(--space-6) 0 var(--space-3);
 }
 
 .md-typeset h4 {
   font-size: var(--text-base);
-  font-weight: 650;
+  font-weight: 600;
   margin: var(--space-5) 0 var(--space-2);
 }
 
@@ -151,7 +151,7 @@ body {
   background: var(--surface-sunken);
   color: var(--text);
   font-family: var(--font-display);
-  font-weight: 650;
+  font-weight: 600;
 }
 
 .md-typeset table:not([class]) td {
@@ -171,7 +171,7 @@ body {
 .md-typeset .admonition,
 .md-typeset details {
   background: var(--surface);
-  border: 1px solid color-mix(in srgb, var(--callout) 35%, var(--border));
+  border: 1px solid color-mix(in srgb, var(--callout) var(--mix-border), var(--border));
   border-radius: var(--radius-md);
   box-shadow: none;
   font-size: var(--text-md);
@@ -209,7 +209,7 @@ body {
 }
 
 .md-typeset :is(.admonition, details):is(.note, .abstract, .summary, .tldr, .info, .todo, .question, .help, .faq, .tip, .hint, .important, .success, .check, .done, .warning, .caution, .attention, .failure, .fail, .missing, .danger, .error, .bug, .example, .quote, .cite) {
-  border-color: color-mix(in srgb, var(--callout) 35%, var(--border));
+  border-color: color-mix(in srgb, var(--callout) var(--mix-border), var(--border));
 }
 
 .md-typeset :is(.admonition, details):is(.note, .abstract, .summary, .tldr, .info, .todo, .question, .help, .faq, .tip, .hint, .important, .success, .check, .done, .warning, .caution, .attention, .failure, .fail, .missing, .danger, .error, .bug, .example, .quote, .cite) > :is(.admonition-title, summary) {
@@ -227,13 +227,13 @@ body {
 /* ------------------------------------------------------------------ buttons */
 
 .md-typeset .md-button {
-  border-color: color-mix(in srgb, var(--brand) 35%, transparent);
+  border-color: color-mix(in srgb, var(--brand) var(--mix-border), transparent);
   border-radius: var(--radius-md);
-  color: var(--brand);
   border-width: 1px;
+  color: var(--brand);
   font-family: var(--font-display);
   font-size: var(--text-md);
-  font-weight: 650;
+  font-weight: 600;
   padding: var(--space-2) var(--space-4);
   transition: background var(--duration) var(--ease),
               border-color var(--duration) var(--ease),
