@@ -1,0 +1,151 @@
+/* Braid Docs — prototype-only styles
+ *
+ * Loaded by mkdocs.preview.yml, NOT by the published site. Everything here
+ * exists to dress the throwaway pages under docs/prototype/ so the shell can
+ * be reviewed with realistic-looking content.
+ *
+ * When a hub page becomes real, promote the rules it needs into base.css or
+ * shell.css and delete them from here. Keeping the split means the published
+ * stylesheet never carries CSS for markup that does not exist.
+ */
+
+/* --------------------------------------------------------------------- hero */
+
+.braid-hero {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin: 0 0 var(--space-6);
+  padding: var(--space-7) var(--space-6);
+}
+
+.braid-hero__eyebrow {
+  align-items: center;
+  color: var(--brand);
+  display: inline-flex;
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  gap: var(--space-2);
+  letter-spacing: var(--tracking-caps);
+  margin: 0 0 var(--space-3);
+  text-transform: uppercase;
+}
+
+.braid-hero__eyebrow::before {
+  background: var(--accent);
+  border-radius: 50%;
+  content: "";
+  height: 6px;
+  width: 6px;
+}
+
+.md-typeset .braid-hero h1 {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  margin: 0 0 var(--space-3);
+}
+
+.braid-hero__lead {
+  color: var(--text-muted);
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+  margin: 0;
+  max-width: 38rem;
+}
+
+.braid-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.md-typeset .braid-hero__actions .md-button {
+  margin: 0;
+}
+
+/* -------------------------------------------------------------- card grid */
+
+.md-typeset .grid.cards {
+  grid-gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  margin: var(--space-4) 0;
+}
+
+.md-typeset .grid.cards > ul > li {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: none;
+  padding: var(--space-4);
+  transition: border-color var(--duration) var(--ease);
+}
+
+.md-typeset .grid.cards > ul > li:hover {
+  border-color: var(--border-strong);
+}
+
+.md-typeset .grid.cards > ul > li > hr {
+  margin: var(--space-2) 0;
+}
+
+.md-typeset .grid.cards strong {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 650;
+}
+
+.md-typeset .grid.cards p {
+  font-size: var(--text-md);
+  line-height: var(--leading-snug);
+}
+
+.md-typeset .grid.cards > ul > li > p:first-child {
+  align-items: center;
+  display: flex;
+}
+
+.md-typeset .grid.cards > ul > li > p:first-child .twemoji {
+  align-items: center;
+  background: color-mix(in srgb, var(--brand) var(--tint-weak), transparent);
+  border-radius: var(--radius-sm);
+  color: var(--brand);
+  display: inline-flex;
+  flex: 0 0 auto;
+  height: 2rem;
+  justify-content: center;
+  margin-inline-end: var(--space-3);
+  width: 2rem;
+}
+
+.md-typeset .grid.cards .twemoji svg {
+  display: block;
+  height: 1.125rem;
+  max-height: none;
+  max-width: none;
+  width: 1.125rem;
+}
+
+/* ----------------------------------------------------------- section label */
+
+.md-typeset .hub-section-title {
+  align-items: center;
+  border: 0;
+  color: var(--text-subtle);
+  display: flex;
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  gap: var(--space-3);
+  letter-spacing: var(--tracking-caps);
+  margin: var(--space-7) 0 var(--space-3);
+  padding: 0;
+  text-transform: uppercase;
+}
+
+.md-typeset .hub-section-title::after {
+  background: var(--border);
+  content: "";
+  flex: 1;
+  height: 1px;
+}

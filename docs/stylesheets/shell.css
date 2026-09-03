@@ -1,0 +1,725 @@
+/* Braid Docs — application shell
+ *
+ * Header, navigation rail, page outline, search palette, footer, and the
+ * three-column grid that holds them.
+ *
+ * Structure of this file, and the rule that keeps the shell working:
+ *
+ *   1. Chrome that applies at every width (header, search palette, focus).
+ *   2. The three-column grid, entirely inside the desktop media query.
+ *   3. Below the desktop breakpoint, Material's own drawer runs. We adjust
+ *      its colours and nothing else.
+ *
+ * Point 3 is deliberate. Material's mobile drawer is a stack of absolutely
+ * positioned nav levels that slide horizontally, with a per-level title that
+ * doubles as the back button. Custom layout rules that leak below the
+ * breakpoint collapse that stack. Keep structural CSS inside the media query.
+ */
+
+/* ===================================================================== header
+ */
+
+.md-header.braid-header {
+  background: var(--canvas);
+  border-bottom: 1px solid var(--border);
+  box-shadow: none;
+  color: var(--text);
+  height: var(--header-height);
+  position: sticky;
+  top: 0;
+
+  /* Must stay below Material's drawer (z-index 5) — at a higher value the
+     header covers the open drawer's back button and the drawer cannot be
+     navigated up. */
+  z-index: var(--z-header);
+}
+
+.braid-header__inner {
+  align-items: center;
+  display: flex;
+  gap: var(--space-3);
+  height: 100%;
+  margin: 0;
+  max-width: none;
+  padding: 0 var(--space-4);
+}
+
+.braid-header__brand {
+  align-items: center;
+  display: flex;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.braid-header__home {
+  align-items: center;
+  color: var(--text);
+  display: inline-flex;
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 650;
+  gap: var(--space-2);
+  text-decoration: none;
+}
+
+.braid-header__logo {
+  display: inline-flex;
+  height: 24px;
+  width: 24px;
+}
+
+.braid-header__logo :is(img, svg) {
+  height: 100%;
+  width: 100%;
+}
+
+.braid-header__divider {
+  background: var(--border-strong);
+  height: 18px;
+  width: 1px;
+}
+
+.braid-header__tools {
+  align-items: center;
+  display: flex;
+  gap: var(--space-2);
+  margin-left: auto;
+}
+
+/* Current page, shown beside the wordmark. Swapped by Material's instant
+   navigation because the element carries data-md-component="header-topic". */
+.braid-header__context {
+  color: var(--text-subtle);
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 600;
+  min-width: 0;
+}
+
+/* The separator belongs to the title, not the container — the container is
+   present but empty on the home page. */
+.braid-header__page {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.braid-header__page::before {
+  color: var(--border-strong);
+  content: "/";
+  margin-inline-end: var(--space-2);
+}
+
+.braid-header__menu {
+  color: var(--text-muted);
+  display: none;
+  margin: 0 0 0 calc(var(--space-1) * -1);
+  padding: var(--space-2);
+}
+
+/* -- search trigger -------------------------------------------------------- */
+
+.braid-search-trigger {
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-subtle);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: var(--text-md);
+  gap: var(--space-2);
+  height: 34px;
+  min-width: 200px;
+  padding: 0 var(--space-2) 0 var(--space-3);
+  transition: border-color var(--duration) var(--ease),
+              color var(--duration) var(--ease);
+}
+
+.braid-search-trigger:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.braid-search-trigger svg {
+  fill: currentcolor;
+  flex: 0 0 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.braid-search-trigger__label {
+  flex: 1;
+  text-align: start;
+}
+
+.braid-search-trigger kbd {
+  background: var(--canvas);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: none;
+  color: var(--text-subtle);
+  font-family: var(--font-sans);
+  font-size: var(--text-2xs);
+  line-height: 1;
+  padding: 3px 5px;
+}
+
+/* Circular icon buttons (palette toggle). */
+.braid-header__tools .md-header__button {
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  color: var(--text-muted);
+  display: flex;
+  height: 34px;
+  justify-content: center;
+  margin: 0;
+  padding: var(--space-2);
+  width: 34px;
+}
+
+.braid-header__tools .md-header__button:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.braid-header__tools .md-header__button[hidden] {
+  display: none;
+}
+
+/* ============================================================ search palette
+ * Presented as a centred command palette at every width.
+ */
+
+/* Hidden with visibility rather than `display: none`: an element inside a
+   `display: none` subtree cannot take focus, so the input would stay unfocused
+   on open and the palette would need a second click to type into. */
+.braid-header .md-search {
+  background: var(--scrim);
+  height: 100dvh;
+  inset: 0;
+  opacity: 0;
+  padding: var(--space-8) var(--space-4) var(--space-4);
+  pointer-events: none;
+  position: fixed;
+  transition: opacity var(--duration) var(--ease),
+              visibility 0s linear var(--duration);
+  visibility: hidden;
+  width: auto;
+  z-index: var(--z-search);
+}
+
+[data-md-toggle="search"]:checked ~ .braid-header .md-search {
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity var(--duration) var(--ease), visibility 0s;
+  visibility: visible;
+}
+
+.braid-header .md-search__overlay {
+  background: transparent;
+}
+
+.braid-header .md-search__inner {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-overlay);
+  display: flex;
+  flex-direction: column;
+  float: none;
+  margin: 0 auto;
+  max-height: min(600px, calc(100dvh - var(--space-8) * 2));
+  overflow: hidden;
+  position: relative;
+  top: 0;
+  transform: none;
+  width: min(640px, 100%);
+}
+
+.braid-header .md-search__form {
+  background: transparent;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  flex: 0 0 auto;
+  height: 48px;
+}
+
+.braid-header .md-search__input {
+  background: transparent;
+  color: var(--text);
+  font-size: var(--text-base);
+  height: 48px;
+}
+
+.braid-header .md-search__input::placeholder {
+  color: var(--text-subtle);
+}
+
+.braid-header .md-search__output {
+  background: transparent;
+  border-radius: 0;
+  position: relative;
+  top: auto;
+  width: 100%;
+}
+
+.braid-header .md-search__scrollwrap {
+  max-height: none;
+  overflow-y: auto;
+}
+
+.braid-header .md-search-result__meta {
+  background: transparent;
+  color: var(--text-subtle);
+  font-size: var(--text-xs);
+  padding: var(--space-3) var(--space-4) var(--space-1);
+}
+
+.braid-header .md-search-result__list {
+  padding: 0 var(--space-2) var(--space-2);
+}
+
+.braid-header .md-search-result__item {
+  border: 0;
+  box-shadow: none;
+}
+
+.braid-header .md-search-result__link {
+  border-radius: var(--radius-sm);
+  color: var(--text);
+}
+
+.braid-header .md-search-result__link:is(:hover, :focus) {
+  background: color-mix(in srgb, var(--brand) var(--tint-weak), transparent);
+}
+
+.braid-header .md-search-result__article {
+  padding: var(--space-2) var(--space-3) var(--space-2) var(--space-7);
+}
+
+.braid-header .md-search-result__article :is(h1, h2) {
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  font-weight: 650;
+  line-height: var(--leading-tight);
+  margin: 0;
+  padding: 0;
+}
+
+.braid-header .md-search-result__article p {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  line-height: var(--leading-snug);
+  margin: var(--space-1) 0 0;
+  overflow: hidden;
+  /* stylelint-disable-next-line property-no-vendor-prefix -- no standard equivalent */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.braid-header .md-search-result__article :is(p:nth-of-type(n + 2), pre) {
+  display: none;
+}
+
+.braid-header .md-search-result__icon {
+  color: var(--text-subtle);
+  height: 18px;
+  left: var(--space-3);
+  width: 18px;
+}
+
+.braid-header .md-search-result mark {
+  background: color-mix(in srgb, var(--brand) var(--tint) , transparent);
+  border-radius: 2px;
+  color: inherit;
+}
+
+.braid-header .md-search-result__more summary {
+  background: transparent;
+  color: var(--text-subtle);
+  font-size: var(--text-xs);
+  padding: var(--space-1) var(--space-3) var(--space-1) var(--space-7);
+}
+
+/* ================================================================ breadcrumbs
+ */
+
+.md-typeset .braid-crumbs {
+  margin: 0 0 var(--space-4);
+}
+
+.md-typeset .braid-crumbs ol {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.md-typeset .braid-crumbs li {
+  margin: 0;
+}
+
+.md-typeset .braid-crumbs :is(a, span) {
+  color: var(--text-subtle);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
+.md-typeset .braid-crumbs a {
+  text-decoration: none;
+  transition: color var(--duration) var(--ease);
+}
+
+.md-typeset .braid-crumbs a:hover {
+  color: var(--brand);
+}
+
+/* ============================================================= navigation rail
+ */
+
+.braid-nav {
+  font-size: var(--text-sm);
+}
+
+.braid-nav .md-nav__item--section > .md-nav__link {
+  color: var(--text-subtle);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  margin: var(--space-5) 0 var(--space-1);
+  text-transform: uppercase;
+}
+
+.braid-nav .md-nav__item--section:first-child > .md-nav__link {
+  margin-top: 0;
+}
+
+.braid-nav .md-nav__link {
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  margin-top: 0;
+  min-height: 30px;
+  padding: var(--space-1) var(--space-2);
+  transition: color var(--duration) var(--ease),
+              background var(--duration) var(--ease);
+}
+
+.braid-nav .md-nav__link:hover {
+  color: var(--text);
+}
+
+.braid-nav .md-nav__item .md-nav__link--active {
+  background: color-mix(in srgb, var(--brand) var(--tint) , transparent);
+  color: var(--brand);
+  font-weight: 600;
+}
+
+.braid-nav__support {
+  align-items: center;
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  text-decoration: none;
+  transition: background var(--duration) var(--ease);
+}
+
+.braid-nav__support:hover {
+  background: var(--surface);
+}
+
+.braid-nav__support-icon {
+  display: inline-flex;
+  flex: 0 0 18px;
+  height: 18px;
+}
+
+.braid-nav__support-icon svg {
+  fill: currentcolor;
+  height: 100%;
+  width: 100%;
+}
+
+.braid-nav__support :is(strong, small) {
+  display: block;
+}
+
+.braid-nav__support strong {
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 650;
+}
+
+.braid-nav__support small {
+  color: var(--text-subtle);
+  font-size: var(--text-xs);
+}
+
+/* ============================================================== page outline
+ */
+
+.md-sidebar--secondary .md-nav__title {
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-subtle);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  padding: 0 0 var(--space-2) var(--space-3);
+  text-transform: uppercase;
+}
+
+.md-sidebar--secondary .md-nav__title::before {
+  display: none;
+}
+
+.md-sidebar--secondary .md-nav__list {
+  border-left: 1px solid var(--border);
+}
+
+.md-sidebar--secondary .md-nav__link {
+  border-radius: 0;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  line-height: var(--leading-snug);
+  margin: 0;
+  padding: var(--space-1) var(--space-3);
+  position: relative;
+}
+
+.md-sidebar--secondary .md-nav__link:hover {
+  color: var(--text);
+}
+
+.md-sidebar--secondary .md-nav__link--active {
+  background: transparent;
+  color: var(--brand);
+  font-weight: 600;
+}
+
+.md-sidebar--secondary .md-nav__link--active::before {
+  background: var(--brand);
+  content: "";
+  inset-block: 3px;
+  inset-inline-start: calc(var(--space-3) * -1 - 1px);
+  position: absolute;
+  width: 2px;
+}
+
+/* ==================================================================== footer
+ */
+
+.md-footer,
+.md-footer-meta {
+  background: var(--canvas);
+  color: var(--text-subtle);
+}
+
+.md-footer {
+  border-top: 1px solid var(--border);
+}
+
+.md-footer__link {
+  border-radius: var(--radius-md);
+}
+
+/* =============================================================== focus & motion
+ */
+
+:is(a, button, label, summary, input, .md-nav__link):focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* Honour the OS setting without disabling transitions Material relies on for
+   state (the drawer would jump rather than slide, but nothing breaks). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* =================================================== three-column shell (desktop)
+ * Everything structural is confined to this block. Below it, Material's own
+ * responsive layout and drawer navigation run untouched.
+ */
+
+@media screen and (min-width: 76.25em) {
+  .md-main__inner.md-grid {
+    column-gap: var(--space-6);
+    display: grid;
+    /* The outline track is `auto`: it sizes to the outline when Material
+       renders one, and collapses to zero on pages with `hide: [toc]`. No
+       content-sniffing rule is needed to switch between two and three
+       columns. */
+    grid-template-columns: var(--nav-width) minmax(0, 1fr) auto;
+    margin-inline: auto;
+    max-width: var(--shell-max);
+    padding: 0;
+  }
+
+  .md-sidebar {
+    grid-row: 1;
+    height: calc(100dvh - var(--header-height));
+    padding: var(--space-5) 0;
+    position: sticky;
+    top: var(--header-height);
+    width: auto;
+  }
+
+  .md-sidebar--primary {
+    border-inline-end: 1px solid var(--border);
+    grid-column: 1;
+    padding-inline: var(--space-5) var(--space-3);
+  }
+
+  .md-sidebar--secondary {
+    display: block;
+    grid-column: 3;
+    padding-inline-end: var(--space-5);
+    width: var(--toc-width);
+  }
+
+  .md-sidebar__scrollwrap {
+    height: 100%;
+    margin: 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+
+  .md-content {
+    grid-column: 2;
+    margin: 0;
+    max-width: none;
+    min-width: 0;
+  }
+
+  .md-content__inner {
+    margin: 0 auto;
+    max-width: var(--measure);
+    padding: var(--space-7) 0 var(--space-8);
+  }
+
+  .md-content__inner::before {
+    display: none;
+  }
+
+  /* Material's nav title is the drawer header and per-level back button. Both
+     are mobile concerns; on desktop the site header already names the site. */
+  .braid-nav > .md-nav__title {
+    display: none;
+  }
+
+  /* The rail's support link sits at the bottom of the rail, not the bottom of
+     the page. */
+  .braid-nav {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+  }
+
+  .braid-nav__list {
+    flex: 1;
+  }
+
+  .braid-nav__footer {
+    border-top: 1px solid var(--border);
+    margin-top: var(--space-5);
+    padding-top: var(--space-3);
+  }
+}
+
+/* ================================================= below the desktop breakpoint
+ * Cosmetic only. Material's drawer supplies the structure.
+ */
+
+@media screen and (max-width: 76.234375em) {
+  .braid-header__menu {
+    display: inline-flex;
+  }
+
+  /* The header page title is not swapped on instant navigation and there is no
+     room for it beside the search field, so it is desktop-only. */
+  .braid-header__context {
+    display: none;
+  }
+
+  .braid-search-trigger {
+    border-radius: var(--radius-pill);
+    justify-content: center;
+    min-width: 34px;
+    padding: 0;
+    width: 34px;
+  }
+
+  .braid-search-trigger :is(.braid-search-trigger__label, kbd) {
+    display: none;
+  }
+
+  .md-content__inner {
+    padding: var(--space-5) 0 var(--space-7);
+  }
+
+  /* Drawer chrome: keep Material's sliding levels, restate their surfaces in
+     Braid colours. The per-level title is the back button — it needs a solid
+     background to stay legible over the level beneath it. */
+  .md-sidebar--primary {
+    background: var(--canvas);
+  }
+
+  .md-nav--primary :is(.md-nav__title, .md-nav__title[for="__drawer"]) {
+    background: var(--surface);
+    box-shadow: 0 1px 0 var(--border);
+    color: var(--text);
+    font-family: var(--font-display);
+    font-weight: 650;
+  }
+
+  .md-nav--primary .md-nav__title .md-nav__button.md-logo :is(img, svg) {
+    height: 22px;
+    width: 22px;
+  }
+
+  .md-nav--primary .md-nav__link {
+    font-size: var(--text-base);
+  }
+
+  .braid-nav__footer {
+    border-top: 1px solid var(--border);
+    margin: var(--space-4) var(--space-2) 0;
+    padding: var(--space-3) 0;
+  }
+}
+
+@media screen and (max-width: 44.984375em) {
+  .braid-header__inner {
+    padding: 0 var(--space-3);
+  }
+
+  /* A five-level trail wraps to three lines on a phone. The immediate parent
+     is the only ancestor worth the space. */
+  .md-typeset .braid-crumbs li:not(:nth-last-child(-n + 3)) {
+    display: none;
+  }
+
+  .braid-header .md-search {
+    padding: var(--space-5) var(--space-3) var(--space-3);
+  }
+}

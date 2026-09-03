@@ -9,6 +9,15 @@
 # Nothing here changes what gets published. CI builds mkdocs.yml.
 INHERIT: ./mkdocs.yml
 exclude_docs: ""
+
+# INHERIT merges maps but replaces lists, so the production sheets have to be
+# restated. prototype.css only dresses the throwaway pages under docs/prototype/
+# and is never part of the published site.
+extra_css:
+  - stylesheets/tokens.css
+  - stylesheets/base.css
+  - stylesheets/shell.css
+  - stylesheets/prototype.css
 nav:
   - Getting started:
       - Home: prototype/index.md

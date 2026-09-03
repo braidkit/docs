@@ -1,5 +1,16 @@
-{# Braid's documentation header keeps the product identity, search, and theme
-   controls available without introducing empty top-level product areas. #}
+{#
+  Braid's documentation header: product identity, search, theme control.
+
+  Two details are load-bearing:
+
+  * The page-title chip carries `data-md-component="header-topic"`. Material's
+    instant navigation swaps a fixed set of components when it replaces the
+    page, and that attribute is how an element joins the set. Without it the
+    chip keeps the previous page's title after every in-site navigation.
+  * The search trigger is a <label> because Material's search overlay is driven
+    by the `#__search` checkbox. It is given button semantics here and the
+    Enter/Space handling it therefore needs lives in search-shortcut.js.
+#}
 <header class="md-header braid-header" data-md-component="header">
   <nav class="md-header__inner braid-header__inner" aria-label="Header">
     <div class="braid-header__brand">
@@ -7,28 +18,28 @@
         {% set icon = config.theme.icon.menu or "material/menu" %}
         {% include ".icons/" ~ icon ~ ".svg" %}
       </label>
-      <a href="{{ config.extra.homepage | d(nav.homepage.url, true) | url }}" class="braid-header__home" aria-label="Braid Docs home">
+      <a href="{{ config.extra.homepage | d(nav.homepage.url, true) | url }}" class="braid-header__home" aria-label="{{ config.site_name }} home">
         <span class="braid-header__logo">{% include "partials/logo.html" %}</span>
         <span class="braid-header__divider" aria-hidden="true"></span>
         <span class="braid-header__product">Docs</span>
       </a>
     </div>
 
-    <div class="braid-header__tools">
-      <div class="braid-header__context" aria-label="Current page">
-        <span>Docs</span>
-        {% if not page.is_homepage %}
-          <span class="braid-header__slash" aria-hidden="true">/</span>
-          <span class="braid-header__page">{{ page.title }}</span>
-        {% endif %}
-      </div>
+    {# Kept in the DOM on every page, empty or not: instant navigation can only
+       swap a component that exists on both the old and the new page. #}
+    <div class="braid-header__context" data-md-component="header-topic">
+      {%- if page and not page.is_homepage -%}
+        <span class="braid-header__page">{{ page.title }}</span>
+      {%- endif -%}
+    </div>
 
+    <div class="braid-header__tools">
       {% if "material/search" in config.plugins %}
         <label class="braid-search-trigger" for="__search" aria-label="Search documentation" role="button" tabindex="0">
           {% set icon = config.theme.icon.search or "material/magnify" %}
           {% include ".icons/" ~ icon ~ ".svg" %}
-          <span>Search docs</span>
-          <kbd>⌘ K</kbd>
+          <span class="braid-search-trigger__label">Search docs</span>
+          <kbd data-braid-shortcut>Ctrl K</kbd>
         </label>
         {% include "partials/search.html" %}
       {% endif %}
