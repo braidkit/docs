@@ -29,4 +29,4 @@ The goal and rationale remain available when a change is reviewed, inherited, or
 
 ## Where to go next
 
-Use the [quickstart](quickstart.md) for a guided path, or read about [braids and threads](concepts.md) before running commands.
+Use the [quickstart](quickstart.md) for a guided path, or read about [braids and threads](concepts/work-model/core-objects/concepts.md) before running commands.

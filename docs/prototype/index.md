@@ -39,7 +39,7 @@ hide:
 
     Understand the core model for coordinating human and agent work.
 
-    [Learn the concepts](concepts.md)
+    [Learn the concepts](concepts/work-model/core-objects/concepts.md)
 
 -   :material-check-decagram-outline:{ .lg }
 
@@ -47,7 +47,7 @@ hide:
 
     See how Braid connects evidence, intent, and a human approval boundary.
 
-    [Review a change](review.md)
+    [Review a change](workflows/review-and-governance/human-review/review.md)
 
 </div>
 
@@ -61,7 +61,7 @@ hide:
 
     Find commands, flags, configuration, and environment variables.
 
-    [Browse commands](cli.md)
+    [Browse commands](command-reference/command-groups/workflow/cli.md)
 
 -   :material-robot-outline:{ .lg }
 
@@ -69,7 +69,7 @@ hide:
 
     Wrap a supported coding agent and keep its work as signed evidence.
 
-    [Capture a session](capture.md)
+    [Capture a session](workflows/agent-sessions/capture/capture.md)
 
 -   :material-lifebuoy:{ .lg }
 

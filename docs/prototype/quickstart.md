@@ -52,4 +52,4 @@ braid review <braid-id>
 
 ## Next steps
 
-Learn how [braids and threads](concepts.md) organize work, or see the [CLI reference](cli.md).
+Learn how [braids and threads](concepts/work-model/core-objects/concepts.md) organize work, or see the [CLI reference](command-reference/command-groups/workflow/cli.md).
