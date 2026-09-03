@@ -86,14 +86,23 @@
   margin-left: auto;
 }
 
-/* Current page, shown beside the wordmark. Swapped by Material's instant
-   navigation because the element carries data-md-component="header-topic". */
-.braid-header__context {
+/* Current page, shown beside the wordmark once its H1 leaves the viewport. */
+.md-header__title.braid-header__context {
   color: var(--text-subtle);
   font-family: var(--font-display);
   font-size: var(--text-md);
   font-weight: 600;
+  margin: 0;
   min-width: 0;
+  opacity: 0;
+  transition: opacity var(--duration) var(--ease),
+              visibility var(--duration) var(--ease);
+  visibility: hidden;
+}
+
+.braid-header__context.md-header__title--active {
+  opacity: 1;
+  visibility: visible;
 }
 
 /* The separator belongs to the title, not the container — the container is
@@ -655,8 +664,7 @@
     display: inline-flex;
   }
 
-  /* The header page title is not swapped on instant navigation and there is no
-     room for it beside the search field, so it is desktop-only. */
+  /* There is no room for the page title beside the search field. */
   .braid-header__context {
     display: none;
   }

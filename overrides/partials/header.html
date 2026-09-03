@@ -3,10 +3,10 @@
 
   Two details are load-bearing:
 
-  * The page-title chip carries `data-md-component="header-topic"`. Material's
-    instant navigation swaps a fixed set of components when it replaces the
-    page, and that attribute is how an element joins the set. Without it the
-    chip keeps the previous page's title after every in-site navigation.
+  * Material's header-title observer marks the page-title chip active once the
+    H1 leaves the viewport. Its nested header-topic remains present on every
+    page so instant navigation can swap the current title without retaining the
+    previous page's title.
   * The search trigger is a <label> because Material's search overlay is driven
     by the `#__search` checkbox. It is given button semantics here and the
     Enter/Space handling it therefore needs lives in search-shortcut.js.
@@ -27,10 +27,12 @@
 
     {# Kept in the DOM on every page, empty or not: instant navigation can only
        swap a component that exists on both the old and the new page. #}
-    <div class="braid-header__context" data-md-component="header-topic">
-      {%- if page and not page.is_homepage -%}
-        <span class="braid-header__page">{{ page.title }}</span>
-      {%- endif -%}
+    <div class="md-header__title braid-header__context" data-md-component="header-title">
+      <div data-md-component="header-topic">
+        {%- if page and not page.is_homepage -%}
+          <span class="braid-header__page">{{ page.title }}</span>
+        {%- endif -%}
+      </div>
     </div>
 
     <div class="braid-header__tools">

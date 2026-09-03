@@ -158,6 +158,14 @@ body {
   border-top: 1px solid var(--border);
 }
 
+/* Material lets code break mid-token (`word-break: break-word`). In a narrow
+   table column that splits identifiers across lines — `thread_dropped` renders
+   as "thread_droppe / d". Keep them whole and let the column size to them; the
+   scrollwrap handles a table that then exceeds the measure. */
+.md-typeset table:not([class]) code {
+  white-space: nowrap;
+}
+
 /* --------------------------------------------------------------- callouts */
 
 .md-typeset .admonition,
@@ -173,23 +181,46 @@ body {
   --callout: var(--brand);
 }
 
-.md-typeset :is(.admonition, details):is(.note, .abstract, .info) { --callout: var(--callout-info); }
-.md-typeset :is(.admonition, details):is(.tip, .success, .question) { --callout: var(--callout-tip); }
-.md-typeset :is(.admonition, details):is(.warning, .caution, .attention) { --callout: var(--callout-warn); }
-.md-typeset :is(.admonition, details):is(.failure, .danger, .error, .bug) { --callout: var(--callout-danger); }
-
-.md-typeset :is(.admonition-title, summary) {
-  background: color-mix(in srgb, var(--callout) var(--tint-weak), transparent);
-  color: var(--text);
-  font-family: var(--font-display);
-  font-weight: 650;
+/* Callout severities.
+ *
+ * Each severity resolves one variable; adding one below is a single line.
+ *
+ * The re-assert rules that follow are not redundant. Material colours every
+ * severity with literal hex values at (0,3,0) and (0,3,1) — border-color, the
+ * title tint, the icon, and the fold arrow. A token-driven rule at lower
+ * specificity loses silently: the callouts render in Material's stock orange,
+ * blue and green with no warning. These selectors mirror Material's own shape
+ * so ours win on source order rather than on !important.
+ */
+.md-typeset :is(.admonition, details):is(.note, .abstract, .summary, .tldr, .info, .todo, .question, .help, .faq) {
+  --callout: var(--callout-info);
 }
 
-.md-typeset :is(.admonition-title, summary)::before {
+.md-typeset :is(.admonition, details):is(.tip, .hint, .important, .success, .check, .done) {
+  --callout: var(--callout-tip);
+}
+
+.md-typeset :is(.admonition, details):is(.warning, .caution, .attention) {
+  --callout: var(--callout-warn);
+}
+
+.md-typeset :is(.admonition, details):is(.failure, .fail, .missing, .danger, .error, .bug) {
+  --callout: var(--callout-danger);
+}
+
+.md-typeset :is(.admonition, details):is(.note, .abstract, .summary, .tldr, .info, .todo, .question, .help, .faq, .tip, .hint, .important, .success, .check, .done, .warning, .caution, .attention, .failure, .fail, .missing, .danger, .error, .bug, .example, .quote, .cite) {
+  border-color: color-mix(in srgb, var(--callout) 35%, var(--border));
+}
+
+.md-typeset :is(.admonition, details):is(.note, .abstract, .summary, .tldr, .info, .todo, .question, .help, .faq, .tip, .hint, .important, .success, .check, .done, .warning, .caution, .attention, .failure, .fail, .missing, .danger, .error, .bug, .example, .quote, .cite) > :is(.admonition-title, summary) {
+  background-color: color-mix(in srgb, var(--callout) var(--tint-weak), transparent);
+}
+
+.md-typeset :is(.admonition, details):is(.note, .abstract, .summary, .tldr, .info, .todo, .question, .help, .faq, .tip, .hint, .important, .success, .check, .done, .warning, .caution, .attention, .failure, .fail, .missing, .danger, .error, .bug, .example, .quote, .cite) > :is(.admonition-title, summary)::before {
   background-color: var(--callout);
 }
 
-.md-typeset :is(.admonition-title, summary)::after {
+.md-typeset :is(.admonition, details):is(.note, .abstract, .summary, .tldr, .info, .todo, .question, .help, .faq, .tip, .hint, .important, .success, .check, .done, .warning, .caution, .attention, .failure, .fail, .missing, .danger, .error, .bug, .example, .quote, .cite) > :is(.admonition-title, summary)::after {
   color: var(--callout);
 }
 

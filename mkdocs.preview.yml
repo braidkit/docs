@@ -10,6 +10,9 @@
 INHERIT: ./mkdocs.yml
 exclude_docs: ""
 
+# null clears the inherited production nav so MkDocs discovers every page.
+nav: null
+
 # INHERIT merges maps but replaces lists, so the production sheets have to be
 # restated. prototype.css only dresses the throwaway pages under docs/prototype/
 # and is never part of the published site.
@@ -18,35 +21,3 @@ extra_css:
   - stylesheets/base.css
   - stylesheets/shell.css
   - stylesheets/prototype.css
-nav:
-  - Getting started:
-      - Home: prototype/index.md
-      - Overview: prototype/overview.md
-      - Installation: getting-started/installation.md
-      - Quickstart: prototype/quickstart.md
-  - Workflows:
-      - Agent sessions:
-          - Capture:
-              - Capture agent work: prototype/capture.md
-              - Inspect a session: prototype/inspect-session.md
-      - Review and governance:
-          - Human review:
-              - Review and verify: prototype/review.md
-              - Approval boundaries: prototype/approval-boundaries.md
-          - Automated checks:
-              - Verification evidence: prototype/verification-evidence.md
-  - Concepts:
-      - Work model:
-          - Core objects:
-              - Braids and threads: prototype/concepts.md
-      - Provenance:
-          - Event model:
-              - Signed events: prototype/signed-events.md
-  - CLI reference:
-      - Command groups:
-          - Workflow:
-              - Commands: prototype/cli.md
-          - Identity:
-              - Authentication commands: prototype/auth-commands.md
-  - Help:
-      - Get help: get-help.md
