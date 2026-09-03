@@ -6,11 +6,12 @@
  * Structure of this file, and the rule that keeps the shell working:
  *
  *   1. Chrome that applies at every width (header, search palette, focus).
- *   2. The three-column grid, entirely inside the desktop media query.
- *   3. Below the desktop breakpoint, Material's own drawer runs. We adjust
- *      its colours and nothing else.
+ *   2. The full header from 720px up, independent of the content columns.
+ *   3. The three-column grid, entirely inside the desktop media query.
+ *   4. Below the desktop breakpoint, Material's own drawer runs. Its trigger
+ *      is shown only on phone-sized screens; we otherwise adjust colours only.
  *
- * Point 3 is deliberate. Material's mobile drawer is a stack of absolutely
+ * Point 4 is deliberate. Material's mobile drawer is a stack of absolutely
  * positioned nav levels that slide horizontally, with a per-level title that
  * doubles as the back button. Custom layout rules that leak below the
  * breakpoint collapse that stack. Keep structural CSS inside the media query.
@@ -53,12 +54,13 @@
 
 .braid-header__home {
   align-items: center;
-  color: var(--text);
+  color: var(--brand);
   display: inline-flex;
-  font-family: var(--font-display);
-  font-size: var(--text-base);
-  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  font-weight: 400;
   gap: var(--space-2);
+  letter-spacing: var(--tracking-caps);
   text-decoration: none;
 }
 
@@ -73,12 +75,6 @@
   width: 100%;
 }
 
-.braid-header__divider {
-  background: var(--border-strong);
-  height: 18px;
-  width: 1px;
-}
-
 .braid-header__tools {
   align-items: center;
   display: flex;
@@ -86,45 +82,43 @@
   margin-left: auto;
 }
 
-/* Current page, shown beside the wordmark once its H1 leaves the viewport. */
-.md-header__title.braid-header__context {
-  color: var(--text-subtle);
-  font-family: var(--font-display);
-  font-size: var(--text-md);
-  font-weight: 600;
-  margin: 0;
-  min-width: 0;
-  opacity: 0;
-  transition: opacity var(--duration) var(--ease),
-              visibility var(--duration) var(--ease);
-  visibility: hidden;
-}
-
-.braid-header__context.md-header__title--active {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* The separator belongs to the title, not the container — the container is
-   present but empty on the home page. */
-.braid-header__page {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.braid-header__page::before {
-  color: var(--border-strong);
-  content: "/";
-  margin-inline-end: var(--space-2);
-}
-
-.braid-header__menu {
+/* Material styles this element as `.md-header__button:not([hidden])`, which is
+   specificity (0,2,0). A single-class rule here is (0,1,0) and loses silently,
+   so the selector below deliberately matches Material's weight rather than
+   reading like an accident. Get this wrong and the trigger is visible at every
+   width with no error anywhere. */
+.md-header__button.braid-header__menu {
   color: var(--text-muted);
   display: none;
   margin: 0 0 0 calc(var(--space-1) * -1);
   padding: var(--space-2);
+}
+
+.braid-header__sections {
+  align-items: center;
+  display: none;
+  gap: var(--space-1);
+}
+
+.braid-header__section {
+  border-radius: var(--radius-pill);
+  color: var(--text-muted);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: var(--space-2) var(--space-3);
+  text-decoration: none;
+  transition: background var(--duration) var(--ease),
+              color var(--duration) var(--ease);
+}
+
+.braid-header__section:hover {
+  color: var(--text);
+}
+
+.braid-header__section--active {
+  background: var(--surface-sunken);
+  color: var(--text);
 }
 
 /* -- search trigger -------------------------------------------------------- */
@@ -399,6 +393,16 @@
   font-size: var(--text-sm);
 }
 
+.braid-nav__wordmark {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  letter-spacing: var(--tracking-caps);
+}
+
+.braid-nav__destinations {
+  display: none;
+}
+
 .braid-nav .md-nav__item--section > .md-nav__link {
   color: var(--text-subtle);
   font-family: var(--font-display);
@@ -565,12 +569,42 @@
   }
 }
 
+/* =============================================== full header (tablet and up)
+ * Header destinations fit comfortably well before the page has room for all
+ * three content columns. A desktop browser can also live in a narrow split
+ * pane, so fine-pointer devices retain this header even below the width cutoff.
+ * Keep this separate from the content-column breakpoint.
+ */
+
+@media screen and (min-width: 45em),
+       screen and (hover: hover) and (pointer: fine) {
+  .braid-header__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  }
+
+  .braid-header__brand {
+    justify-self: start;
+  }
+
+  .braid-header__sections {
+    display: flex;
+    justify-self: center;
+  }
+
+  .braid-header__tools {
+    justify-self: end;
+    margin-left: 0;
+  }
+}
+
 /* =================================================== three-column shell (desktop)
  * Everything structural is confined to this block. Below it, Material's own
  * responsive layout and drawer navigation run untouched.
  */
 
 @media screen and (min-width: 76.25em) {
+
   .md-main__inner.md-grid {
     column-gap: var(--space-6);
     display: grid;
@@ -604,6 +638,13 @@
     grid-column: 3;
     padding-inline-end: var(--space-5);
     width: var(--toc-width);
+  }
+
+  /* The class rule above is more specific than the browser's [hidden]
+     default. Restate the semantic state so pages that opt out of a table of
+     contents do not retain an empty third rail. */
+  .md-sidebar--secondary[hidden] {
+    display: none;
   }
 
   .md-sidebar__scrollwrap {
@@ -660,13 +701,13 @@
  */
 
 @media screen and (max-width: 76.234375em) {
-  .braid-header__menu {
+  /* The trigger has to exist exactly where the navigation lives in the drawer,
+     and Material decides that on viewport width alone. Gating it on pointer
+     type instead left every fine-pointer device between 720px and 1220px — an
+     ordinary laptop, or a desktop browser in a split pane — with the nav
+     off-screen and no control to reach it. */
+  .md-header__button.braid-header__menu {
     display: inline-flex;
-  }
-
-  /* There is no room for the page title beside the search field. */
-  .braid-header__context {
-    display: none;
   }
 
   .braid-search-trigger {
@@ -709,6 +750,31 @@
     font-size: var(--text-base);
   }
 
+  .braid-nav__destinations {
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    gap: var(--space-1);
+    grid-template-columns: 1fr 1fr;
+    margin: 0 var(--space-2) var(--space-4);
+    padding: var(--space-3) 0 var(--space-4);
+  }
+
+  .braid-nav__destinations a {
+    border-radius: var(--radius-pill);
+    color: var(--text-muted);
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    padding: var(--space-2);
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .braid-nav__destinations .braid-nav__destination--active {
+    background: var(--surface-sunken);
+    color: var(--text);
+  }
+
   .braid-nav__footer {
     border-top: 1px solid var(--border);
     margin: var(--space-4) var(--space-2) 0;
@@ -717,6 +783,7 @@
 }
 
 @media screen and (max-width: 44.984375em) {
+
   .braid-header__inner {
     padding: 0 var(--space-3);
   }

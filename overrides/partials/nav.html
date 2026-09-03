@@ -1,9 +1,10 @@
 {#
   Primary navigation.
 
-  Identical to Material's own nav.html apart from the support link appended
-  after the list. The title block is Material's — it is the drawer header on
-  mobile and the per-level back button, so it must keep its markup.
+  Based on Material's own nav.html, with Braid's mobile destination switcher
+  above the documentation hierarchy and the support link appended after it.
+  The title block is Material's drawer header and per-level back button, so it
+  must keep its surrounding markup.
 
   The support link is configured under `extra.support` in mkdocs.yml rather
   than hard-coded here, so moving or renaming the help page does not require a
@@ -19,13 +20,25 @@
     <span class="md-nav__button md-logo" aria-label="{{ config.site_name }}" data-md-component="logo">
       {% include "partials/logo.html" %}
     </span>
-    {{ config.site_name }}
+    <span class="braid-nav__wordmark">braid</span>
   </label>
+
+  {% set on_changelog = page and page.url == "changelog/" %}
+  <div class="braid-nav__destinations" role="navigation" aria-label="Sections">
+    <a href="{{ nav.homepage.url | url }}"{% if not on_changelog %} class="braid-nav__destination--active" aria-current="page"{% endif %}>Documentation</a>
+    <a href="{{ 'changelog/' | url }}"{% if on_changelog %} class="braid-nav__destination--active" aria-current="page"{% endif %}>Changelog</a>
+  </div>
 
   <ul class="md-nav__list braid-nav__list" data-md-scrollfix>
     {% for nav_item in nav %}
-      {% set path = "__nav_" ~ loop.index %}
-      {{ item.render(nav_item, path, 1) }}
+      {# Changelog is a product destination above the docs hierarchy, not a
+         documentation page within it. It remains in MkDocs' nav so strict
+         builds validate it, while the dedicated destination switcher renders
+         it in both the desktop header and mobile drawer. #}
+      {% if nav_item.url != "changelog/" %}
+        {% set path = "__nav_" ~ loop.index %}
+        {{ item.render(nav_item, path, 1) }}
+      {% endif %}
     {% endfor %}
   </ul>
 

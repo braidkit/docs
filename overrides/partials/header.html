@@ -1,39 +1,37 @@
 {#
-  Braid's documentation header: product identity, search, theme control.
+  Braid's documentation header: brand, site destinations, search, theme control.
 
-  Two details are load-bearing:
-
-  * Material's header-title observer marks the page-title chip active once the
-    H1 leaves the viewport. Its nested header-topic remains present on every
-    page so instant navigation can swap the current title without retaining the
-    previous page's title.
-  * The search trigger is a <label> because Material's search overlay is driven
+  The search trigger is a <label> because Material's search overlay is driven
     by the `#__search` checkbox. It is given button semantics here and the
     Enter/Space handling it therefore needs lives in search-shortcut.js.
 #}
 <header class="md-header braid-header" data-md-component="header">
-  <nav class="md-header__inner braid-header__inner" aria-label="Header">
+  <div class="md-header__inner braid-header__inner">
     <div class="braid-header__brand">
-      <button class="md-header__button md-icon braid-header__menu" type="button" aria-controls="__drawer" aria-expanded="false" aria-label="Open navigation">
+      {# A <label>, not a <button>, and both halves of that matter.
+
+         Material's drawer is driven entirely by the #__drawer checkbox, so a
+         label toggles it natively with no JavaScript; a button toggles nothing,
+         because aria-controls is metadata rather than behaviour. Material also
+         hides this trigger on desktop with
+         `.md-header__button[for="__drawer"] { display: none }`, which cannot
+         match an element that has no `for`. Using a button therefore broke the
+         click and pinned the trigger visible at every width at the same time. #}
+      <label class="md-header__button md-icon braid-header__menu" for="__drawer" aria-label="Open navigation" role="button" tabindex="0">
         {% set icon = config.theme.icon.menu or "material/menu" %}
         {% include ".icons/" ~ icon ~ ".svg" %}
-      </button>
+      </label>
       <a href="{{ config.extra.homepage | d(nav.homepage.url, true) | url }}" class="braid-header__home" aria-label="{{ config.site_name }} home">
         <span class="braid-header__logo">{% include "partials/logo.html" %}</span>
-        <span class="braid-header__divider" aria-hidden="true"></span>
-        <span class="braid-header__product">Docs</span>
+        <span class="braid-header__wordmark">braid</span>
       </a>
     </div>
 
-    {# Kept in the DOM on every page, empty or not: instant navigation can only
-       swap a component that exists on both the old and the new page. #}
-    <div class="md-header__title braid-header__context" data-md-component="header-title">
-      <div data-md-component="header-topic">
-        {%- if page and not page.is_homepage -%}
-          <span class="braid-header__page">{{ page.title }}</span>
-        {%- endif -%}
-      </div>
-    </div>
+    {% set on_changelog = page and page.url == "changelog/" %}
+    <nav class="braid-header__sections" aria-label="Primary">
+      <a href="{{ nav.homepage.url | url }}" class="braid-header__section{% if not on_changelog %} braid-header__section--active{% endif %}"{% if not on_changelog %} aria-current="page"{% endif %}>Documentation</a>
+      <a href="{{ 'changelog/' | url }}" class="braid-header__section{% if on_changelog %} braid-header__section--active{% endif %}"{% if on_changelog %} aria-current="page"{% endif %}>Changelog</a>
+    </nav>
 
     <div class="braid-header__tools">
       {% if "material/search" in config.plugins %}
@@ -53,5 +51,5 @@
         {% include "partials/javascripts/palette.html" %}
       {% endif %}
     </div>
-  </nav>
+  </div>
 </header>
