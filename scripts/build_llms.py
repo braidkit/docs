@@ -4,8 +4,8 @@
 The published set is the mkdocs nav. A page that is not in the nav is not
 published, so it does not belong in either file.
 
-CI runs this before every build, so the corpus is regenerated from the pages
-rather than committed. The outputs are gitignored. Nothing can drift.
+MkDocs runs this as a pre-build hook, so local, CI, and Cloudflare builds all
+regenerate the corpus from the pages. The outputs are gitignored.
 
 Run with --check to compare without writing, which is useful locally.
 """
@@ -109,9 +109,21 @@ def render():
     return "\n".join(index).rstrip() + "\n", "\n".join(full).rstrip() + "\n"
 
 
+def write_corpus():
+    index_text, full_text = render()
+    for path, text in [(DOCS / "llms.txt", index_text), (DOCS / "llms-full.txt", full_text)]:
+        path.write_text(text)
+        print(f"wrote {path.relative_to(ROOT)}")
+
+
+def on_pre_build(config):
+    """Write discovery files before MkDocs collects the documentation files."""
+    write_corpus()
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--check", action="store_true", help="fail if the committed files are stale")
+    parser.add_argument("--check", action="store_true", help="fail if the generated files are stale")
     args = parser.parse_args()
 
     index_text, full_text = render()
@@ -124,9 +136,7 @@ def main():
         print("llms.txt and llms-full.txt are current")
         return
 
-    for path, want in targets:
-        path.write_text(want)
-        print(f"wrote {path.relative_to(ROOT)}")
+    write_corpus()
 
 
 if __name__ == "__main__":

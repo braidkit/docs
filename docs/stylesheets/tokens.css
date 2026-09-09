@@ -1,0 +1,222 @@
+/* Braid Docs — design tokens
+ *
+ * The single source of truth for colour, type, space, and elevation. Nothing
+ * outside this file declares a raw colour or a raw pixel size; everything else
+ * consumes these variables.
+ *
+ * The rule that keeps this maintainable: every semantic token is defined in
+ * BOTH themes below. Component CSS therefore never needs a dark-mode branch —
+ * if you find yourself writing `[data-md-color-scheme="slate"] .foo`, the token
+ * is missing, not the override.
+ *
+ * Contrast: every text token is checked against its intended background at
+ * WCAG AA (4.5:1). See the table beside each value.
+ *
+ * Breakpoints (Material's, restated here because CSS custom properties cannot
+ * be used in media queries — keep these in sync if Material's ever change):
+ *   --bp-mobile   44.984375em / 719px   below: single column, drawer nav
+ *   --bp-desktop  76.25em     / 1220px  at and above: three-column shell
+ */
+
+:root {
+  /* -- brand ------------------------------------------------------------- */
+  --brand: #5c2d4a;             /* 10.3:1 on canvas */
+  --brand-strong: #46213a;
+  --brand-contrast: #ffffff;    /* text on a --brand fill: 10.9:1 */
+  --accent: #186c66;            /* 5.9:1 on canvas */
+
+  /* -- surfaces ---------------------------------------------------------- */
+  --canvas: #faf8fc;
+  --surface: #ffffff;
+  --surface-sunken: #f2ecf6;
+  --border: #e4dcec;
+  --border-strong: #d2c8de;
+
+  /* -- text -------------------------------------------------------------- */
+  --text: #1f1a22;              /* 16.2:1 */
+  --text-muted: #5f5566;        /*  6.7:1 */
+  --text-subtle: #736a7c;       /*  4.9:1 */
+
+  /* -- code -------------------------------------------------------------- */
+  --code-bg: #f2ecf6;
+  --code-fg: #4a2d55;           /* 10.1:1 on --code-bg */
+
+  /* -- callout hues ------------------------------------------------------ *
+   * One hue family per severity, all at the same chroma so a page of mixed
+   * callouts reads as one system. */
+  --callout-info: #186c66;    /* 5.9:1 — teal */
+  --callout-tip: #2f7d5c;     /* 4.7:1 — green; "success" has to look like it */
+  --callout-warn: #9c5b25;    /* 5.1:1 — amber */
+  --callout-danger: #a8323c;  /* 6.2:1 — red. Deliberately far from the brand
+                                 plum: an error must not be the most on-brand
+                                 thing on the page. */
+
+  /* -- tint helpers ------------------------------------------------------ *
+   * Percentages are centralised so "the selected nav row" is one value, not
+   * eleven scattered color-mix() calls. */
+  --tint-weak: 6%;
+  --tint: 10%;
+  --tint-strong: 16%;
+
+  /* How much of a hue a border carries. Recurs on callouts and buttons. */
+  --mix-border: 35%;
+
+  /* -- type -------------------------------------------------------------- *
+   * Two families. `--font-display` is a seam: point it at a separate display
+   * face here and every heading and UI label follows, with no other edits. */
+  --font-sans: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-sans);
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* Loaded faces — see fonts.css and FONTS.md:
+   *   Hanken Grotesk  variable 400–700 upright, static 400 italic
+   *   JetBrains Mono  static 400
+   * Use the upright variable range freely. Adding another italic or mono
+   * weight requires vendoring that face and declaring it in fonts.css. */
+
+  /* Modular scale, ratio ~1.25.
+   *
+   * Material sets `html { font-size: 125% }` — 125% of whatever the reader has
+   * chosen as their browser default, stepping to 137.5% above 100em and 150%
+   * above 125em. So 1rem is 20px for a reader on defaults, and larger for one
+   * who has set a bigger default. Do NOT pin `html { font-size: 16px }` to make
+   * these numbers rounder: that silently overrides the reader's own setting.
+   *
+   * The px comments below are therefore "at browser defaults", not fixed sizes.
+   */
+  --text-2xs: 0.6rem;     /* 12px — kbd */
+  --text-xs:  0.625rem;   /* 12.5px — outline, breadcrumbs */
+  --text-sm:  0.7rem;     /* 14px — nav, table cells */
+  --text-md:  0.75rem;    /* 15px — captions, search results */
+  --text-base:0.8rem;     /* 16px — body copy */
+  --text-lg:  0.9rem;     /* 18px — lead paragraph */
+  --text-xl:  1rem;       /* 20px — h3 */
+  --text-2xl: 1.25rem;    /* 25px — h2 */
+  --text-3xl: 1.8rem;     /* 36px — h1 */
+
+  --leading-tight: 1.25;
+  --leading-snug: 1.45;
+  --leading-body: 1.65;
+
+  --tracking-caps: 0.08em;  /* section labels, eyebrows */
+  --tracking-tight: -0.011em;
+
+  /* -- space ------------------------------------------------------------- *
+   * 4px base at browser defaults (see the note on the type scale). Use these,
+   * not arbitrary values. */
+  --space-1: 0.2rem;   /*  4px */
+  --space-2: 0.4rem;   /*  8px */
+  --space-3: 0.6rem;   /* 12px */
+  --space-4: 0.8rem;   /* 16px */
+  --space-5: 1.2rem;   /* 24px */
+  --space-6: 1.6rem;   /* 32px */
+  --space-7: 2.4rem;   /* 48px */
+  --space-8: 3.2rem;   /* 64px */
+
+  /* -- shape & elevation ------------------------------------------------- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgb(31 26 34 / 5%);
+  --shadow-md: 0 2px 4px rgb(31 26 34 / 5%), 0 8px 24px rgb(31 26 34 / 7%);
+  --shadow-overlay: 0 24px 64px rgb(31 26 34 / 22%);
+  --scrim: rgb(31 26 34 / 45%);
+
+  /* -- layout ------------------------------------------------------------ */
+  --header-height: 56px;
+  --nav-width: 272px;
+  --toc-width: 220px;
+  --shell-max: 68rem;       /* caps the whole three-column shell so the outline
+                             * does not drift a screen-width away from the text
+                             * on an ultrawide monitor. Below this the shell
+                             * fills the viewport. */
+  --measure: 32rem;         /* 640px ≈ 81 characters at 16px.
+                             * Prose alone would want ~600px, but reference
+                             * tables share this column and a narrower measure
+                             * squeezes them. 16px type at 1.65 carries the
+                             * longer line comfortably; 14px would not. */
+
+  /* -- motion ------------------------------------------------------------ */
+  --ease: cubic-bezier(0.2, 0, 0.2, 1);
+  --duration: 140ms;
+
+  /* -- stacking ---------------------------------------------------------- *
+   * Material owns 0–5 (drawer and its scrim both sit at 5). The header must
+   * stay BELOW the drawer or it covers the drawer's back button on mobile. */
+  --z-header: 3;
+  --z-search: 6;
+}
+
+/* Material writes this attribute onto <body> for the dark palette. */
+[data-md-color-scheme="slate"] {
+  --brand: #dda9c8;             /* 9.5:1 on canvas */
+  --brand-strong: #ecc6dd;
+  --brand-contrast: #1a1018;    /* text on a --brand fill: 9.4:1 */
+  --accent: #5cbcb2;            /* 8.4:1 */
+
+  --canvas: #121016;
+  --surface: #1a1722;
+  --surface-sunken: #221d2b;
+  --border: #2e2837;
+  --border-strong: #3f3849;
+
+  --text: #ece7f0;              /* 15.6:1 */
+  --text-muted: #a99fb3;        /*  7.5:1 */
+  --text-subtle: #8d8399;       /*  5.3:1 */
+
+  --code-bg: #221e29;
+  --code-fg: #e4d5ec;           /* 11.7:1 on --code-bg */
+
+  --callout-info: #5cbcb2;    /* 8.4:1 */
+  --callout-tip: #59b98d;     /* 7.9:1 */
+  --callout-warn: #d1904f;    /* 7.0:1 */
+  --callout-danger: #e58a94;  /* 7.6:1 */
+
+  --tint-weak: 10%;
+  --tint: 16%;
+  --tint-strong: 24%;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 30%);
+  --shadow-md: 0 2px 4px rgb(0 0 0 / 30%), 0 8px 24px rgb(0 0 0 / 35%);
+  --shadow-overlay: 0 24px 64px rgb(0 0 0 / 55%);
+  --scrim: rgb(0 0 0 / 60%);
+}
+
+/* ---------------------------------------------------------------------------
+ * Bridge to Material's own variables.
+ *
+ * Material's stylesheet is built on --md-* names. Mapping ours onto theirs
+ * once, here, means every un-restyled Material component (footnotes, tabs,
+ * task lists, annotations, the 404 page) inherits the Braid palette for free
+ * instead of needing a rule of its own.
+ * ------------------------------------------------------------------------ */
+:root,
+[data-md-color-scheme="slate"] {
+  --md-default-bg-color: var(--canvas);
+  --md-default-fg-color: var(--text);
+  --md-default-fg-color--light: var(--text-muted);
+  --md-default-fg-color--lighter: var(--text-subtle);
+  --md-default-fg-color--lightest: var(--border);
+
+  --md-primary-fg-color: var(--canvas);
+  --md-primary-bg-color: var(--text);
+  --md-accent-fg-color: var(--brand-strong);
+
+  --md-typeset-color: var(--text);
+  --md-typeset-a-color: var(--brand);
+  --md-typeset-mark-color: color-mix(in srgb, var(--brand) var(--tint-strong), transparent);
+  --md-typeset-del-color: color-mix(in srgb, var(--callout-danger) var(--tint), transparent);
+  --md-typeset-ins-color: color-mix(in srgb, var(--accent) var(--tint), transparent);
+
+  --md-code-bg-color: var(--code-bg);
+  --md-code-fg-color: var(--code-fg);
+
+  --md-text-font: var(--font-sans);
+  --md-code-font: var(--font-mono);
+
+  /* Anchor targets must clear the sticky header, or a linked heading lands
+     underneath it. Material's default assumes its own 48px header. */
+  --md-scroll-margin: calc(var(--header-height) + var(--space-4));
+}

@@ -3,6 +3,9 @@ site_url: https://docs.braidkit.io/
 site_description: Documentation for Braid, which records the decisions and reasoning behind a change and keeps that record with the code.
 repo_url: https://github.com/braidkit/docs
 repo_name: braidkit/docs
+# Used by the footer's GitHub icon to resolve each rendered page back to its
+# source Markdown file on the default branch.
+edit_uri: blob/main/docs/
 
 theme:
   name: material
@@ -10,6 +13,21 @@ theme:
   logo: assets/brand/logo/braid-mark-purple-512.png
   favicon: assets/brand/logo/braid-avatar-purple-512.png
   font: false
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Use light theme
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Use dark theme
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Use system theme
   icon:
     repo: fontawesome/brands/github
   features:
@@ -23,10 +41,24 @@ theme:
     - content.code.copy
     - content.code.annotate
     - content.tooltips
-plugins: []
+    - search.suggest
+    - search.highlight
+plugins:
+  - search
 
+# Generate the agent-readable corpus for local, CI, and Cloudflare builds.
+hooks:
+  - scripts/build_llms.py
+
+# Order matters: tokens define the variables the other two consume.
 extra_css:
-  - stylesheets/brand.css
+  - stylesheets/fonts.css
+  - stylesheets/tokens.css
+  - stylesheets/base.css
+  - stylesheets/shell.css
+
+extra_javascript:
+  - javascripts/search-shortcut.js
 
 markdown_extensions:
   - admonition
@@ -36,6 +68,7 @@ markdown_extensions:
   - footnotes
   - toc:
       permalink: true
+      title: On this page
   - pymdownx.details
   - pymdownx.highlight:
       anchor_linenums: true
@@ -57,16 +90,25 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - Why Braid?: why-braid.md
   - How Braid works: how-braid-works.md
   - Braid and thread lifecycle: lifecycle.md
   - What Braid records: what-braid-records.md
   - Braid on your machine: braid-on-your-machine.md
   - Installation: getting-started/installation.md
   - Get help: get-help.md
+  - Changelog: changelog.md
 
 extra:
+  # Rendered as the persistent link at the foot of the navigation rail.
+  # Omit this block and the link disappears rather than 404s.
+  support:
+    title: Contact support
+    description: Get help on Discord
+    link: get-help/
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/braidkit
-      name: Braid on GitHub
+      link: https://github.com/braidkit/docs
+      name: View this page on GitHub
+      page_source: true
   generator: false

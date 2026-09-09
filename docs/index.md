@@ -15,6 +15,7 @@ Braid is in private preview. It is being used by a small number of invited devel
 
 ## Documentation
 
+- [Why Braid?](why-braid.md). Why keeping the decisions behind a change matters for review and maintenance.
 - [How Braid works](how-braid-works.md). The model: braids, threads, contributors, scope, signed events, and how state is derived.
 - [Braid and thread lifecycle](lifecycle.md). The states and what moves between them.
 - [What Braid records](what-braid-records.md). Identity, signed events, and what leaves your machine.

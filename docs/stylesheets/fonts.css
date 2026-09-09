@@ -1,0 +1,52 @@
+/* Braid Docs — self-hosted web fonts
+ *
+ * Loaded before every other stylesheet so the faces are discovered as early as
+ * possible. See FONTS.md at the repository root for why the upright
+ * face is a variable file and the italic is a static instance.
+ *
+ * `font-display: swap` renders text immediately in the fallback and swaps when
+ * the face arrives: readable during load, never invisible. The fallback stacks
+ * in tokens.css are chosen so the reflow on swap is small.
+ *
+ * unicode-range is the latin subset Google serves. Anything outside it falls
+ * through to the system stack rather than downloading a face that cannot
+ * render it.
+ */
+
+@font-face {
+  font-display: swap;
+  font-family: "Hanken Grotesk";
+  font-style: normal;
+  /* One variable file covers every upright weight the stylesheet uses. */
+  font-weight: 400 700;
+  src: url("../assets/fonts/hanken-grotesk-variable.woff2") format("woff2-variations"),
+       url("../assets/fonts/hanken-grotesk-variable.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Hanken Grotesk";
+  font-style: italic;
+  /* Static 400. Bold italic is rare enough in prose that synthesising it is a
+     better trade than a 22 KB larger variable italic. */
+  font-weight: 400;
+  src: url("../assets/fonts/hanken-grotesk-italic.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  /* Nothing renders bold code, so 400 is the whole family here. */
+  font-weight: 400;
+  src: url("../assets/fonts/jetbrains-mono.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
