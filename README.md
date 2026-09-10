@@ -35,6 +35,7 @@ another clone or worktree will not reflect your edits.
 Verify a change:
 
 ```sh
+python -m unittest discover -s tests -v
 mkdocs build --strict
 python scripts/build_llms.py --check
 python scripts/check_site.py site
@@ -93,6 +94,11 @@ It generates ignored `docs/llms.txt` and `docs/llms-full.txt` from nav pages:
 These files and the search index contain documentation content and must be
 covered by the same access gate as the HTML.
 
+The corpus generator, page-Markdown publisher, and site contract checker read
+the shared project configuration without importing MkDocs internals. MkDocs
+still invokes the publishers through thin hook adapters; they can also run as
+standalone commands for another builder.
+
 ## Branding and layout
 
 - `docs/stylesheets/tokens.css`: Braid colors, typography, spacing, both themes.
@@ -125,3 +131,11 @@ CI checks the build, corpus, expected page outputs, and custom shell contracts.
 A successful build does not establish that the deployed site is private or
 that an outline is ready to launch. Follow [DEPLOYMENT.md](DEPLOYMENT.md) for
 access verification, public launch, and rollback.
+
+## Builder migration
+
+Material for MkDocs is in its final maintenance period. Production remains on
+the pinned MkDocs and Material versions while Zensical compatibility is added
+and verified in reversible stages. See
+[ZENSICAL_MIGRATION.md](ZENSICAL_MIGRATION.md) for the evidence, constraints,
+cutover criteria, and rollback plan.
