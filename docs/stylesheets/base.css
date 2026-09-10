@@ -87,6 +87,18 @@ body {
   transition: text-decoration-color var(--duration) var(--ease);
 }
 
+/* A link inside running text needs a signal that is not colour. Plum against
+   body ink is 1.54:1, so colour alone leaves the link invisible to a reader
+   who cannot separate the two hues.
+ *
+ * The decoration colour and offset above were already written for an
+ * underline, but Material sets `text-decoration: none` and won, so the line
+ * never rendered. This restores it, scoped to prose: cards, heading anchors
+ * and navigation are links too, and none of them sit in a sentence. */
+.md-typeset :is(p, li, td, dd) a {
+  text-decoration-line: underline;
+}
+
 .md-typeset a:hover {
   text-decoration-color: currentcolor;
 }
