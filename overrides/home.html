@@ -1,20 +1,18 @@
 {% extends "main.html" %}
 
-{# Navigation cards resolve real MkDocs pages, so URLs respect the site base
-   and outline labels follow page metadata when the content is completed.
-   index.md keeps a plain Markdown equivalent for the agent-readable corpus. #}
-{% macro card(path, label, description, icon) %}
-  {% for target in nav.pages if target.file.src_uri == path %}
-    <a class="braid-home__card" href="{{ target.url | url }}">
-      <span class="braid-home__card-top">
-        <span class="braid-home__icon" aria-hidden="true">{% include ".icons/material/" ~ icon ~ ".svg" %}</span>
-        {% if target.meta.draft %}<span class="braid-home__status">Outline</span>{% endif %}
-      </span>
-      <h3>{{ label }}</h3>
-      <span class="braid-home__description">{{ description }}</span>
-      <span class="braid-home__arrow" aria-hidden="true">↗</span>
-    </a>
-  {% endfor %}
+{# Card routes and outline state live in the same configuration as their labels.
+   The contract checker keeps that state aligned with page front matter. This
+   avoids relying on builder-specific navigation object internals. #}
+{% macro card(path, label, description, icon, draft) %}
+  <a class="braid-home__card" href="{{ (path[:-3] ~ '/') | url }}">
+    <span class="braid-home__card-top">
+      <span class="braid-home__icon" aria-hidden="true">{% include ".icons/material/" ~ icon ~ ".svg" %}</span>
+      {% if draft %}<span class="braid-home__status">Outline</span>{% endif %}
+    </span>
+    <h3>{{ label }}</h3>
+    <span class="braid-home__description">{{ description }}</span>
+    <span class="braid-home__arrow" aria-hidden="true">↗</span>
+  </a>
 {% endmacro %}
 
 {% block content %}
@@ -28,7 +26,7 @@
       <h2 id="{{ section.id }}">{{ section.title }}</h2>
       <div class="braid-home__grid">
         {% for item in section.cards %}
-          {{ card(item.path, item.label, item.description, item.icon) }}
+          {{ card(item.path, item.label, item.description, item.icon, item.draft) }}
         {% endfor %}
       </div>
     </section>
@@ -38,9 +36,7 @@
       <h2 id="{{ config.extra.home.explore.id }}">{{ config.extra.home.explore.title }}</h2>
       <div class="braid-home__links">
         {% for item in config.extra.home.explore.links %}
-          {% for target in nav.pages if target.file.src_uri == item.path %}
-            <a href="{{ target.url | url }}">{{ item.label }}{% if target.meta.draft %} <span class="braid-home__status">Outline</span>{% endif %}<span aria-hidden="true"> →</span></a>
-          {% endfor %}
+          <a href="{{ (item.path[:-3] ~ '/') | url }}">{{ item.label }}{% if item.draft %} <span class="braid-home__status">Outline</span>{% endif %}<span aria-hidden="true"> →</span></a>
         {% endfor %}
       </div>
     </section>
