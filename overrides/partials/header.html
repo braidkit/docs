@@ -1,0 +1,55 @@
+{#
+  Braid's documentation header: brand, site destinations, search, theme control.
+
+  The search trigger is a <label> because Material's search overlay is driven
+    by the `#__search` checkbox. It is given button semantics here and the
+    Enter/Space handling it therefore needs lives in search-shortcut.js.
+#}
+<header class="md-header braid-header" data-md-component="header">
+  <div class="md-header__inner braid-header__inner">
+    <div class="braid-header__brand">
+      {# A <label>, not a <button>, and both halves of that matter.
+
+         Material's drawer is driven entirely by the #__drawer checkbox, so a
+         label toggles it natively with no JavaScript; a button toggles nothing,
+         because aria-controls is metadata rather than behaviour. Material also
+         hides this trigger on desktop with
+         `.md-header__button[for="__drawer"] { display: none }`, which cannot
+         match an element that has no `for`. Using a button therefore broke the
+         click and pinned the trigger visible at every width at the same time. #}
+      <label class="md-header__button md-icon braid-header__menu" for="__drawer" aria-label="Open navigation" role="button" tabindex="0">
+        {% set icon = config.theme.icon.menu or "material/menu" %}
+        {% include ".icons/" ~ icon ~ ".svg" %}
+      </label>
+      <a href="{{ config.extra.homepage | d(nav.homepage.url, true) | url }}" class="braid-header__home" aria-label="{{ config.site_name }} home">
+        <span class="braid-header__logo">{% include "partials/logo.html" %}</span>
+        <span class="braid-header__wordmark">braid</span>
+      </a>
+    </div>
+
+    {% set on_changelog = page and page.url == "changelog/" %}
+    <nav class="braid-header__sections" aria-label="Primary">
+      <a href="{{ nav.homepage.url | url }}" class="braid-header__section{% if not on_changelog %} braid-header__section--active{% endif %}"{% if not on_changelog %} aria-current="page"{% endif %}>Documentation</a>
+      <a href="{{ 'changelog/' | url }}" class="braid-header__section{% if on_changelog %} braid-header__section--active{% endif %}"{% if on_changelog %} aria-current="page"{% endif %}>Changelog</a>
+    </nav>
+
+    <div class="braid-header__tools">
+      {% if "material/search" in config.plugins %}
+        <label class="braid-search-trigger" for="__search" aria-label="Search documentation" role="button" tabindex="0">
+          {% set icon = config.theme.icon.search or "material/magnify" %}
+          {% include ".icons/" ~ icon ~ ".svg" %}
+          <span class="braid-search-trigger__label">Search docs</span>
+          <kbd data-braid-shortcut>Ctrl K</kbd>
+        </label>
+        {% include "partials/search.html" %}
+      {% endif %}
+
+      {% if config.theme.palette %}
+        {% include "partials/palette.html" %}
+      {% endif %}
+      {% if not config.theme.palette is mapping %}
+        {% include "partials/javascripts/palette.html" %}
+      {% endif %}
+    </div>
+  </div>
+</header>

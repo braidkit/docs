@@ -1,27 +1,46 @@
 {% extends "base.html" %}
 
-{% block header %}{% endblock %}
+{#
+  Fonts are self-hosted (docs/assets/fonts, declared in stylesheets/fonts.css),
+  so rendering text needs no third-party request at all.
 
-<!-- Breadcrumbs: the open-source Material theme has no breadcrumb feature, so we
-     render them from the page's nav ancestors. Shown on every page except the
-     top-level home page. -->
+  The upright face is preloaded because it is on the critical path for every
+  page and would otherwise not be discovered until fonts.css has been fetched
+  and parsed — a serialised round trip. The italic and mono faces are not
+  preloaded: plenty of pages use neither, and preloading a face a page does not
+  use is a wasted download that competes with one it does.
+
+  `mkdocs.yml` sets `font: false` so Material does not load a family of its own.
+#}
+{% block extrahead %}
+  <link rel="preload" href="{{ 'assets/fonts/hanken-grotesk-variable.woff2' | url }}" as="font" type="font/woff2" crossorigin>
+{% endblock %}
+
+{#
+  Breadcrumbs. The open-source Material theme has no breadcrumb feature, so we
+  render them from the page's nav ancestors. Every page except the home page.
+#}
 {% block content %}
-  {% if page and page.ancestors %}
+  {% if page and page.ancestors and not page.is_homepage %}
     <nav class="braid-crumbs" aria-label="Breadcrumb">
       <ol>
-        <li><a href="{{ nav.homepage.url | url }}">Home</a></li>
-        {% for ancestor in page.ancestors | reverse %}
+        {# The homepage's own url is the empty string, which is falsy — test for
+           the page, not its url, or Home silently drops off every crumb. The
+           `url` filter turns "" into a correct relative link. #}
+        {% if nav.homepage %}
+          <li><a href="{{ nav.homepage.url | url }}">Home</a></li>
           <li class="braid-crumbs__sep" aria-hidden="true">/</li>
-          <li>
-            {% if ancestor.url %}
-              <a href="{{ ancestor.url | url }}">{{ ancestor.title }}</a>
-            {% else %}
-              <span>{{ ancestor.title }}</span>
-            {% endif %}
-          </li>
+        {% endif %}
+        {% for ancestor in page.ancestors | reverse %}
+          {% if not loop.first %}
+            <li class="braid-crumbs__sep" aria-hidden="true">/</li>
+          {% endif %}
+          {% if ancestor.url %}
+            <li><a href="{{ ancestor.url | url }}">{{ ancestor.title }}</a></li>
+          {% else %}
+            <li><span>{{ ancestor.title }}</span></li>
+          {% endif %}
         {% endfor %}
-        <li class="braid-crumbs__sep" aria-hidden="true">/</li>
-        <li><span class="braid-crumbs__current" aria-current="page">{{ page.title }}</span></li>
       </ol>
     </nav>
   {% endif %}
