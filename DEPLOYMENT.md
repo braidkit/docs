@@ -13,7 +13,7 @@ repository.
 | Setting | Value |
 | --- | --- |
 | Source repository | `braidkit/docs` |
-| Cloudflare Pages project | `braid-docs` |
+| Cloudflare Pages project | `braid-docs-site` |
 | Production branch | `main` |
 | Build command | `python -m pip install -r requirements.txt && python -m mkdocs build --strict` |
 | Build output | `site` |
@@ -30,7 +30,7 @@ repository.
 3. Keep automatic production and preview deployments enabled. Cloudflare will
    build non-production branches as previews.
 4. Require the GitHub `mkdocs build` check before merging to `main`.
-5. Confirm the first deployment on the generated `braid-docs.pages.dev` URL.
+5. Confirm the first deployment on the generated `braid-docs-site.pages.dev` URL.
 
 Cloudflare's build is a second build from the same commit; GitHub Actions is the
 required pre-merge quality gate. The deployment page identifies the source
@@ -46,29 +46,79 @@ commit that produced each Cloudflare build.
 4. Deploy the marketing repository change that redirects `/docs` and `/docs/`
    to the canonical documentation domain.
 
+## Private review before public launch
+
+The launch branch builds the full navigation, existing pages, and explicit
+outlines. Merging it no longer means the writing is complete.
+
+**Access control must be configured separately before deploying content that
+must stay private.** Neither `draft: true`, `robots.txt`, nor `noindex`
+prevents access. The docs source repository is public and is outside a website
+access gate.
+
+Available approaches:
+
+- A shared password checked at the server before any static file is served.
+  The secret belongs in Cloudflare, never in HTML, JavaScript sent to the
+  browser, or Git. Authentication must fail closed when unconfigured or when
+  the Functions allowance is exhausted.
+- Cloudflare Access with approved reviewer identities. If using the Pages
+  preview-access switch, extend it to the production Pages hostname and custom
+  domain; the switch alone does not protect both.
+- Public but unindexed documentation, only if that exposure is an explicit
+  product decision. This is not a private preview.
+
+Gate all of `docs.braidkit.io`, `braid-docs-site.pages.dev`, and
+`*.braid-docs-site.pages.dev`. Existing immutable preview deployments need
+coverage too; a gate added only to a new deployment does not protect them.
+Do not describe the site as private until anonymous checks below pass.
+
+Official references:
+[Pages preview access](https://developers.cloudflare.com/pages/configuration/preview-deployments/),
+[custom-domain access caveats](https://developers.cloudflare.com/pages/platform/known-issues/),
+and [Functions fail-open behavior](https://developers.cloudflare.com/pages/functions/routing/).
+
 ## Verify a deployment
 
 For a preview deployment:
 
 * open the preview URL from the pull request;
-* confirm the page contains `documentation is coming soon`;
-* confirm an old documentation URL returns `404`;
+* confirm Home shows the configured task cards and grouped navigation;
+* confirm every outline shows its status notice;
+* confirm support is available once at the foot of the sidebar;
+* confirm search, deep links, dark mode, and mobile navigation work;
 * confirm the response includes `X-Robots-Tag: noindex`.
 
-For production, verify:
+For an access-controlled deployment, anonymous requests must be challenged or
+denied on every hostname, including these paths:
 
 ```sh
-curl --fail --location https://docs.braidkit.io/
-curl --fail https://docs.braidkit.io/robots.txt
-curl --fail https://docs.braidkit.io/sitemap.xml
-curl --fail https://docs.braidkit.io/llms.txt
-curl --fail https://docs.braidkit.io/llms-full.txt
-curl --head https://braidkit.io/docs
+curl --head https://docs.braidkit.io/
+curl --head https://docs.braidkit.io/why-braid/
+curl --head https://docs.braidkit.io/search/search_index.json
+curl --head https://docs.braidkit.io/llms.txt
+curl --head https://docs.braidkit.io/llms-full.txt
+curl --head https://docs.braidkit.io/sitemap.xml
+curl --head https://docs.braidkit.io/stylesheets/home.css
+curl --head https://docs.braidkit.io/404.html
 ```
 
-While the site is a coming-soon page, production must return
-`X-Robots-Tag: noindex` and `robots.txt` must disallow crawling. Change those
-settings only when reviewed documentation is ready to be published.
+Repeat against the production Pages hostname and an existing preview URL.
+Test valid and invalid credentials, not just the home-page login prompt.
+After signing in, verify the content checks above and compare the deployed
+commit with the intended PR/main commit.
+
+## Open the docs publicly
+
+1. Complete the writing and release checks in [LAUNCH.md](LAUNCH.md).
+2. Remove `draft: true` only from reviewed pages; hide unfinished pages if they
+   are deferred from launch.
+3. Verify the deployed build, then remove the chosen access gate deliberately.
+4. Resolve the indexing policy in
+   [BRA-250](https://linear.app/braidkit/issue/BRA-250). If indexing is approved,
+   update `docs/robots.txt` and `docs/_headers` together.
+5. Verify public HTML, search, sitemap, and both agent-readable files, plus the
+   marketing redirect at `https://braidkit.io/docs`.
 
 ## Roll back
 

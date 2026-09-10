@@ -3,6 +3,7 @@ title: Changelog
 description: Product updates and release notes from Braid.
 hide:
   - toc
+  - footer
 ---
 
 # Changelog

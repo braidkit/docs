@@ -1,6 +1,6 @@
 ---
 title: How Braid works
-description: The model behind Braid: braids, threads, contributors, scope, signed events, and how state is derived from the event log.
+description: "The model behind Braid: braids, threads, contributors, scope, signed events, and how state is derived from the event log."
 ---
 
 # How Braid works

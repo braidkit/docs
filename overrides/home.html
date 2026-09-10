@@ -1,0 +1,48 @@
+{% extends "main.html" %}
+
+{# Navigation cards resolve real MkDocs pages, so URLs respect the site base
+   and outline labels follow page metadata when the content is completed.
+   index.md keeps a plain Markdown equivalent for the agent-readable corpus. #}
+{% macro card(path, label, description, icon) %}
+  {% for target in nav.pages if target.file.src_uri == path %}
+    <a class="braid-home__card" href="{{ target.url | url }}">
+      <span class="braid-home__card-top">
+        <span class="braid-home__icon" aria-hidden="true">{% include ".icons/material/" ~ icon ~ ".svg" %}</span>
+        {% if target.meta.draft %}<span class="braid-home__status">Outline</span>{% endif %}
+      </span>
+      <h3>{{ label }}</h3>
+      <span class="braid-home__description">{{ description }}</span>
+      <span class="braid-home__arrow" aria-hidden="true">↗</span>
+    </a>
+  {% endfor %}
+{% endmacro %}
+
+{% block content %}
+  <div class="braid-home">
+    <span class="braid-home__eyebrow">Private preview</span>
+    <h1>Documentation</h1>
+    <p class="braid-home__intro">Keep the understanding behind agent-written code.<br>Start here, or pick up where you left off.</p>
+
+    {% for section in config.extra.home.sections %}
+    <section aria-labelledby="{{ section.id }}">
+      <h2 id="{{ section.id }}">{{ section.title }}</h2>
+      <div class="braid-home__grid">
+        {% for item in section.cards %}
+          {{ card(item.path, item.label, item.description, item.icon) }}
+        {% endfor %}
+      </div>
+    </section>
+    {% endfor %}
+
+    <section class="braid-home__learn" aria-labelledby="{{ config.extra.home.explore.id }}">
+      <h2 id="{{ config.extra.home.explore.id }}">{{ config.extra.home.explore.title }}</h2>
+      <div class="braid-home__links">
+        {% for item in config.extra.home.explore.links %}
+          {% for target in nav.pages if target.file.src_uri == item.path %}
+            <a href="{{ target.url | url }}">{{ item.label }}{% if target.meta.draft %} <span class="braid-home__status">Outline</span>{% endif %}<span aria-hidden="true"> →</span></a>
+          {% endfor %}
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+{% endblock %}

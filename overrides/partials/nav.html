@@ -31,11 +31,9 @@
 
   <ul class="md-nav__list braid-nav__list" data-md-scrollfix>
     {% for nav_item in nav %}
-      {# Changelog is a product destination above the docs hierarchy, not a
-         documentation page within it. It remains in MkDocs' nav so strict
-         builds validate it, while the dedicated destination switcher renders
-         it in both the desktop header and mobile drawer. #}
-      {% if nav_item.url != "changelog/" %}
+      {# Utility pages stay in the build and corpus, but have dedicated links:
+         Changelog in the section switcher, Get help in the support footer. #}
+      {% if nav_item.url != "changelog/" and nav_item.url != config.extra.support.link %}
         {% set path = "__nav_" ~ loop.index %}
         {{ item.render(nav_item, path, 1) }}
       {% endif %}

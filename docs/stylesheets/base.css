@@ -87,17 +87,63 @@ body {
   text-decoration-color: currentcolor;
 }
 
-/* Heading anchors stay out of the way until the heading is hovered or the
-   anchor itself is keyboard-focused. */
+/* Heading links use a familiar paperclip. The Markdown extension emits a
+   pilcrow as fallback text; visually replace it so the link reads as an
+   action to copy a section URL. */
 .md-typeset :is(h1, h2, h3, h4, h5, h6) .headerlink {
+  align-items: center;
   color: var(--text-subtle);
+  display: inline-flex;
+  font-size: 0;
+  height: 18px;
+  justify-content: center;
+  margin-inline-start: var(--space-2);
   opacity: 0;
+  position: relative;
   transition: opacity var(--duration) var(--ease);
+  vertical-align: baseline;
+  width: 18px;
+}
+
+.md-typeset :is(h1, h2, h3, h4, h5, h6) .headerlink::before {
+  background: currentcolor;
+  content: "";
+  height: 16px;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M16.5 6.5v11.586a4.414 4.414 0 0 1-8.828 0V5a3 3 0 0 1 6 0v12.586a1.586 1.586 0 0 1-3.172 0V6.5H9v11.086a3.086 3.086 0 0 0 6.172 0V5a4.5 4.5 0 0 0-9 0v13.086a5.914 5.914 0 0 0 11.828 0V6.5z'/%3E%3C/svg%3E") center / contain no-repeat;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M16.5 6.5v11.586a4.414 4.414 0 0 1-8.828 0V5a3 3 0 0 1 6 0v12.586a1.586 1.586 0 0 1-3.172 0V6.5H9v11.086a3.086 3.086 0 0 0 6.172 0V5a4.5 4.5 0 0 0-9 0v13.086a5.914 5.914 0 0 0 11.828 0V6.5z'/%3E%3C/svg%3E") center / contain no-repeat;
+  width: 16px;
 }
 
 .md-typeset :is(h1, h2, h3, h4, h5, h6):hover .headerlink,
 .md-typeset .headerlink:focus-visible {
   opacity: 1;
+}
+
+/* A heading remains the URL target after copying. Do not let that target state
+   leave an icon visible after a pointer click. Keyboard focus still exposes it. */
+.md-typeset :is(h1, h2, h3, h4, h5, h6):target:not(:hover) .headerlink:not(:focus-visible) {
+  opacity: 0;
+}
+
+.braid-link-toast {
+  background: var(--text);
+  border-radius: var(--radius-sm);
+  bottom: var(--space-5);
+  color: var(--canvas);
+  font-size: var(--text-sm);
+  left: 50%;
+  opacity: 0;
+  padding: var(--space-2) var(--space-3);
+  pointer-events: none;
+  position: fixed;
+  transform: translate(-50%, var(--space-2));
+  transition: opacity var(--duration) var(--ease), transform var(--duration) var(--ease);
+  z-index: var(--z-header);
+}
+
+.braid-link-toast[data-visible="true"] {
+  opacity: 1;
+  transform: translate(-50%, 0);
 }
 
 /* --------------------------------------------------------------------- code */
