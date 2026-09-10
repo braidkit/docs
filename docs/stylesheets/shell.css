@@ -64,15 +64,16 @@
   text-decoration: none;
 }
 
+/* The mark is 309x512, so only its height can be set: giving it a square box
+   stretched it half as wide again as it should be. */
 .braid-header__logo {
   display: inline-flex;
   height: 24px;
-  width: 24px;
 }
 
 .braid-header__logo :is(img, svg) {
   height: 100%;
-  width: 100%;
+  width: auto;
 }
 
 .braid-header__tools {
@@ -181,6 +182,17 @@
   margin: 0;
   padding: var(--space-2);
   width: 34px;
+}
+
+/* Material sizes every `.md-icon svg` at 1.2rem, which is 24px, and this
+   button's content box is 16px once its padding and border are taken out. The
+   icon was therefore left to whatever flex-shrink allowed at layout time,
+   rendering 16x24 on load and 24x24 once the palette had been cycled. Pin it to
+   the 16px the search trigger beside it already uses. */
+.braid-header__tools .md-header__button svg {
+  flex: 0 0 16px;
+  height: 16px;
+  width: 16px;
 }
 
 .braid-header__tools .md-header__button:hover {
@@ -352,8 +364,166 @@
 /* ================================================================ breadcrumbs
  */
 
+/* Breadcrumb on the left, Markdown actions on the right, sharing one row so
+   the actions cost no vertical space of their own. */
+.md-typeset .braid-pagebar {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  justify-content: space-between;
+  margin: 0 0 var(--space-3);
+  min-height: 26px;
+}
+
 .md-typeset .braid-crumbs {
-  margin: 0 0 var(--space-4);
+  margin: 0;
+}
+
+.md-typeset .braid-pageactions {
+  display: flex;
+  /* Top-level pages have no ancestors and so no breadcrumb. Keep the actions
+     against the right edge rather than letting them slide left. */
+  margin-inline-start: auto;
+  position: relative;
+}
+
+.md-typeset :is(.braid-pageactions__face, .braid-pageactions__toggle) {
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-subtle);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  gap: var(--space-2);
+  height: 26px;
+  transition: border-color var(--duration) var(--ease),
+              color var(--duration) var(--ease);
+  white-space: nowrap;
+}
+
+/* The two halves read as one control: a shared border between them, rounded
+   only on the outer edges. */
+.md-typeset .braid-pageactions__face {
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+  padding: 0 var(--space-2) 0 var(--space-3);
+}
+
+.md-typeset .braid-pageactions__toggle {
+  border-inline-start: 0;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 0 var(--space-1);
+}
+
+.md-typeset :is(.braid-pageactions__face, .braid-pageactions__toggle):hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.md-typeset :is(.braid-pageactions__face, .braid-pageactions__toggle) svg {
+  fill: currentColor;
+  flex: none;
+  height: 14px;
+  width: 14px;
+}
+
+.md-typeset .braid-pageactions__toggle[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+/* The label swaps to a shorter confirmation on copy. Reserving the width of the
+   longer label stops the control resizing under the pointer. */
+.md-typeset .braid-pageactions__face [data-braid-copy-label] {
+  display: inline-block;
+  min-width: 9.4ch;
+  text-align: start;
+}
+
+.md-typeset .braid-pageactions__menu {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg, 0 12px 32px rgb(0 0 0 / 32%));
+  display: flex;
+  flex-direction: column;
+  inset-block-start: calc(100% + var(--space-2));
+  inset-inline-end: 0;
+  min-width: 260px;
+  padding: var(--space-1);
+  position: absolute;
+  z-index: 5;
+}
+
+/* `display: flex` above outranks the browser's `[hidden] { display: none }`,
+   so the closed state has to be restated. */
+.md-typeset .braid-pageactions__menu[hidden] {
+  display: none;
+}
+
+.md-typeset .braid-pageactions__item {
+  align-items: flex-start;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-sm, 4px);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  text-align: start;
+  text-decoration: none;
+  transition: background var(--duration) var(--ease);
+  width: 100%;
+}
+
+.md-typeset .braid-pageactions__item:hover {
+  background: color-mix(in srgb, var(--text) 6%, transparent);
+}
+
+.md-typeset .braid-pageactions__item svg {
+  fill: currentColor;
+  flex: none;
+  height: 15px;
+  margin-block-start: 1px;
+  opacity: 0.7;
+  width: 15px;
+}
+
+.md-typeset .braid-pageactions__item span {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.md-typeset .braid-pageactions__item strong {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+}
+
+.md-typeset .braid-pageactions__external svg {
+  height: 11px;
+  opacity: 0.6;
+  vertical-align: baseline;
+  width: 11px;
+}
+
+.md-typeset .braid-pageactions__item small {
+  color: var(--text-subtle);
+  font-size: var(--text-xs);
+  line-height: var(--leading-tight);
+}
+
+/* Neither action earns its space on a phone: there is rarely anywhere to paste
+   to, and the Markdown view is the same text the reader already has. */
+@media screen and (max-width: 63.984375em) {
+  .md-typeset .braid-pageactions {
+    display: none;
+  }
 }
 
 .md-typeset .braid-crumbs ol {
@@ -361,12 +531,20 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
+  /* Body leading is a computed length inherited from the 16px content size, so
+     it gives this 12.5px row a 26px line box. Set leading here or the crumb
+     occupies twice the height its text needs. */
+  line-height: var(--leading-tight);
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.md-typeset .braid-crumbs li {
+/* Material indents list items with `[dir=ltr] .md-typeset ol li`, which is
+   more specific than a two-class selector and so beat `.braid-crumbs li`. That
+   left every crumb carrying a 20px left margin on top of the flex gap. Match
+   its specificity and win on order: extra_css loads after the theme. */
+.md-typeset .braid-crumbs ol li {
   margin: 0;
 }
 
@@ -393,8 +571,12 @@
   font-size: var(--text-sm);
 }
 
+/* Only ever seen in the drawer, where it is the same brand lockup as the site
+   header and so carries the same colour and size. */
 .braid-nav__wordmark {
+  color: var(--brand);
   font-family: var(--font-mono);
+  font-size: var(--text-lg);
   font-weight: 400;
   letter-spacing: var(--tracking-caps);
 }
@@ -403,17 +585,15 @@
   display: none;
 }
 
-.braid-nav .md-nav__item--section > .md-nav__link {
+.braid-nav > .braid-nav__list > .md-nav__item--nested > .md-nav__link {
   color: var(--text-subtle);
   font-family: var(--font-display);
-  font-size: var(--text-xs);
-  font-weight: 700;
-  letter-spacing: var(--tracking-caps);
-  margin: var(--space-5) 0 var(--space-1);
-  text-transform: uppercase;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  margin: var(--space-1) 0;
 }
 
-.braid-nav .md-nav__item--section:first-child > .md-nav__link {
+.braid-nav > .braid-nav__list > .md-nav__item--nested:first-child > .md-nav__link {
   margin-top: 0;
 }
 
@@ -532,6 +712,71 @@
   width: 2px;
 }
 
+/* =========================================================== previous / next
+ * Rendered inside the article by `main.html`, so it shares the prose measure
+ * rather than the full width of the shell.
+ */
+
+.md-typeset .braid-pagenav {
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: var(--space-3);
+  justify-content: space-between;
+  margin-top: var(--space-7);
+  padding-top: var(--space-5);
+}
+
+/* A page with no previous page still sends its next link to the right edge. */
+.md-typeset .braid-pagenav__link--next:only-child {
+  margin-inline-start: auto;
+}
+
+.md-typeset .braid-pagenav__link {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-width: 50%;
+  padding: var(--space-3) var(--space-4);
+  text-decoration: none;
+  transition: border-color var(--duration) var(--ease);
+}
+
+.md-typeset .braid-pagenav__link:hover {
+  border-color: var(--border-strong);
+}
+
+.md-typeset .braid-pagenav__link--next {
+  text-align: end;
+}
+
+.braid-pagenav__direction {
+  align-items: center;
+  color: var(--text-subtle);
+  display: flex;
+  font-size: var(--text-xs);
+  gap: var(--space-1);
+}
+
+.braid-pagenav__link--next .braid-pagenav__direction {
+  justify-content: flex-end;
+}
+
+.braid-pagenav__direction svg {
+  fill: currentcolor;
+  flex: 0 0 14px;
+  height: 14px;
+  width: 14px;
+}
+
+.braid-pagenav__title {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 600;
+}
+
 /* ==================================================================== footer
  */
 
@@ -569,15 +814,22 @@
   }
 }
 
-/* =============================================== full header (tablet and up)
- * Header destinations fit comfortably well before the page has room for all
- * three content columns. A desktop browser can also live in a narrow split
- * pane, so fine-pointer devices retain this header even below the width cutoff.
- * Keep this separate from the content-column breakpoint.
+/* ==================================================== full header (desktop)
+ * The destination switcher and the drawer offer the same two links, so they
+ * share the shell's breakpoint: the switcher appears exactly when the rail
+ * does, and the drawer that also lists Documentation and Changelog is gone.
+ * Any other cutoff leaves a band where both are on screen at once.
+ *
+ * Width alone gates it. An earlier pointer-type clause kept this header on any
+ * fine-pointer device, which on a narrow desktop window put the switcher on top
+ * of the wordmark: brand, switcher and tools want more room than 390px has.
  */
 
-@media screen and (min-width: 45em),
-       screen and (hover: hover) and (pointer: fine) {
+@media screen and (min-width: 64em) {
+  /* Three tracks so the switcher sits dead centre regardless of how wide the
+     brand and the tools are. The tools are placed by the grid here; below this
+     width the header is the flex row declared above, where `margin-left: auto`
+     is what holds them against the right edge. */
   .braid-header__inner {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
@@ -599,14 +851,25 @@
 }
 
 /* =================================================== three-column shell (desktop)
- * Everything structural is confined to this block. Below it, Material's own
- * responsive layout and drawer navigation run untouched.
+ * Everything structural is confined to this block and the two that follow it.
+ * Below them, Material's own responsive layout and drawer navigation run
+ * untouched.
+ *
+ * Material puts the navigation into a drawer below 76.25em, which is 1220px: a
+ * hamburger on screens with room for the rail several times over. Mintlify
+ * shows its rail from 1024px and Linear from 768px. This block therefore starts
+ * at 64em, and the block after next undoes the drawer over the range Material
+ * still considers narrow.
  */
 
-@media screen and (min-width: 76.25em) {
+@media screen and (min-width: 64em) {
 
   .md-main__inner.md-grid {
     column-gap: var(--space-6);
+    /* Material opens the grid 30px below the header. The rails and the content
+       column set their own top spacing, so this only pushed all three down
+       together. */
+    margin-block-start: 0;
     display: grid;
     /* The outline track is `auto`: it sizes to the outline when Material
        renders one, and collapses to zero on pages with `hide: [toc]`. No
@@ -630,28 +893,32 @@
   .md-sidebar--primary {
     border-inline-end: 1px solid var(--border);
     grid-column: 1;
+    height: calc(100dvh - var(--header-height));
+    left: max(0px, calc((100vw - var(--shell-max)) / 2));
     padding-inline: var(--space-5) var(--space-3);
+    position: fixed;
+    top: var(--header-height);
+    width: var(--nav-width);
   }
 
-  .md-sidebar--secondary {
-    display: block;
-    grid-column: 3;
-    padding-inline-end: var(--space-5);
-    width: var(--toc-width);
-  }
-
-  /* The class rule above is more specific than the browser's [hidden]
-     default. Restate the semantic state so pages that opt out of a table of
-     contents do not retain an empty third rail. */
-  .md-sidebar--secondary[hidden] {
-    display: none;
-  }
-
-  .md-sidebar__scrollwrap {
-    height: 100%;
+  /* Material scrolls the whole primary rail by default. That can carry the
+     support action below the fold. Make the rail a flex container instead, so
+     only the document list scrolls and the support action always keeps its
+     reserved space. The secondary rail retains Material's normal scrolling. */
+  .md-sidebar--primary .md-sidebar__scrollwrap {
+    display: flex;
+    /* Material writes a shorter inline height as the page footer enters the
+       viewport. The desktop rail is fixed, so its contents should continue to
+       use the rail's full height instead of following that page-end offset. */
+    height: 100% !important;
     margin: 0;
-    overflow-y: auto;
-    scrollbar-width: thin;
+    overflow: hidden;
+  }
+
+  .md-sidebar--primary .md-sidebar__inner {
+    display: flex;
+    flex: 1;
+    min-height: 0;
   }
 
   .md-content {
@@ -661,10 +928,18 @@
     min-width: 0;
   }
 
-  .md-content__inner {
-    margin: 0 auto;
+  /* Material pins this block to the rail with
+     `[dir=ltr] .md-sidebar--primary:not([hidden]) ~ .md-content > .md-content__inner`,
+     a (0,5,0) selector that beat a bare `.md-content__inner` and left the
+     column's spare width piled up on the right. Matching its shape gets to
+     (0,4,0); adding the element's other class ties at (0,5,0), and extra_css
+     loads after the theme so the tie falls our way. */
+  .md-sidebar--primary:not([hidden]) ~ .md-content > .md-content__inner.md-typeset {
+    margin-inline: auto;
     max-width: var(--measure);
-    padding: var(--space-7) 0 var(--space-8);
+    /* Matches the rails' own top padding so the breadcrumb, the outline
+       heading, and the navigation all begin on the same line. */
+    padding: var(--space-5) 0 var(--space-8);
   }
 
   .md-content__inner::before {
@@ -681,31 +956,189 @@
      the page. */
   .braid-nav {
     display: flex;
+    flex: 1;
     flex-direction: column;
-    min-height: 100%;
+    min-height: 0;
   }
 
   .braid-nav__list {
     flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
   }
 
   .braid-nav__footer {
     border-top: 1px solid var(--border);
+    flex-shrink: 0;
     margin-top: var(--space-5);
     padding-top: var(--space-3);
   }
+}
+
+/* ================================================== the outline (1220px and up)
+ * The third rail asks for another 250px on top of the rail and the measure, so
+ * it waits for the width Material used for the whole shell. Mintlify makes the
+ * same call: rail and prose first, outline only once there is room.
+ */
+
+@media screen and (min-width: 76.25em) {
+  .md-sidebar--secondary {
+    display: block;
+    grid-column: 3;
+    padding-inline-end: var(--space-5);
+    width: var(--toc-width);
+  }
+
+  /* The class rule above is more specific than the browser's [hidden]
+     default. Restate the semantic state so pages that opt out of a table of
+     contents do not retain an empty third rail. */
+  .md-sidebar--secondary[hidden] {
+    display: none;
+  }
+
+  /* Which entry is current is Material's decision, and it draws the line a
+     heading must cross at
+     `header height + 0.8 x (grid.offsetTop - main.offsetTop)`.
+     Braid's top spacing sits on the content block and on the rails rather than
+     on the grid, so that second term is zero and the line lands at 56px, which
+     is exactly the bottom edge of the sticky header: an entry lit up only once
+     its heading had already gone behind it.
+
+     That gap is the only term available, so open it on the grid and close it
+     again on main. Both boxes move, the content between them does not, and the
+     line goes to 184px, where a heading is well inside the viewport by the time
+     its entry lights up. Delete one of these two and the other stops making
+     sense: they are a pair. */
+  .md-main__inner.md-grid {
+    margin-block-start: 160px;
+  }
+
+  .md-main {
+    margin-block-start: -160px;
+  }
+}
+
+/* Material reveals the outline from 60em, which put it on screen beside the
+   hamburger and with no rail. It belongs to the three-column shell, so it is
+   hidden everywhere below it. The selector matches Material's own
+   `.md-sidebar--secondary:not([hidden])`, which is (0,2,0); a bare class loses
+   and the outline wraps onto a second grid row under the rail. */
+@media screen and (max-width: 76.234375em) {
+  .md-sidebar--secondary:not([hidden]) {
+    display: none;
+  }
+}
+
+/* ==================================================== rail, no outline (1024px)
+ * Material's drawer rules run until 76.234375em, so over the range where the
+ * shell above now applies but Material still expects a drawer, they are undone
+ * here. Nothing in this block is new design: it is the rail the block above
+ * describes, minus what the drawer did to it.
+ */
+
+@media screen and (min-width: 64em) and (max-width: 76.234375em) {
+  /* Material parks the rail off-canvas at `[dir=ltr] .md-sidebar--primary`,
+     which is (0,2,0) and beats the single-class rule that positions it above.
+     Match that shape to win the `left` back. */
+  [dir="ltr"] .md-sidebar--primary {
+    left: max(0px, calc((100vw - var(--shell-max)) / 2));
+  }
+
+  .md-sidebar--primary {
+    transform: none;
+    transition: none;
+    z-index: auto;
+  }
+
+  /* The drawer slides in on this transform when its checkbox is checked. The
+     checkbox survives a resize, so a rail opened as a drawer and then widened
+     would otherwise sit 242px to the right of its column. */
+  [data-md-toggle="drawer"]:checked ~ .md-container .md-sidebar--primary {
+    transform: none;
+  }
+
+  .md-sidebar--primary .md-sidebar__scrollwrap {
+    inset: auto;
+    position: static;
+  }
+
+  /* Each nav level is an absolutely positioned drawer panel. On a rail they
+     are one column again. The root keeps the flex layout the block above gives
+     it, which is what holds the support link at the bottom. */
+  .md-nav--primary {
+    height: auto;
+    position: static;
+    z-index: auto;
+  }
+
+  .md-nav--primary .md-nav {
+    display: block;
+    height: auto;
+    position: static;
+    z-index: auto;
+  }
+
+  /* Sub-levels slide in from the right in the drawer and expand in place on
+     the rail. This is Material's own row animation from above 76.25em. */
+  .md-nav__toggle ~ .md-nav {
+    display: grid;
+    grid-template-rows: minmax(0, 0fr);
+    opacity: 0;
+    transform: none;
+    transition: grid-template-rows 0.25s var(--ease), opacity 0.25s;
+  }
+
+  .md-nav__toggle ~ .md-nav > .md-nav__list {
+    overflow: hidden;
+  }
+
+  .md-nav__toggle:checked ~ .md-nav {
+    grid-template-rows: minmax(0, 1fr);
+    opacity: 1;
+    transform: none;
+  }
+
+  .md-nav__item--nested .md-nav__toggle:checked ~ .md-nav__link .md-nav__icon::after {
+    transform: rotate(90deg);
+  }
+
+  /* Drawer chrome: the per-level header, the row separators, and the inset
+     shadow that divided the header from the list. */
+  .md-nav__item--nested > .md-nav > .md-nav__title {
+    display: none;
+  }
+
+  .md-nav--primary .md-nav__item {
+    border-top: 0;
+  }
+
+  .md-nav--primary .md-nav__title ~ .md-nav__list {
+    background: none;
+    box-shadow: none;
+  }
+
+  /* Material hides this only from 76.25em, and the rail is present here. */
+  .md-header__button.braid-header__menu {
+    display: none;
+  }
+
+  /* Two tracks, so the collapsed outline column leaves no gap on the right. */
+  .md-main__inner.md-grid {
+    grid-template-columns: var(--nav-width) minmax(0, 1fr);
+  }
+
 }
 
 /* ================================================= below the desktop breakpoint
  * Cosmetic only. Material's drawer supplies the structure.
  */
 
-@media screen and (max-width: 76.234375em) {
-  /* The trigger has to exist exactly where the navigation lives in the drawer,
-     and Material decides that on viewport width alone. Gating it on pointer
-     type instead left every fine-pointer device between 720px and 1220px — an
-     ordinary laptop, or a desktop browser in a split pane — with the nav
-     off-screen and no control to reach it. */
+@media screen and (max-width: 63.984375em) {
+  /* The trigger has to exist exactly where the navigation lives in the drawer.
+     Gating it on pointer type instead left every fine-pointer device below the
+     shell breakpoint — an ordinary laptop, or a desktop browser in a split
+     pane — with the nav off-screen and no control to reach it. */
   .md-header__button.braid-header__menu {
     display: inline-flex;
   }
@@ -741,9 +1174,31 @@
     font-weight: 600;
   }
 
+  /* Material's drawer header is a two-row lockup: the logo is positioned
+     absolutely across the top and the site name sits on the line below it. The
+     site header puts the two side by side, and this is the same lockup, so it
+     is laid out the same way. */
+  .md-nav--primary .md-nav__title[for="__drawer"] {
+    align-items: center;
+    display: flex;
+    gap: var(--space-2);
+    height: var(--header-height);
+    line-height: 1;
+    padding: 0 var(--space-4);
+  }
+
+  .md-nav--primary .md-nav__title .md-nav__button.md-logo {
+    display: inline-flex;
+    height: 24px;
+    margin: 0;
+    padding: 0;
+    position: static;
+    width: auto;
+  }
+
   .md-nav--primary .md-nav__title .md-nav__button.md-logo :is(img, svg) {
-    height: 22px;
-    width: 22px;
+    height: 24px;
+    width: auto;
   }
 
   .md-nav--primary .md-nav__link {

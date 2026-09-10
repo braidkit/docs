@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Generate llms.txt and llms-full.txt from the published documentation.
 
-The published set is the mkdocs nav. A page that is not in the nav is not
-published, so it does not belong in either file.
+The corpus follows the mkdocs nav, including grouped sections and utility
+pages. Draft pages are listed as outlines, but their empty bodies are omitted.
 
 MkDocs runs this as a pre-build hook, so local, CI, and Cloudflare builds all
 regenerate the corpus from the pages. The outputs are gitignored.
@@ -12,8 +12,12 @@ Run with --check to compare without writing, which is useful locally.
 
 import argparse
 import pathlib
-import re
 import sys
+
+import yaml
+from mkdocs.config import load_config
+from mkdocs.structure.files import get_files
+from mkdocs.structure.nav import get_navigation
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
@@ -23,26 +27,16 @@ SITE = "https://docs.braidkit.io"
 INTRO = "Braid records the decisions and reasoning behind a change, from people and agents alike, and keeps that record with the code."
 
 
-def nav_entries():
-    """Return [(title, path)] in nav order.
+def nav_entries(config):
+    """Return ``[(title, source path)]`` from MkDocs' parsed navigation.
 
-    mkdocs.yml is not parsed as YAML on purpose. The config uses Python-specific
-    tags that a plain yaml.safe_load rejects, and the nav is a flat list of
-    "- Title: path.md" lines, so a line scan is enough and adds no dependency.
+    Letting MkDocs interpret its own config keeps this generator compatible
+    with nested sections and every navigation form MkDocs supports. It also
+    means the corpus uses the same resolved titles and order as the site.
     """
-    lines = MKDOCS.read_text().splitlines()
-    try:
-        start = lines.index("nav:")
-    except ValueError:
-        sys.exit("mkdocs.yml has no nav block")
-
-    entries = []
-    for line in lines[start + 1 :]:
-        if line and not line[0].isspace():
-            break
-        match = re.match(r"\s*-\s*(.+?):\s*(\S+\.md)\s*$", line)
-        if match:
-            entries.append((match.group(1).strip(), match.group(2).strip()))
+    files = get_files(config)
+    navigation = get_navigation(files, config)
+    entries = [(page.title, page.file.src_uri) for page in navigation.pages]
     if not entries:
         sys.exit("mkdocs.yml nav lists no pages")
     return entries
@@ -55,11 +49,9 @@ def split_front_matter(text):
     end = text.find("\n---\n", 4)
     if end == -1:
         return {}, text
-    meta = {}
-    for line in text[4:end].splitlines():
-        key, sep, value = line.partition(":")
-        if sep and not key.startswith(" "):
-            meta[key.strip()] = value.strip().strip('"').strip("'")
+    meta = yaml.safe_load(text[4:end]) or {}
+    if not isinstance(meta, dict):
+        raise ValueError("front matter must be a YAML mapping")
     return meta, text[end + 5 :].lstrip("\n")
 
 
@@ -82,24 +74,32 @@ def describe(meta, path):
     return description
 
 
-def render():
+def render(entries):
     index = [f"# Braid documentation", "", f"> {INTRO}", ""]
     full = [
         "# Braid documentation",
         "",
         f"> {INTRO}",
         "",
-        "The complete text of every published page follows, in navigation order.",
+        "Page content follows in navigation order. Unwritten outlines are listed in llms.txt and omitted here.",
         "",
     ]
 
-    for title, path in nav_entries():
+    for title, path in entries:
         source = DOCS / path
         if not source.exists():
             sys.exit(f"nav lists {path}, which does not exist")
-        meta, body = split_front_matter(source.read_text())
-        index.append(f"- [{title}]({page_url(path)}): {describe(meta, path)}")
-        full.append(f"## {title}")
+        try:
+            meta, body = split_front_matter(source.read_text())
+        except (yaml.YAMLError, ValueError) as error:
+            sys.exit(f"{path}: invalid YAML front matter: {error}")
+        page_title = str(meta.get("title") or title)
+        description = describe(meta, path)
+        if meta.get("draft"):
+            index.append(f"- [{page_title}]({page_url(path)}): Outline only; instructions have not been written.")
+            continue
+        index.append(f"- [{page_title}]({page_url(path)}): {description}")
+        full.append(f"## {page_title}")
         full.append("")
         full.append(f"Source: {page_url(path)}")
         full.append("")
@@ -109,16 +109,22 @@ def render():
     return "\n".join(index).rstrip() + "\n", "\n".join(full).rstrip() + "\n"
 
 
-def write_corpus():
-    index_text, full_text = render()
+def write_corpus(config):
+    index_text, full_text = render(nav_entries(config))
     for path, text in [(DOCS / "llms.txt", index_text), (DOCS / "llms-full.txt", full_text)]:
+        # MkDocs watches the documentation directory in serve mode. Rewriting
+        # an unchanged generated file causes a filesystem event, which starts
+        # another build and an endless live-reload loop.
+        if path.exists() and path.read_text() == text:
+            continue
         path.write_text(text)
         print(f"wrote {path.relative_to(ROOT)}")
 
 
-def on_pre_build(config):
-    """Write discovery files before MkDocs collects the documentation files."""
-    write_corpus()
+def on_config(config):
+    """Write discovery files before MkDocs collects documentation files."""
+    write_corpus(config)
+    return config
 
 
 def main():
@@ -126,7 +132,8 @@ def main():
     parser.add_argument("--check", action="store_true", help="fail if the generated files are stale")
     args = parser.parse_args()
 
-    index_text, full_text = render()
+    config = load_config(config_file=str(MKDOCS))
+    index_text, full_text = render(nav_entries(config))
     targets = [(DOCS / "llms.txt", index_text), (DOCS / "llms-full.txt", full_text)]
 
     if args.check:
@@ -136,7 +143,7 @@ def main():
         print("llms.txt and llms-full.txt are current")
         return
 
-    write_corpus()
+    write_corpus(config)
 
 
 if __name__ == "__main__":

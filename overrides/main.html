@@ -21,7 +21,23 @@
   render them from the page's nav ancestors. Every page except the home page.
 #}
 {% block content %}
-  {% if page and page.ancestors and not page.is_homepage %}
+  {#
+    The page bar carries the breadcrumb on the left and the Markdown actions on
+    the right. Both are page-level chrome and share a row, so the actions cost
+    no additional vertical space.
+
+    `page_markdown.py` publishes every page's source at its own URL with a .md
+    extension, which is what both actions point at.
+  #}
+  {#
+    `page_markdown.py` writes both shapes of Markdown URL for every page. Link
+    the bare one, `why-braid.md`, because that is what Linear and Mintlify
+    serve and so the shape a reader is most likely to recognise.
+  #}
+  {% set md_path = (page.url[:-1] if page.url.endswith('/') else page.url) ~ '.md' %}
+  {% if page and not page.is_homepage %}
+    <div class="braid-pagebar">
+      {% if page.ancestors %}
     <nav class="braid-crumbs" aria-label="Breadcrumb">
       <ol>
         {# The homepage's own url is the empty string, which is falsy — test for
@@ -43,6 +59,104 @@
         {% endfor %}
       </ol>
     </nav>
+      {% endif %}
+      {#
+        Split button, after Linear's: the face copies straight away, the chevron
+        opens the menu for both actions. Hidden below the desktop breakpoint,
+        where neither action is much use.
+      #}
+      <div class="braid-pageactions" data-braid-pageactions>
+        <button
+          class="braid-pageactions__face"
+          type="button"
+          data-braid-copy-markdown
+          data-markdown-url="{{ md_path | url }}"
+        >
+          {% include ".icons/material/content-copy.svg" %}
+          <span data-braid-copy-label>Copy page</span>
+        </button>
+        <button
+          class="braid-pageactions__toggle"
+          type="button"
+          aria-haspopup="menu"
+          aria-expanded="false"
+          aria-label="More Markdown actions"
+          data-braid-menu-toggle
+        >
+          {% include ".icons/material/chevron-down.svg" %}
+        </button>
+        <div class="braid-pageactions__menu" role="menu" hidden data-braid-menu>
+          <button
+            class="braid-pageactions__item"
+            type="button"
+            role="menuitem"
+            data-braid-copy-markdown
+            data-markdown-url="{{ md_path | url }}"
+          >
+            {% include ".icons/material/content-copy.svg" %}
+            <span>
+              <strong data-braid-copy-label>Copy page</strong>
+              <small>Copy page as Markdown for LLMs</small>
+            </span>
+          </button>
+          <a
+            class="braid-pageactions__item"
+            role="menuitem"
+            href="{{ md_path | url }}"
+            target="_blank"
+            rel="noopener"
+          >
+            {% include ".icons/material/file-document-outline.svg" %}
+            <span>
+              <strong>
+                View as Markdown
+                <span class="braid-pageactions__external" aria-hidden="true">
+                  {% include ".icons/material/arrow-top-right.svg" %}
+                </span>
+              </strong>
+              <small>View this page as plain text</small>
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% if page and page.meta.draft %}
+    <aside class="braid-draft" aria-label="Page status">
+      <strong>Outline · To be written</strong>
+      <span>This page shows the planned coverage. Instructions are not available yet.</span>
+    </aside>
   {% endif %}
   {{ super() }}
+  {#
+    Previous and next. Material renders these in the page footer, which spans
+    the whole shell and so places them under the rails instead of under the
+    prose. Mintlify and Linear both keep them in the article column, which is
+    where they are rendered here; `partials/footer.html` drops its own copy.
+
+    The `hide: [footer]` page-meta opt-out is Material's and still works.
+  #}
+  {% set hide_pagenav = page.meta and page.meta.hide and "footer" in page.meta.hide %}
+  {% if "navigation.footer" in features and (page.previous_page or page.next_page) and not hide_pagenav %}
+    <nav class="braid-pagenav" aria-label="{{ lang.t('footer') }}">
+      {% if page.previous_page %}
+        <a href="{{ page.previous_page.url | url }}" class="braid-pagenav__link braid-pagenav__link--prev" rel="prev">
+          <span class="braid-pagenav__direction">
+            {% include ".icons/material/arrow-left.svg" %}
+            {{ lang.t("footer.previous") }}
+          </span>
+          <span class="braid-pagenav__title">{{ page.previous_page.title }}</span>
+        </a>
+      {% endif %}
+      {% if page.next_page %}
+        <a href="{{ page.next_page.url | url }}" class="braid-pagenav__link braid-pagenav__link--next" rel="next">
+          <span class="braid-pagenav__direction">
+            {{ lang.t("footer.next") }}
+            {% include ".icons/material/arrow-right.svg" %}
+          </span>
+          <span class="braid-pagenav__title">{{ page.next_page.title }}</span>
+        </a>
+      {% endif %}
+    </nav>
+  {% endif %}
 {% endblock %}

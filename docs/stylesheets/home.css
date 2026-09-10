@@ -1,0 +1,179 @@
+/* Home is a navigation hub. Scope its layout so article pages keep their
+   existing reading measure and Material keeps ownership of the mobile drawer.
+
+   The second selector is the opt-out from the article measure. shell.css caps
+   the content block with a selector matching Material's own (0,5,0) rail rule,
+   which a bare class here loses to, and the card grid is then squeezed into a
+   640px column. Restate it at the same weight and win on load order. */
+.md-content__inner:has(.braid-home),
+.md-sidebar--primary:not([hidden]) ~ .md-content > .md-content__inner:has(.braid-home) {
+  max-width: none;
+  padding-inline-end: var(--space-6);
+}
+
+.braid-home {
+  padding-block: var(--space-3);
+}
+
+.braid-home__eyebrow {
+  color: var(--brand);
+  display: inline-block;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-caps);
+  margin-bottom: var(--space-3);
+  text-transform: uppercase;
+}
+
+.md-typeset .braid-home h1 {
+  margin-bottom: var(--space-3);
+}
+
+.md-typeset .braid-home__intro {
+  color: var(--text-muted);
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+  margin: 0;
+}
+
+.md-typeset .braid-home h2 {
+  font-size: var(--text-xl);
+  margin: var(--space-6) 0 var(--space-3);
+}
+
+.braid-home__grid {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.md-typeset .braid-home__card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-4);
+  position: relative;
+  text-decoration: none;
+  transition: border-color var(--duration) var(--ease), background var(--duration) var(--ease);
+}
+
+.md-typeset .braid-home__card:hover {
+  background: color-mix(in srgb, var(--brand) var(--tint-weak), var(--surface));
+  border-color: var(--brand);
+}
+
+.braid-home__card-top {
+  align-items: center;
+  display: flex;
+  gap: var(--space-2);
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.braid-home__icon {
+  color: var(--brand);
+  display: inline-flex;
+  height: var(--space-5);
+  width: var(--space-5);
+}
+
+.braid-home__icon svg {
+  fill: currentcolor;
+  height: 100%;
+  width: 100%;
+}
+
+.braid-home__status {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  color: var(--text-subtle);
+  display: inline-block;
+  font-size: var(--text-2xs);
+  font-weight: 400;
+  line-height: var(--leading-snug);
+  padding: 0 var(--space-2);
+  vertical-align: middle;
+}
+
+.md-typeset .braid-home__card h3 {
+  font-size: var(--text-base);
+  margin: 0 0 var(--space-2);
+}
+
+.braid-home__description {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+  padding-inline-end: var(--space-3);
+}
+
+.braid-home__arrow {
+  color: var(--text-subtle);
+  font-size: var(--text-base);
+  margin-top: var(--space-2);
+  text-align: end;
+}
+
+.braid-home__learn {
+  border-top: 1px solid var(--border);
+  margin-top: var(--space-6);
+}
+
+.braid-home__links {
+  display: grid;
+  gap: var(--space-3) var(--space-5);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.braid-home__links a {
+  font-size: var(--text-sm);
+  text-decoration: none;
+}
+
+.braid-home__links a:hover {
+  text-decoration: underline;
+}
+
+.braid-draft {
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-5);
+  padding: var(--space-3) var(--space-4);
+}
+
+.braid-draft strong,
+.braid-draft span {
+  display: block;
+}
+
+.braid-draft strong {
+  color: var(--brand);
+  margin-bottom: var(--space-1);
+}
+
+@media screen and (max-width: 44.984375em) {
+  .md-content__inner:has(.braid-home) {
+    padding-inline-end: 0;
+  }
+
+  .braid-home__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media screen and (max-width: 29.984375em) {
+  .braid-home__grid,
+  .braid-home__links {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .braid-home__card-top {
+    margin-bottom: var(--space-3);
+  }
+}
