@@ -1,3 +1,0 @@
-# braid documentation
-
-> braid V1 documentation is being prepared and is not yet published.
