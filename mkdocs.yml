@@ -59,6 +59,9 @@ extra_css:
   - stylesheets/base.css
   - stylesheets/shell.css
   - stylesheets/home.css
+  # Last on purpose: the design language layer only modifies rules the files
+  # above have already set. See docs/stylesheets/braid-language.css.
+  - stylesheets/braid-language.css
 
 extra_javascript:
   - javascripts/search-shortcut.js
