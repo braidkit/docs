@@ -1,0 +1,21 @@
+{#
+  Material's stock footer, less the previous/next navigation.
+
+  That navigation is rendered by `main.html` inside the article instead. The
+  footer spans the whole shell, so leaving it here parked the two links under
+  the navigation rail and the outline rather than under the prose. Mintlify and
+  Linear both keep them in the article column.
+
+  Everything below is Material's own markup, so the meta row, copyright and
+  social links keep working as the theme intends.
+#}
+<footer class="md-footer">
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      {% include "partials/copyright.html" %}
+      {% if config.extra.social %}
+        {% include "partials/social.html" %}
+      {% endif %}
+    </div>
+  </div>
+</footer>

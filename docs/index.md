@@ -1,24 +1,32 @@
 ---
-title: Braid documentation
-description: What Braid is, who it is for, and where to start. Braid is in private preview.
+title: Documentation
+description: Start with Quickstart or find guides for capture, understanding a change, review, and troubleshooting.
+template: home.html
+hide:
+  - toc
+  - footer
 ---
 
-# Braid
+# Documentation
 
-AI can produce large amounts of code. Owning that software still requires people to understand and maintain it. When an agent writes code, the context behind the work can leave with the agent. That context includes why an approach was chosen, what was rejected, and what was checked.
+Keep the understanding behind agent-written code. Start here, or pick up where you left off.
 
-During the work, Braid records reasoning and decisions contributed by people and agents. It keeps this history with the code. A later contributor can see what was intended, how the decisions were reached, and what was verified.
+## Start here
 
-## Private preview
+- [Install Braid](getting-started/installation.md) — Set up Braid on your Mac.
+- [Quickstart](getting-started/quickstart.md) — Take one change from capture to completion.
+- [Capture agent work](guides/capture-agent-work.md) — Set up capture and organize your sessions.
 
-Braid is in private preview. It is being used by a small number of invited developers. Parts of it are rough.
+## Keep moving
 
-## Documentation
+- [Understand a change](guides/understand-a-change.md) — Read the decisions and evidence behind the code.
+- [Review a change](guides/review-a-change.md) — Check the work and complete the braid.
+- [CLI reference](reference/cli.md) — Find a command or flag.
 
-- [Why Braid?](why-braid.md). Why keeping the decisions behind a change matters for review and maintenance.
-- [How Braid works](how-braid-works.md). The model: braids, threads, contributors, scope, signed events, and how state is derived.
-- [Braid and thread lifecycle](lifecycle.md). The states and what moves between them.
-- [What Braid records](what-braid-records.md). Identity, signed events, and what leaves your machine.
-- [Braid on your machine](braid-on-your-machine.md). The daemon and what Braid writes to disk.
-- [Installation](getting-started/installation.md).
-- [Get help](get-help.md).
+## Explore the docs
+
+- [Why Braid?](why-braid.md)
+- [How Braid works](how-braid-works.md)
+- [What Braid records](what-braid-records.md)
+- [Troubleshooting](troubleshooting.md)
+- [Preview status](preview-status.md)
