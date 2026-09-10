@@ -115,9 +115,21 @@ def check_site(site_dir):
             markdown_path.relative_to(site_dir),
             errors,
         )
+        source_path = pathlib.Path(page.file.abs_src_path)
+        source_metadata = front_matter(
+            source_path.read_text(encoding="utf-8"),
+            page.file.src_uri,
+            errors,
+        )
         for field in ("title", "url", "description"):
             if not metadata.get(field):
                 errors.append(f"{markdown_path.relative_to(site_dir)}: missing {field!r}")
+        expected_title = source_metadata.get("title") or page.title
+        if metadata.get("title") != expected_title:
+            errors.append(
+                f"{markdown_path.relative_to(site_dir)}: title is "
+                f"{metadata.get('title')!r}, expected authored title {expected_title!r}"
+            )
         expected_url = site_url + "/" + page.url
         if metadata.get("url") != expected_url:
             errors.append(

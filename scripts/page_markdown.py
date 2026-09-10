@@ -66,11 +66,13 @@ def on_page_markdown(markdown, page, config, files):
     if not dest.endswith(".html"):
         return None
 
-    front = ["---", f"title: {_yaml_scalar(page.title)}"]
+    metadata = page.meta or {}
+    authored_title = metadata.get("title") or page.title
+    front = ["---", f"title: {_yaml_scalar(authored_title)}"]
     site_url = (config.get("site_url") or "").rstrip("/")
     if site_url:
         front.append(f"url: {_yaml_scalar(site_url + '/' + page.url)}")
-    description = (page.meta or {}).get("description", "")
+    description = metadata.get("description", "")
     if description:
         front.append(f"description: {_yaml_scalar(description)}")
     front.append("---")

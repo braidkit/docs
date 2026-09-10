@@ -93,12 +93,13 @@ def render(entries):
             meta, body = split_front_matter(source.read_text())
         except (yaml.YAMLError, ValueError) as error:
             sys.exit(f"{path}: invalid YAML front matter: {error}")
+        page_title = str(meta.get("title") or title)
         description = describe(meta, path)
         if meta.get("draft"):
-            index.append(f"- [{title}]({page_url(path)}): Outline only; instructions have not been written.")
+            index.append(f"- [{page_title}]({page_url(path)}): Outline only; instructions have not been written.")
             continue
-        index.append(f"- [{title}]({page_url(path)}): {description}")
-        full.append(f"## {title}")
+        index.append(f"- [{page_title}]({page_url(path)}): {description}")
+        full.append(f"## {page_title}")
         full.append("")
         full.append(f"Source: {page_url(path)}")
         full.append("")
