@@ -34,7 +34,7 @@
     the bare one, `why-braid.md`, because that is what Linear and Mintlify
     serve and so the shape a reader is most likely to recognise.
   #}
-  {% set md_path = (page.url[:-1] if page.url.endswith('/') else page.url) ~ '.md' %}
+  {% set md_path = (page.url[:-1] if page.url[-1:] == '/' else page.url) ~ '.md' %}
   {% if page and not page.is_homepage %}
     <div class="braid-pagebar">
       {% if page.ancestors %}

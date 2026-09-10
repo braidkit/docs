@@ -134,10 +134,12 @@ extra:
             label: Quickstart
             description: Take one change from capture to completion.
             icon: source-branch
+            draft: true
           - path: guides/capture-agent-work.md
             label: Capture agent work
             description: Set up capture and organize your sessions.
             icon: record-circle-outline
+            draft: true
       - id: keep-moving
         title: Keep moving
         cards:
@@ -145,14 +147,17 @@ extra:
             label: Understand a change
             description: Read the decisions and evidence behind the code.
             icon: text-box-search-outline
+            draft: true
           - path: guides/review-a-change.md
             label: Review a change
             description: Check the work and complete the braid.
             icon: check-decagram-outline
+            draft: true
           - path: reference/cli.md
             label: CLI reference
             description: Find a command or flag.
             icon: console
+            draft: true
     explore:
       id: explore-the-docs
       title: Explore the docs
@@ -165,8 +170,10 @@ extra:
           label: What Braid records
         - path: troubleshooting.md
           label: Troubleshooting
+          draft: true
         - path: preview-status.md
           label: Preview status
+          draft: true
   # Rendered as the persistent link at the foot of the navigation rail.
   # Omit this block and the link disappears rather than 404s.
   support:
