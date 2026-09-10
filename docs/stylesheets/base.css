@@ -39,7 +39,10 @@ body {
 
 .md-typeset h1 {
   font-size: var(--text-3xl);
-  font-weight: 700;
+  /* The display voice holds at 400. Size and space already carry the
+     hierarchy, and a bold heading is the loudest thing on the page. */
+  font-weight: 400;
+  letter-spacing: -0.02em;
   margin: 0 0 var(--space-5);
 }
 
@@ -48,13 +51,14 @@ body {
    a near-symmetric gap leaves the reader unsure which section it opens. */
 .md-typeset h2 {
   font-size: var(--text-2xl);
-  font-weight: 600;
+  font-weight: 400;
+  letter-spacing: -0.015em;
   margin: var(--space-8) 0 var(--space-3);
 }
 
 .md-typeset h3 {
   font-size: var(--text-xl);
-  font-weight: 600;
+  font-weight: 500;
   margin: var(--space-6) 0 var(--space-3);
 }
 
@@ -193,15 +197,28 @@ body {
   width: 100%;
 }
 
+/* A header cell names a column rather than arguing anything, so it takes the
+   captured voice: mono, uppercase, tracked. Figures below it line up. */
 .md-typeset table:not([class]) th {
   background: var(--surface-sunken);
-  color: var(--text);
-  font-family: var(--font-display);
-  font-weight: 600;
+  color: var(--text-subtle);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: 400;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
 }
 
 .md-typeset table:not([class]) td {
   border-top: 1px solid var(--border);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Several reference tables use an empty header row ("| | |") to force a
+   two-column layout. A header band with no labels in it is a layout artifact,
+   so it is not drawn. */
+.md-typeset table:not([class]) thead:not(:has(th:not(:empty))) {
+  display: none;
 }
 
 /* Material lets code break mid-token (`word-break: break-word`). In a narrow
@@ -214,17 +231,59 @@ body {
 
 /* --------------------------------------------------------------- callouts */
 
+/* A callout is subordinate material keyed to the text above it, so it is set
+   apart by a rule rather than boxed in a tinted card.
+ *
+ * The two mix percentages are re-pointed here rather than in the severity
+ * rules below, which deliberately mirror Material's own selector shape. With
+ * --tint-weak at 0% the title fill those rules compute becomes transparent,
+ * and with --mix-border at 100% the border colour resolves to the pure
+ * severity hue. The sidebar's selection tint shares these variables and is
+ * outside this subtree, so it is untouched. */
 .md-typeset .admonition,
 .md-typeset details {
-  background: var(--surface);
-  border: 1px solid color-mix(in srgb, var(--callout) var(--mix-border), var(--border));
-  border-radius: var(--radius-md);
+  background: transparent;
+  border: 0;
+  border-top: 2px solid var(--callout);
+  border-radius: 0;
   box-shadow: none;
   font-size: var(--text-md);
+  padding: var(--space-3) 0 var(--space-4);
 
   /* Every callout resolves one variable. Adding a severity below is one line,
      not a new block of border/background/icon rules. */
   --callout: var(--brand);
+  --mix-border: 100%;
+  --tint-weak: 0%;
+}
+
+/* The label already names the severity in words, so the icon is redundant
+   weight. Removing it must lose no meaning: if a callout ever depends on its
+   icon to be understood, the label is wrong. */
+.md-typeset :is(.admonition, details) > :is(.admonition-title, summary) {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  color: var(--callout);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: 400;
+  letter-spacing: var(--tracking-caps);
+  margin: 0;
+  padding: 0 0 var(--space-2);
+  text-transform: uppercase;
+}
+
+.md-typeset :is(.admonition, details) > :is(.admonition-title, summary)::before {
+  display: none;
+}
+
+.md-typeset :is(.admonition, details) p {
+  color: var(--text-muted);
+}
+
+.md-typeset :is(.admonition, details) > :last-child {
+  margin-bottom: 0;
 }
 
 /* Callout severities.
