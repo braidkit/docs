@@ -64,15 +64,20 @@
   /* -- type -------------------------------------------------------------- *
    * Two families. `--font-display` is a seam: point it at a separate display
    * face here and every heading and UI label follows, with no other edits. */
-  --font-sans: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans: Archivo, "Helvetica Neue", Arial, sans-serif;
   --font-display: var(--font-sans);
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
   /* Loaded faces — see fonts.css and FONTS.md:
-   *   Hanken Grotesk  variable 400–700 upright, static 400 italic
+   *   Archivo         variable 400–600 upright, no italic
    *   JetBrains Mono  static 400
-   * Use the upright variable range freely. Adding another italic or mono
-   * weight requires vendoring that face and declaring it in fonts.css. */
+   * Use the upright variable range freely. Adding an italic or another mono
+   * weight requires vendoring that face and declaring it in fonts.css.
+   *
+   * Type is assigned by information role, not by author. See DESIGN.md:
+   *   authored       Archivo, plain       a person wrote it
+   *   captured       JetBrains Mono       emitted and signed as it happened
+   *   reconstructed  Archivo + plum rule  a model inferred it from events */
 
   /* Modular scale, ratio ~1.25.
    *
@@ -114,9 +119,11 @@
   --space-8: 3.2rem;   /* 64px */
 
   /* -- shape & elevation ------------------------------------------------- */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+  /* Square by default. Radius is reserved for things you can click, so it
+     means something rather than decorating every surface. */
+  --radius-sm: 3px;
+  --radius-md: 3px;
+  --radius-lg: 0;
   --radius-pill: 999px;
 
   --shadow-sm: 0 1px 2px rgb(31 26 34 / 5%);
