@@ -14,6 +14,16 @@
 #}
 {% block extrahead %}
   <link rel="preload" href="{{ 'assets/fonts/archivo-variable.woff2' | url }}" as="font" type="font/woff2" crossorigin>
+  {#
+    theme.favicon emits the SVG. These two cover what it cannot:
+      favicon.ico       requested at the site root by legacy browsers, feed
+                        readers and some link unfurlers, whatever the markup says
+      apple-touch-icon  iOS home screen; opaque and unrounded because iOS
+                        applies its own rounding
+    Sources live in braidkit/ops under brand/icons.
+  #}
+  <link rel="icon" sizes="any" href="{{ 'assets/brand/icons/favicon.ico' | url }}">
+  <link rel="apple-touch-icon" href="{{ 'assets/brand/icons/apple-touch-icon.png' | url }}">
 {% endblock %}
 
 {#

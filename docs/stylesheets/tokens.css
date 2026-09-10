@@ -20,34 +20,34 @@
 
 :root {
   /* -- brand ------------------------------------------------------------- */
-  --brand: #5c2d4a;             /* 10.3:1 on canvas */
-  --brand-strong: #46213a;
-  --brand-contrast: #ffffff;    /* text on a --brand fill: 10.9:1 */
-  --accent: #186c66;            /* 5.9:1 on canvas */
+  --brand: var(--bk-brand);             /* 10.3:1 on canvas */
+  --brand-strong: var(--bk-brand-strong);
+  --brand-contrast: var(--bk-on-brand);    /* text on a --brand fill: 10.9:1 */
+  --accent: var(--bk-signed);            /* 5.9:1 on canvas */
 
   /* -- surfaces ---------------------------------------------------------- */
-  --canvas: #faf8fc;
-  --surface: #ffffff;
-  --surface-sunken: #f2ecf6;
-  --border: #e4dcec;
-  --border-strong: #d2c8de;
+  --canvas: var(--bk-canvas);
+  --surface: var(--bk-surface);
+  --surface-sunken: var(--bk-sunken);
+  --border: var(--bk-line);
+  --border-strong: var(--bk-line-strong);
 
   /* -- text -------------------------------------------------------------- */
-  --text: #1f1a22;              /* 16.2:1 */
-  --text-muted: #5f5566;        /*  6.7:1 */
-  --text-subtle: #736a7c;       /*  4.9:1 */
+  --text: var(--bk-text);              /* 16.2:1 */
+  --text-muted: var(--bk-text-muted);        /*  6.7:1 */
+  --text-subtle: var(--bk-text-subtle);       /*  4.9:1 */
 
   /* -- code -------------------------------------------------------------- */
-  --code-bg: #f2ecf6;
-  --code-fg: #4a2d55;           /* 10.1:1 on --code-bg */
+  --code-bg: var(--bk-code-bg);
+  --code-fg: var(--bk-code-text);           /* 10.1:1 on --code-bg */
 
   /* -- callout hues ------------------------------------------------------ *
    * One hue family per severity, all at the same chroma so a page of mixed
    * callouts reads as one system. */
-  --callout-info: #186c66;    /* 5.9:1 — teal */
-  --callout-tip: #2f7d5c;     /* 4.7:1 — green; "success" has to look like it */
-  --callout-warn: #9c5b25;    /* 5.1:1 — amber */
-  --callout-danger: #a8323c;  /* 6.2:1 — red. Deliberately far from the brand
+  --callout-info: var(--bk-signed);    /* 5.9:1 — teal */
+  --callout-tip: var(--bk-promoted);     /* 4.7:1 — green; "success" has to look like it */
+  --callout-warn: var(--bk-attention);    /* 5.1:1 — amber */
+  --callout-danger: var(--bk-blocked);  /* 6.2:1 — red. Deliberately far from the brand
                                  plum: an error must not be the most on-brand
                                  thing on the page. */
 
@@ -64,9 +64,9 @@
   /* -- type -------------------------------------------------------------- *
    * Two families. `--font-display` is a seam: point it at a separate display
    * face here and every heading and UI label follows, with no other edits. */
-  --font-sans: Archivo, "Helvetica Neue", Arial, sans-serif;
+  --font-sans: var(--bk-font-sans);
   --font-display: var(--font-sans);
-  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-mono: var(--bk-font-mono);
 
   /* Loaded faces — see fonts.css and FONTS.md:
    *   Archivo         variable 400–600 upright, no italic
@@ -121,9 +121,9 @@
   /* -- shape & elevation ------------------------------------------------- */
   /* Square by default. Radius is reserved for things you can click, so it
      means something rather than decorating every surface. */
-  --radius-sm: 3px;
-  --radius-md: 3px;
-  --radius-lg: 0;
+  --radius-sm: var(--bk-radius-control);
+  --radius-md: var(--bk-radius-control);
+  --radius-lg: var(--bk-radius-panel);
   --radius-pill: 999px;
 
   --shadow-sm: 0 1px 2px rgb(31 26 34 / 5%);
@@ -158,28 +158,28 @@
 
 /* Material writes this attribute onto <body> for the dark palette. */
 [data-md-color-scheme="slate"] {
-  --brand: #dda9c8;             /* 9.5:1 on canvas */
-  --brand-strong: #ecc6dd;
-  --brand-contrast: #1a1018;    /* text on a --brand fill: 9.4:1 */
-  --accent: #5cbcb2;            /* 8.4:1 */
+  --brand: var(--bk-brand);             /* 9.5:1 on canvas */
+  --brand-strong: var(--bk-brand-strong);
+  --brand-contrast: var(--bk-on-brand);    /* text on a --brand fill: 9.4:1 */
+  --accent: var(--bk-signed);            /* 8.4:1 */
 
-  --canvas: #121016;
-  --surface: #1a1722;
-  --surface-sunken: #221d2b;
-  --border: #2e2837;
-  --border-strong: #3f3849;
+  --canvas: var(--bk-canvas);
+  --surface: var(--bk-surface);
+  --surface-sunken: var(--bk-sunken);
+  --border: var(--bk-line);
+  --border-strong: var(--bk-line-strong);
 
-  --text: #ece7f0;              /* 15.6:1 */
-  --text-muted: #a99fb3;        /*  7.5:1 */
-  --text-subtle: #8d8399;       /*  5.3:1 */
+  --text: var(--bk-text);              /* 15.6:1 */
+  --text-muted: var(--bk-text-muted);        /*  7.5:1 */
+  --text-subtle: var(--bk-text-subtle);       /*  5.3:1 */
 
-  --code-bg: #221e29;
-  --code-fg: #e4d5ec;           /* 11.7:1 on --code-bg */
+  --code-bg: var(--bk-code-bg);
+  --code-fg: var(--bk-code-text);           /* 11.7:1 on --code-bg */
 
-  --callout-info: #5cbcb2;    /* 8.4:1 */
-  --callout-tip: #59b98d;     /* 7.9:1 */
-  --callout-warn: #d1904f;    /* 7.0:1 */
-  --callout-danger: #e58a94;  /* 7.6:1 */
+  --callout-info: var(--bk-signed);    /* 8.4:1 */
+  --callout-tip: var(--bk-promoted);     /* 7.9:1 */
+  --callout-warn: var(--bk-attention);    /* 7.0:1 */
+  --callout-danger: var(--bk-blocked);  /* 7.6:1 */
 
   --tint-weak: 10%;
   --tint: 16%;
