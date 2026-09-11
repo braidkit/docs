@@ -1,14 +1,16 @@
 {
-  "upstream": "34f83667d81c0428a2b2a96de6a864fde6392e2d",
+  "upstream": "7adec5520032d740698f69a5bd57e114cb38f8f7",
   "source": "git@github.com:braidkit/brand.git",
   "files": {
-    "docs/stylesheets/braid-tokens.css": "00c00fa8e698dc242edf68e21a5a3f5e372282824ddbdc09e229d67c153020a4",
-    "docs/assets/brand/logo/braid-mark-purple-512.png": "4692423eaa329efa3113b3539202f869eff4f991695ef894c451f11fa3c0f76b",
-    "docs/assets/brand/icons/icon.svg": "a9757e5a7bbbef4cbbecbe974a3daa28eeb49ac64bd01813ce598bcf601cbaee",
-    "docs/assets/brand/icons/favicon.ico": "fcc16fc32a64132817ccdb094f6103dbb7f3bc29de2c76cc2fa59d8bd3085ee1",
     "docs/assets/brand/icons/apple-touch-icon.png": "5a8aa323caf071889643c6cfb995f18b2d869bb466b8147f911db98dba491a2b",
+    "docs/assets/brand/icons/favicon.ico": "fcc16fc32a64132817ccdb094f6103dbb7f3bc29de2c76cc2fa59d8bd3085ee1",
+    "docs/assets/brand/icons/icon-192.png": "be2b436d4ca49ae7c52a7cae5d60a55b57c6ff4bc6fd81bb4c45732a4f6d5c22",
+    "docs/assets/brand/icons/icon-512.png": "801cb20477895c53d59149366ba66e33f23a4ed9d60ee0ac321da6824c0005ae",
+    "docs/assets/brand/icons/icon.svg": "924a6b1a660c3e5771a890ed77890e400aa2168c10780b596ebf5372ef881718",
+    "docs/assets/brand/logo/braid-mark-purple-512.png": "4692423eaa329efa3113b3539202f869eff4f991695ef894c451f11fa3c0f76b",
+    "docs/assets/fonts/OFL.txt": "5843a692aa2ebab7321d8551718422280a7141dfc5a254bd6ff8fcc40dc75783",
     "docs/assets/fonts/archivo-variable.woff2": "7150c0ec5ad356453013d11affec1fbab95de0dd2dcecb043b4f1cb7f87c4ba4",
     "docs/assets/fonts/jetbrains-mono.woff2": "d3dcdccdaba31643defe2317942155d4af3ee03951d058adbe8bc02b13e61b0a",
-    "docs/assets/fonts/OFL.txt": "5843a692aa2ebab7321d8551718422280a7141dfc5a254bd6ff8fcc40dc75783"
+    "docs/stylesheets/braid-tokens.css": "00c00fa8e698dc242edf68e21a5a3f5e372282824ddbdc09e229d67c153020a4"
   }
 }
