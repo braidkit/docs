@@ -10,6 +10,9 @@
 
 tokens/braid-tokens.css       -> docs/stylesheets/braid-tokens.css
 
+# the header wordmark, referenced by theme.logo in mkdocs.yml
+logo/braid-mark-purple-512.png -> docs/assets/brand/logo/braid-mark-purple-512.png
+
 icons/icon.svg                -> docs/assets/brand/icons/icon.svg
 icons/favicon.ico             -> docs/assets/brand/icons/favicon.ico
 icons/apple-touch-icon.png    -> docs/assets/brand/icons/apple-touch-icon.png

@@ -1,8 +1,9 @@
 {
-  "upstream": "d64b001bacdd99685837451496fb1235921d09d9",
+  "upstream": "34f83667d81c0428a2b2a96de6a864fde6392e2d",
   "source": "git@github.com:braidkit/brand.git",
   "files": {
     "docs/stylesheets/braid-tokens.css": "00c00fa8e698dc242edf68e21a5a3f5e372282824ddbdc09e229d67c153020a4",
+    "docs/assets/brand/logo/braid-mark-purple-512.png": "4692423eaa329efa3113b3539202f869eff4f991695ef894c451f11fa3c0f76b",
     "docs/assets/brand/icons/icon.svg": "a9757e5a7bbbef4cbbecbe974a3daa28eeb49ac64bd01813ce598bcf601cbaee",
     "docs/assets/brand/icons/favicon.ico": "fcc16fc32a64132817ccdb094f6103dbb7f3bc29de2c76cc2fa59d8bd3085ee1",
     "docs/assets/brand/icons/apple-touch-icon.png": "5a8aa323caf071889643c6cfb995f18b2d869bb466b8147f911db98dba491a2b",
