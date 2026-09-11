@@ -1,6 +1,15 @@
 /* Braid design tokens — the shared layer beneath every surface.
  * ============================================================================
  *
+ * THIS FILE IS COPIED INTO OTHER REPOSITORIES.
+ *
+ * The master is braidkit/ops at brand/tokens/braid-tokens.css. If you are
+ * reading this anywhere else, it is a vendored copy: editing it here will pass
+ * review, build cleanly, and then be silently reverted by the next sync.
+ *
+ * Make the change upstream instead, then run scripts/sync-brand.py. To try an
+ * upstream change before it merges:  BRAND_SOURCE=../ops scripts/sync-brand.py
+ *
  * WHY THIS FILE EXISTS
  *
  * Braid has three UI surfaces and, as of today, three unrelated vocabularies

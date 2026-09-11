@@ -4,6 +4,11 @@
     scripts/sync-brand.py              pull the latest and update the copies
     scripts/sync-brand.py --check      verify the copies match brand.lock (CI)
     scripts/sync-brand.py --status     report whether upstream has moved
+    scripts/sync-brand.py --install-hook   fail at commit time, not at CI
+
+The hook is optional and local. Git shares one hooks directory across every
+worktree and branch of a repository, so it is written to stay silent wherever
+the script or the lock is absent.
 
 WHY COPIES AT ALL
 
@@ -201,16 +206,65 @@ def cmd_sync() -> int:
             shutil.rmtree(brand.parent.parent, ignore_errors=True)
 
 
+HOOK = """#!/bin/sh
+# Installed by scripts/sync-brand.py --install-hook.
+#
+# Vendored brand files are copies. Editing one here builds clean, passes review,
+# and is then silently reverted by the next sync. Fail at commit time rather
+# than at CI, which is after the work is already done.
+#
+# Git shares one hooks directory across every worktree and branch of a
+# repository, so this must stay silent where it does not apply: a branch that
+# predates the sync script has to remain committable.
+root=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+[ -f "$root/scripts/sync-brand.py" ] || exit 0
+[ -f "$root/brand.lock" ] || exit 0
+command -v python3 >/dev/null 2>&1 || exit 0
+
+python3 "$root/scripts/sync-brand.py" --check >/dev/null 2>&1 && exit 0
+echo
+python3 "$root/scripts/sync-brand.py" --check
+exit 1
+"""
+
+
+def cmd_install_hook() -> int:
+    """Fail at commit time rather than at CI, which is after the work is done."""
+    r = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--git-path", "hooks"],
+                       capture_output=True, text=True)
+    if r.returncode != 0:
+        sys.exit("not a git repository")
+    hooks = (REPO / r.stdout.strip()).resolve()
+    hooks.mkdir(parents=True, exist_ok=True)
+    path = hooks / "pre-commit"
+
+    if path.exists() and "sync-brand.py" not in path.read_text(encoding="utf-8"):
+        print(f"a pre-commit hook already exists at {path}")
+        print("Leaving it alone. Add this line to it yourself:")
+        print("  python3 scripts/sync-brand.py --check || exit 1")
+        return 1
+
+    path.write_text(HOOK, encoding="utf-8")
+    path.chmod(0o755)
+    print(f"installed {path}")
+    print("Commits now fail if a vendored brand file was edited here.")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     g = ap.add_mutually_exclusive_group()
     g.add_argument("--check", action="store_true", help="verify copies against brand.lock")
     g.add_argument("--status", action="store_true", help="report whether upstream moved")
+    g.add_argument("--install-hook", action="store_true",
+                   help="add a pre-commit hook that runs --check")
     a = ap.parse_args()
     if a.check:
         return cmd_check()
     if a.status:
         return cmd_status()
+    if a.install_hook:
+        return cmd_install_hook()
     return cmd_sync()
 
 
