@@ -52,11 +52,13 @@
  * WCAG 2.2 AA for body text (4.5:1) or better. If you change a value, remeasure
  * it. The ratio is part of the token, not a nice-to-have.
  *
- * THREE CONFLICTS THIS FILE DOES NOT SETTLE ALONE. Each is a console decision
- * that needs agreeing before console work resumes.
- *   1. Console spec allows 10px tertiary labels. This file floors at 11px.
- *   2. Console spec allows radii up to 8px. This file allows 3px, on controls.
- *   3. Console spec says "system sans stack". This file says Archivo.
+ * THREE THINGS WORTH KNOWING BEFORE YOU CHANGE A VALUE
+ *   1. The annotation tier is 10px in compact and 11px elsewhere. Nothing a
+ *      reader needs in order to act belongs in it, at either size.
+ *   2. Radius carries meaning: a control takes a small one, a panel takes none,
+ *      and the pill is for status dots.
+ *   3. The interface face is set here rather than left to the system, so the
+ *      product looks the same on every operating system.
  * ========================================================================== */
 
 :root {
@@ -136,7 +138,8 @@
    *
    * The size floors are accessibility commitments, not preferences:
    *   required body text  >= 16px   controls >= 14px   essential metadata >= 12px
-   * Nothing a reader needs in order to act may sit in the 11px tier. */
+   * Nothing a reader needs in order to act may sit in the annotation tier,
+   * which is 11px here and 10px in compact. */
   --bk-size-2xs: 0.6875rem;   /* 11px — decorative annotation ONLY, never required */
   --bk-size-xs:  0.75rem;     /* 12px — label, uppercase, tracked. Metadata floor. */
   --bk-size-sm:  0.8125rem;   /* 13px — data, tabular */
@@ -202,13 +205,13 @@
  *
  *   <div data-bk-density="compact">  or on the console's <html>
  *
- * The floor is 11px. The existing console spec permits 10px for tertiary
- * labels. 10px is below what most people can scan comfortably at arm's length
- * and there is no way to test it as "passing", so this file holds 11 and flags
- * the disagreement rather than silently picking a side.
+ * The annotation tier is 10px here, against 11px on reading surfaces, because
+ * this is a scanned surface rather than a read one. At 10px the guard on the
+ * tier is doing the real work: nothing a reader needs in order to act may sit
+ * in it, on any surface, at either density.
  * ========================================================================== */
 [data-bk-density="compact"] {
-  --bk-size-2xs: 0.6875rem;   /* 11px — decorative annotation ONLY */
+  --bk-size-2xs: 0.625rem;    /* 10px — decorative annotation ONLY, never required */
   --bk-size-xs:  0.75rem;     /* 12px — metadata floor holds even here */
   --bk-size-sm:  0.8125rem;   /* 13px */
   --bk-size-md:  0.875rem;    /* 14px — control floor holds even here */
