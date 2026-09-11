@@ -3,12 +3,12 @@
  *
  * THIS FILE IS COPIED INTO OTHER REPOSITORIES.
  *
- * The master is braidkit/ops at brand/tokens/braid-tokens.css. If you are
- * reading this anywhere else, it is a vendored copy: editing it here will pass
- * review, build cleanly, and then be silently reverted by the next sync.
+ * The master is braidkit/brand at tokens/braid-tokens.css. If you are reading
+ * this anywhere else, it is a vendored copy: editing it here will pass review,
+ * build cleanly, and then be silently reverted by the next sync.
  *
- * Make the change upstream instead, then run scripts/sync-brand.py. To try an
- * upstream change before it merges:  BRAND_SOURCE=../ops scripts/sync-brand.py
+ * Make the change upstream instead, then run brand/sync.py. To try an upstream
+ * change before it merges:  BRAND_SOURCE=../brand brand/sync.py
  *
  * WHY THIS FILE EXISTS
  *
@@ -51,7 +51,8 @@
  * WCAG 2.2 AA for body text (4.5:1) or better. If you change a value, remeasure
  * it. The ratio is part of the token, not a nice-to-have.
  *
- * THREE CONFLICTS THIS FILE DOES NOT SETTLE ALONE — see DESIGN.md, Decisions.
+ * THREE CONFLICTS THIS FILE DOES NOT SETTLE ALONE. Each is a console decision
+ * that needs agreeing before console work resumes.
  *   1. Console spec allows 10px tertiary labels. This file floors at 11px.
  *   2. Console spec allows radii up to 8px. This file allows 3px, on controls.
  *   3. Console spec says "system sans stack". This file says Archivo.
