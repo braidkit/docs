@@ -54,8 +54,8 @@ hooks:
 
 # Order matters: tokens define the variables the other two consume.
 extra_css:
-  # First: the shared brand tokens, vendored from braidkit/ops brand/tokens.
-  # Everything below derives from these rather than declaring its own values.
+  # First: the shared brand tokens, vendored from braidkit/brand. Everything
+  # below derives from these rather than declaring its own values.
   - stylesheets/braid-tokens.css
   - stylesheets/fonts.css
   - stylesheets/tokens.css
