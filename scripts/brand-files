@@ -1,8 +1,7 @@
 # Which files this repository takes from braidkit/brand, and where they go.
 #
 # This repository owns this map because it knows its own layout. The mechanism
-# lives in braidkit/brand (vendor.py), and somebody runs it there to refresh
-# these copies. Nothing is automatic.
+# lives in braidkit/brand (vendor.py); running it there refreshes these copies.
 #
 # A source ending in / is a directory: every committed file under it travels,
 # so a font or an icon added upstream arrives without this file being touched.

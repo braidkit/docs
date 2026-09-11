@@ -7,19 +7,18 @@ Runs in CI and needs no network: everything it compares is already on disk.
 
 WHY IT EXISTS
 
-These files are copies. The masters live in braidkit/brand, and somebody runs
-`python3 vendor.py` there to refresh them here. Nothing is automatic.
+These files are copies. The masters live in braidkit/brand; running
+`python3 vendor.py` there refreshes them here.
 
-What copying costs is that editing a copy here works. It builds clean, it passes
-review, and it is then silently reverted the next time anyone vendors. This
-makes that loud instead.
+Editing a copy here builds clean and passes review, and the next vendor run
+reverts it. This check fails first, so the edit is visible while it is still
+yours to move.
 
 Do not fix a failure here by editing the lock. Move the change to
 braidkit/brand and vendor it back.
 
-What this does not catch: the comparison is against the lock, not against
-braidkit/brand. So an edited copy fails here, and a copy that is merely out of
-date passes.
+The comparison is against the lock rather than against braidkit/brand, so this
+reports an edited copy and not an out-of-date one.
 """
 from __future__ import annotations
 
