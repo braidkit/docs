@@ -103,10 +103,10 @@
    * reads as a quotation from the machine. */
   --bk-code-bg: #f2ecf6;
   --bk-code-text: #4a2d55;          /* 10.1:1 on --bk-code-bg */
-  --bk-shell: #191320;
-  --bk-shell-text: #ddd4e6;
-  --bk-shell-dim: #8d80a0;
-  --bk-shell-prompt: #5fc79f;
+  --bk-shell: #191320;              /* terminal ground */
+  --bk-shell-text: #ddd4e6;         /* 12.7:1 on --bk-shell */
+  --bk-shell-dim: #8d80a0;          /*  5.0:1 on --bk-shell */
+  --bk-shell-prompt: #5fc79f;       /*  8.8:1 on --bk-shell */
 
   /* -- reconstruction ------------------------------------------------------
    * Model-inferred prose is the most dangerous text in the product: it reads

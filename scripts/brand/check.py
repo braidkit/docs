@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""Verify this repository's vendored brand files match scripts/brand.lock.
+"""Verify this repository's vendored brand files match scripts/brand/lock.json.
 
-    python3 scripts/check-brand.py
+    python3 scripts/brand/check.py
 
 Runs in CI and needs no network: everything it compares is already on disk.
 
 WHY IT EXISTS
 
-These files are copies. The masters live in braidkit/brand; running
-`python3 vendor.py` there refreshes them here.
+These files are copies, this script among them. The masters live in
+braidkit/brand; running `python3 vendor.py` there refreshes them here.
 
 Editing a copy here builds clean and passes review, and the next vendor run
 reverts it. This check fails first, so the edit is visible while it is still
@@ -27,8 +27,10 @@ import json
 import sys
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parent.parent
-LOCK = REPO / "scripts" / "brand.lock"
+# This file lives at scripts/brand/check.py in the consuming repository, so the
+# repository root is three levels up.
+REPO = Path(__file__).resolve().parent.parent.parent
+LOCK = Path(__file__).resolve().parent / "lock.json"
 
 
 def main() -> int:

@@ -8,8 +8,8 @@
 # Naming a single file takes that file alone.
 #
 # Never edit a vendored copy in place. It builds clean, passes review, and is
-# then silently reverted the next time anyone vendors. scripts/check-brand.py
-# fails CI when that happens.
+# then silently reverted the next time anyone vendors. scripts/brand/check.py
+# fails CI when that happens, and travels under the lock itself.
 
 tokens/ -> docs/stylesheets/
 fonts/  -> docs/assets/fonts/
@@ -18,3 +18,6 @@ icons/  -> docs/assets/brand/icons/
 # The header wordmark, referenced by theme.logo in mkdocs.yml. A file line
 # rather than logo/, which carries every mark and avatar variant.
 logo/braid-mark-purple-512.png -> docs/assets/brand/logo/braid-mark-purple-512.png
+
+# The CI check itself, vendored like everything else.
+consumer/check.py -> scripts/brand/check.py
