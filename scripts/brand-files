@@ -1,15 +1,15 @@
 # Which files this repository takes from braidkit/brand, and where they go.
 #
 # This repository owns this map because it knows its own layout. The mechanism
-# lives in braidkit/brand (propagate.py); a workflow there opens a pull request
-# here whenever one of these files changes.
+# lives in braidkit/brand (vendor.py), and somebody runs it there to refresh
+# these copies. Nothing is automatic.
 #
 # A source ending in / is a directory: every committed file under it travels,
 # so a font or an icon added upstream arrives without this file being touched.
 # Naming a single file takes that file alone.
 #
 # Never edit a vendored copy in place. It builds clean, passes review, and is
-# then silently overwritten by the next propagation. scripts/check-brand.py
+# then silently reverted the next time anyone vendors. scripts/check-brand.py
 # fails CI when that happens.
 
 tokens/ -> docs/stylesheets/

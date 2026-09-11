@@ -7,16 +7,19 @@ Runs in CI and needs no network: everything it compares is already on disk.
 
 WHY IT EXISTS
 
-These files are copies. The masters live in braidkit/brand, and a workflow there
-opens a pull request here whenever they change, so nobody has to remember to
-pull.
+These files are copies. The masters live in braidkit/brand, and somebody runs
+`python3 vendor.py` there to refresh them here. Nothing is automatic.
 
 What copying costs is that editing a copy here works. It builds clean, it passes
-review, and it is then silently overwritten by the next propagation. This makes
-that loud instead.
+review, and it is then silently reverted the next time anyone vendors. This
+makes that loud instead.
 
 Do not fix a failure here by editing the lock. Move the change to
-braidkit/brand; the next propagation brings it back.
+braidkit/brand and vendor it back.
+
+What this does not catch: the comparison is against the lock, not against
+braidkit/brand. So an edited copy fails here, and a copy that is merely out of
+date passes.
 """
 from __future__ import annotations
 
@@ -58,8 +61,8 @@ def main() -> int:
     print()
     if bad:
         print(f"{len(bad)} of {len(files)} vendored brand file(s) do not match the lock.")
-        print("These are copies. Move the change to braidkit/brand and let the")
-        print("propagation workflow bring it back, or the next one overwrites you.")
+        print("These are copies. Move the change to braidkit/brand and vendor it")
+        print("back from there, or the next vendor run overwrites you.")
         return 1
     print(f"{len(files)} vendored brand file(s) match, from brand@{lock.get('upstream','?')[:12]}.")
     return 0
