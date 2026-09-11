@@ -12,6 +12,7 @@
     "docs/assets/fonts/archivo-variable.woff2": "7150c0ec5ad356453013d11affec1fbab95de0dd2dcecb043b4f1cb7f87c4ba4",
     "docs/assets/fonts/jetbrains-mono.woff2": "d3dcdccdaba31643defe2317942155d4af3ee03951d058adbe8bc02b13e61b0a",
     "docs/stylesheets/braid-tokens.css": "336490c82d36904df71583383456c25cc6643fd2461215ed0893432af4bab10b",
+    "scripts/brand/DESIGN.md": "cfec523355e0c93a7209f4e81411133f8e787dc755c197c15bf296f3e9fb196c",
     "scripts/brand/check.py": "e9e4ae3477084aad08d4ef7ba9042602cc06770f17492e6f2a2f0d46081c7cc8"
   }
 }

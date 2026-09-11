@@ -101,16 +101,22 @@ standalone commands for another builder.
 
 ## Branding and layout
 
-- `docs/stylesheets/tokens.css`: Braid colors, typography, spacing, both themes.
+- `braid-tokens.css`: the shared tokens, vendored from `braidkit/brand`.
+- `docs/stylesheets/tokens.css`: maps those onto the names this site and Material use.
 - `fonts.css`: locally hosted fonts; see [FONTS.md](FONTS.md).
 - `base.css`: article typography, tables, code, callouts.
 - `shell.css`: header, navigation, search, outline, responsive drawer.
 - `home.css`: navigation cards and outline notices.
 - `overrides/`: focused Material template overrides.
 
-Logo copies live in `docs/assets/brand/logo/`. The marketing site's brand
-capsule remains the source for logo assets. The docs use local tokens and
-fonts; they do not import a remote `brand.css` at runtime.
+The tokens, typefaces, icons and the header mark are copies owned by
+[`braidkit/brand`](https://github.com/braidkit/brand). Change them there, not
+here. The design rules they implement are vendored alongside them at
+[`scripts/brand/DESIGN.md`](scripts/brand/DESIGN.md), and
+[AGENTS.md](AGENTS.md) covers the rest of working in this repository.
+
+Nothing is fetched at runtime; every asset is served from this site's own
+origin.
 
 Keep structural desktop rules inside their desktop media query. Material owns
 the mobile drawer and its label/checkbox controls; replacing those controls
