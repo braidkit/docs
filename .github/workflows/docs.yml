@@ -20,6 +20,11 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: python -m pip install -r requirements.txt
+      # Vendored brand files must match scripts/brand/lock.json. Catches a copy
+      # edited here instead of upstream in braidkit/brand, which otherwise
+      # builds clean and is silently reverted the next time anyone vendors.
+      # Reads the lock, so no network.
+      - run: python scripts/brand/check.py
       - run: python -m unittest discover -s tests -v
       - run: python -m mkdocs build --strict
       - name: Verify the generated corpus

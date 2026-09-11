@@ -1,0 +1,336 @@
+/* Braid design tokens — the shared layer beneath every surface.
+ * ============================================================================
+ *
+ * THIS FILE IS COPIED INTO OTHER REPOSITORIES.
+ *
+ * The master is braidkit/brand at tokens/braid-tokens.css. If you are reading
+ * this anywhere else, it is a vendored copy: editing it here will pass review,
+ * build cleanly, and then be silently reverted by the next sync.
+ *
+ * Make the change upstream instead, then run scripts/sync-brand.py in the
+ * consuming repository. To try an upstream change before it merges:
+ *   BRAND_SOURCE=../brand scripts/sync-brand.py
+ *
+ * WHY THIS FILE EXISTS
+ *
+ * Braid has three UI surfaces and, as of today, three unrelated vocabularies
+ * for the same ideas:
+ *
+ *   surface     custom properties   distinct raw hex   brand hue
+ *   marketing   10                  14                 #5c2d4a
+ *   docs        82                   0                 #5c2d4a
+ *   console      3                 307                 #7769d8
+ *
+ * The console is not a different theme. It is a different brand: #7769d8 is a
+ * blue-violet, #5c2d4a is a plum. It also carries two greys one hex digit
+ * apart (#777988 and #777987), which is what uncontrolled drift looks like
+ * from the inside. And `--accent` already means teal in the docs and purple in
+ * the console spec, so the same token name resolves to two different colours
+ * depending on which surface you are reading.
+ *
+ * This file is the fix. It is the single place a colour, a size, or a family
+ * is decided. Everything downstream consumes these names.
+ *
+ * HOW TO USE IT
+ *
+ * 1. Load this file first, before any surface stylesheet.
+ * 2. Map your surface's local names onto these, once, in one block. The docs
+ *    site already does exactly this against Material's --md-* variables; this
+ *    is the same move one level up.
+ * 3. Never write a raw colour or a raw font size in component CSS again. If
+ *    you reach for one, the token is missing. Add it here.
+ *
+ * NAMESPACE
+ *
+ * Every name is prefixed --bk- so this file can be dropped into any surface
+ * without colliding with Material's --md-*, the console's locals, or anything
+ * a future framework introduces.
+ *
+ * CONTRAST
+ *
+ * Ratios in comments are measured against --bk-canvas in that theme and meet
+ * WCAG 2.2 AA for body text (4.5:1) or better. If you change a value, remeasure
+ * it. The ratio is part of the token, not a nice-to-have.
+ *
+ * THREE CONFLICTS THIS FILE DOES NOT SETTLE ALONE. Each is a console decision
+ * that needs agreeing before console work resumes.
+ *   1. Console spec allows 10px tertiary labels. This file floors at 11px.
+ *   2. Console spec allows radii up to 8px. This file allows 3px, on controls.
+ *   3. Console spec says "system sans stack". This file says Archivo.
+ * ========================================================================== */
+
+:root {
+  /* -- brand ---------------------------------------------------------------
+   * One interaction colour. Links, focus rings, primary actions, the current
+   * item. It is never a status. */
+  --bk-brand: #5c2d4a;              /* 10.3:1 */
+  --bk-brand-strong: #46213a;       /* hover/active */
+  --bk-on-brand: #ffffff;           /* 10.9:1 on --bk-brand */
+  --bk-brand-wash: #efe7f3;         /* selected row, never text */
+
+  /* -- surfaces ------------------------------------------------------------ */
+  --bk-canvas: #faf8fc;             /* the page ground */
+  --bk-surface: #ffffff;            /* a raised panel */
+  --bk-sunken: #f2ecf6;             /* an inset well: code, table head */
+
+  /* -- lines ---------------------------------------------------------------
+   * Hairlines separate things. A border is not a container. */
+  --bk-line: #e4dcec;
+  --bk-line-strong: #d2c8de;
+
+  /* -- text ---------------------------------------------------------------- */
+  --bk-text: #1f1a22;               /* 16.2:1 */
+  --bk-text-muted: #5f5566;         /*  6.7:1 — secondary prose */
+  --bk-text-subtle: #736a7c;        /*  4.9:1 — labels only, never a paragraph */
+
+  /* -- state ---------------------------------------------------------------
+   * Four meanings, deliberately far from the brand hue so an error can never
+   * be the most on-brand thing on the screen. Colour always reinforces a text
+   * label; it is never the only signal. */
+  --bk-signed: #186c66;           /*  5.9:1 — the signature verified. NOT a claim about content. */
+  --bk-promoted: #2f7d5c;           /*  4.7:1 — the only green; folded and sealed */
+  --bk-attention: #9c5b25;          /*  5.1:1 — a person is needed, or evidence is absent */
+  --bk-blocked: #a8323c;            /*  6.2:1 — technical failure or a contradicted claim */
+  --bk-neutral: #736a7c;            /*  4.9:1 — recorded, inactive, contextual */
+
+  /* Absent evidence is drawn as a hatch in --bk-attention, never a flat fill
+   * and never red. Red means wrong; a gap means unknown. */
+  --bk-hatch: repeating-linear-gradient(45deg,
+              var(--bk-attention) 0 1px, transparent 1px 5px);
+
+  /* -- code and shell ------------------------------------------------------
+   * The dark shell is the one dark surface allowed inside the light theme. It
+   * reads as a quotation from the machine. */
+  --bk-code-bg: #f2ecf6;
+  --bk-code-text: #4a2d55;          /* 10.1:1 on --bk-code-bg */
+  --bk-shell: #191320;              /* terminal ground */
+  --bk-shell-text: #ddd4e6;         /* 12.7:1 on --bk-shell */
+  --bk-shell-dim: #8d80a0;          /*  5.0:1 on --bk-shell */
+  --bk-shell-prompt: #5fc79f;       /*  8.8:1 on --bk-shell */
+
+  /* -- reconstruction ------------------------------------------------------
+   * Model-inferred prose is the most dangerous text in the product: it reads
+   * as human writing and borrows the record's authority. It is always marked. */
+  --bk-reconstructed-rule: 2px solid var(--bk-brand);
+  --bk-reconstructed-inset: var(--bk-space-4);
+
+  /* -- elevation -----------------------------------------------------------
+   * Depth is an offset shadow or a hairline. Never a zero-offset glow. */
+  --bk-shadow-sm: 0 1px 2px rgb(31 26 34 / 6%);
+  --bk-shadow-md: 0 2px 4px rgb(31 26 34 / 5%), 0 8px 24px rgb(31 26 34 / 7%);
+  --bk-scrim: rgb(31 26 34 / 45%);
+
+  /* -- type ----------------------------------------------------------------
+   * Type is assigned by information role, not by author. Three origins:
+   *   authored       Archivo, plain          a person wrote it
+   *   captured       JetBrains Mono          emitted and signed as it happened
+   *   reconstructed  Archivo + plum rule     a model inferred it from events
+   *
+   * Mono carries ids, timestamps, states, commands, paths, digests, evidence
+   * refs and navigation labels. It is never used for persuasion. A
+   * reconstruction never appears without its provenance line. */
+  --bk-font-sans: Archivo, "Helvetica Neue", Arial, sans-serif;
+  --bk-font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* Reading density. Marketing and docs. Prose is the point, so it breathes.
+   *
+   * The size floors are accessibility commitments, not preferences:
+   *   required body text  >= 16px   controls >= 14px   essential metadata >= 12px
+   * Nothing a reader needs in order to act may sit in the 11px tier. */
+  --bk-size-2xs: 0.6875rem;   /* 11px — decorative annotation ONLY, never required */
+  --bk-size-xs:  0.75rem;     /* 12px — label, uppercase, tracked. Metadata floor. */
+  --bk-size-sm:  0.8125rem;   /* 13px — data, tabular */
+  --bk-size-md:  0.875rem;    /* 14px — secondary prose. Control floor. */
+  --bk-size-base:1rem;        /* 16px — body. Required-text floor. */
+  --bk-size-lg:  1.125rem;    /* 18px — lead paragraph */
+  --bk-size-xl:  1.375rem;    /* 22px — heading */
+  --bk-size-2xl: 1.875rem;    /* 30px — page title */
+  --bk-size-3xl: 2.5rem;      /* 40px — display. Nothing is larger. */
+
+  --bk-leading-tight: 1.14;   /* display only */
+  --bk-leading-snug: 1.35;    /* headings */
+  --bk-leading-body: 1.65;    /* prose */
+  --bk-leading-data: 1.85;    /* mono blocks; descenders need the room */
+
+  --bk-track-label: 0.12em;   /* uppercase labels only */
+  --bk-track-display: -0.02em;
+
+  --bk-weight-regular: 400;   /* display and body. The display voice stops here. */
+  --bk-weight-medium: 500;    /* subheads, emphasis, button labels */
+  /* There is no bold token. If you want 700, you want size or space instead. */
+
+  /* -- space ---------------------------------------------------------------
+   * 4px base. Use these, never an arbitrary value. */
+  --bk-space-1: 4px;
+  --bk-space-2: 8px;
+  --bk-space-3: 12px;
+  --bk-space-4: 16px;
+  --bk-space-5: 24px;
+  --bk-space-6: 32px;
+  --bk-space-7: 48px;
+  --bk-space-8: 64px;
+  --bk-space-9: 96px;
+
+  /* -- shape ---------------------------------------------------------------
+   * Square by default. Radius means you can click it, so it stays scarce. */
+  --bk-radius-control: 3px;
+  --bk-radius-panel: 0;
+  --bk-radius-pill: 999px;    /* status dots only */
+
+  /* -- layout -------------------------------------------------------------- */
+  --bk-measure: 68ch;         /* prose column; tables may exceed it */
+  --bk-shell-max: 1080px;
+
+  /* -- motion --------------------------------------------------------------
+   * One rule: short, and only opacity or colour. A record that animates looks
+   * authored. Every transition must survive prefers-reduced-motion. */
+  --bk-duration: 140ms;
+  --bk-ease: cubic-bezier(0.2, 0, 0.2, 1);
+
+  /* -- focus ---------------------------------------------------------------
+   * One focus treatment everywhere, on every surface, no exceptions. */
+  --bk-focus-width: 2px;
+  --bk-focus-offset: 2px;
+  --bk-focus-color: var(--bk-brand);
+}
+
+/* ============================================================================
+ * OPERATING DENSITY
+ *
+ * The console is scanned and operated, not read. It earns a tighter scale.
+ * This is the same scale, stepped down; it is not a second type system.
+ *
+ *   <div data-bk-density="compact">  or on the console's <html>
+ *
+ * The floor is 11px. The existing console spec permits 10px for tertiary
+ * labels. 10px is below what most people can scan comfortably at arm's length
+ * and there is no way to test it as "passing", so this file holds 11 and flags
+ * the disagreement rather than silently picking a side.
+ * ========================================================================== */
+[data-bk-density="compact"] {
+  --bk-size-2xs: 0.6875rem;   /* 11px — decorative annotation ONLY */
+  --bk-size-xs:  0.75rem;     /* 12px — metadata floor holds even here */
+  --bk-size-sm:  0.8125rem;   /* 13px */
+  --bk-size-md:  0.875rem;    /* 14px — control floor holds even here */
+  --bk-size-base:0.875rem;    /* 14px — body, compact */
+  --bk-size-lg:  1rem;        /* 16px */
+  --bk-size-xl:  1.125rem;    /* 18px */
+  --bk-size-2xl: 1.375rem;    /* 22px */
+  --bk-size-3xl: 1.75rem;     /* 28px */
+
+  --bk-leading-body: 1.5;
+  --bk-space-9: 48px;         /* the big steps collapse; the small ones do not */
+  --bk-space-8: 32px;
+  --bk-space-7: 24px;
+}
+
+/* ============================================================================
+ * DARK
+ *
+ * Redesigned, not inverted. Surfaces get their own values, the brand hue is
+ * lightened until it is legible as text, and every ratio is remeasured.
+ *
+ * These values come from the docs site's slate palette, which shipped first and
+ * carried a measured ratio per token. They beat the ones originally drafted here
+ * on every single value, so they replaced them rather than the other way round:
+ *   brand 9.5 vs 9.0 · accent 8.4 vs 7.7 · text 15.6 vs 15.1
+ *   muted 7.5 vs 6.6 · subtle 5.3 vs 4.7
+ *
+ * Two selectors, deliberately. The media query is guarded so an explicit light
+ * choice beats a dark OS, and the attribute selector lets a toggle win in the
+ * other direction.
+ * ========================================================================== */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-bk-theme="light"]) {
+    --bk-brand: #dda9c8;     /* 9.5:1 */
+    --bk-brand-strong: #ecc6dd;
+    --bk-on-brand: #1a1018;     /* 9.4:1 on --bk-brand */
+    --bk-brand-wash: #2a1f2e;
+
+    --bk-canvas: #121016;
+    --bk-surface: #1a1722;
+    --bk-sunken: #221d2b;
+
+    --bk-line: #2e2837;
+    --bk-line-strong: #3f3849;
+
+    --bk-text: #ece7f0;     /* 15.6:1 */
+    --bk-text-muted: #a99fb3;     /* 7.5:1 */
+    --bk-text-subtle: #8d8399;     /* 5.3:1 */
+
+    --bk-signed: #5cbcb2;     /* 8.4:1 */
+    --bk-promoted: #59b98d;     /* 7.9:1 */
+    --bk-attention: #d1904f;     /* 7.0:1 */
+    --bk-blocked: #e58a94;     /* 7.6:1 */
+    --bk-neutral: #8d8399;
+
+    --bk-code-bg: #221e29;
+    --bk-code-text: #e4d5ec;     /* 11.7:1 on --bk-code-bg */
+    --bk-shell: #100c15;
+
+    --bk-shadow-sm: 0 1px 2px rgb(0 0 0 / 30%);
+    --bk-shadow-md: 0 2px 4px rgb(0 0 0 / 30%), 0 8px 24px rgb(0 0 0 / 40%);
+    --bk-scrim: rgb(0 0 0 / 60%);
+  }
+}
+
+/* Consumer theme hooks.
+ *
+ * Frameworks announce dark in their own way, and a token file that only listens
+ * for one of them silently renders light values under the others. Each hook a
+ * surface uses is listed here, once, so the palette below is never duplicated:
+ *
+ *   [data-bk-theme="dark"]           anything consuming these tokens directly
+ *   [data-md-color-scheme="slate"]   MkDocs Material, which sets it on <body>
+ *
+ * Add a hook when a surface adopts a framework with its own switch. Do not
+ * copy the values into that surface's stylesheet. */
+[data-bk-theme="dark"],
+[data-md-color-scheme="slate"] {
+  --bk-brand: #dda9c8;     /* 9.5:1 */
+  --bk-brand-strong: #ecc6dd;
+  --bk-on-brand: #1a1018;     /* 9.4:1 on --bk-brand */
+  --bk-brand-wash: #2a1f2e;
+
+  --bk-canvas: #121016;
+  --bk-surface: #1a1722;
+  --bk-sunken: #221d2b;
+
+  --bk-line: #2e2837;
+  --bk-line-strong: #3f3849;
+
+  --bk-text: #ece7f0;     /* 15.6:1 */
+  --bk-text-muted: #a99fb3;     /* 7.5:1 */
+  --bk-text-subtle: #8d8399;     /* 5.3:1 */
+
+  --bk-signed: #5cbcb2;     /* 8.4:1 */
+  --bk-promoted: #59b98d;     /* 7.9:1 */
+  --bk-attention: #d1904f;     /* 7.0:1 */
+  --bk-blocked: #e58a94;     /* 7.6:1 */
+  --bk-neutral: #8d8399;
+
+  --bk-code-bg: #221e29;
+  --bk-code-text: #e4d5ec;     /* 11.7:1 on --bk-code-bg */
+  --bk-shell: #100c15;
+
+  --bk-shadow-sm: 0 1px 2px rgb(0 0 0 / 30%);
+  --bk-shadow-md: 0 2px 4px rgb(0 0 0 / 30%), 0 8px 24px rgb(0 0 0 / 40%);
+  --bk-scrim: rgb(0 0 0 / 60%);
+}
+
+/* ============================================================================
+ * THE FOCUS RULE
+ *
+ * Written once, here, because it is the accessibility commitment most likely
+ * to be forgotten per-component. Every interactive element on every surface
+ * gets this. If a component overrides it, that is a bug.
+ * ========================================================================== */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: var(--bk-focus-width) solid var(--bk-focus-color);
+  outline-offset: var(--bk-focus-offset);
+  border-radius: var(--bk-radius-control);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --bk-duration: 0.01ms; }
+}

@@ -11,7 +11,7 @@ theme:
   name: material
   custom_dir: overrides
   logo: assets/brand/logo/braid-mark-purple-512.png
-  favicon: assets/brand/logo/braid-avatar-purple-512.png
+  favicon: assets/brand/icons/icon.svg
   font: false
   palette:
     - media: "(prefers-color-scheme)"
@@ -54,6 +54,9 @@ hooks:
 
 # Order matters: tokens define the variables the other two consume.
 extra_css:
+  # First: the shared brand tokens, vendored from braidkit/brand. Everything
+  # below derives from these rather than declaring its own values.
+  - stylesheets/braid-tokens.css
   - stylesheets/fonts.css
   - stylesheets/tokens.css
   - stylesheets/base.css
