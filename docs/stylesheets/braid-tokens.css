@@ -7,8 +7,9 @@
  * this anywhere else, it is a vendored copy: editing it here will pass review,
  * build cleanly, and then be silently reverted by the next sync.
  *
- * Make the change upstream instead, then run brand/sync.py. To try an upstream
- * change before it merges:  BRAND_SOURCE=../brand brand/sync.py
+ * Make the change upstream instead, then run scripts/sync-brand.py in the
+ * consuming repository. To try an upstream change before it merges:
+ *   BRAND_SOURCE=../brand scripts/sync-brand.py
  *
  * WHY THIS FILE EXISTS
  *
