@@ -33,8 +33,10 @@ vendors, so `scripts/brand/check.py` fails CI when it happens. Change them in
 
 ## UI
 
-Read [`scripts/brand/DESIGN.md`](scripts/brand/DESIGN.md) first, the shared
-foundation for the marketing site, these docs and the console.
+The design rules are `DESIGN.md` in
+[`braidkit/brand`](https://github.com/braidkit/brand), the shared foundation for
+the marketing site, these docs and the console. Read it before changing anything
+visual. That repository is private, so ask for access if you do not have it.
 
 Values the surfaces share come from `braid-tokens.css`.
 `docs/stylesheets/tokens.css` maps them onto the names this site and Material

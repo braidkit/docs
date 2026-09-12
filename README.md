@@ -111,9 +111,8 @@ standalone commands for another builder.
 
 The tokens, typefaces, icons and the header mark are copies owned by
 [`braidkit/brand`](https://github.com/braidkit/brand). Change them there, not
-here. The design rules they implement are vendored alongside them at
-[`scripts/brand/DESIGN.md`](scripts/brand/DESIGN.md), and
-[AGENTS.md](AGENTS.md) covers the rest of working in this repository.
+here. The design rules they implement are `DESIGN.md` in that repository, and
+[AGENTS.md](AGENTS.md) covers the rest of working here.
 
 Nothing is fetched at runtime; every asset is served from this site's own
 origin.
