@@ -15,10 +15,9 @@ python scripts/check_site.py site           # site contracts, after a build
 
 CI runs all five in that order.
 
-## Files you must not edit here
+## Copies from braidkit/brand
 
-`scripts/brand/`, plus these, are copies owned by
-[`braidkit/brand`](https://github.com/braidkit/brand):
+`scripts/brand/`, plus these, are copies rather than originals:
 
 ```
 docs/stylesheets/braid-tokens.css
@@ -28,20 +27,19 @@ docs/assets/brand/logo/braid-mark-purple-512.png
 ```
 
 Editing one builds clean, passes review, and is reverted the next time anyone
-vendors. `scripts/brand/check.py` fails CI when it happens. Change them in
-`braidkit/brand` and run `python3 vendor.py ../docs` from a checkout of it.
+vendors, so `scripts/brand/check.py` fails CI when it happens. Change them in
+[`braidkit/brand`](https://github.com/braidkit/brand) instead.
 `scripts/brand/files` declares what this repository takes and where it goes.
 
-## Before writing any UI
+## UI
 
-Read [`scripts/brand/DESIGN.md`](scripts/brand/DESIGN.md), the shared foundation
-for the marketing site, these docs and the console.
+Read [`scripts/brand/DESIGN.md`](scripts/brand/DESIGN.md) first, the shared
+foundation for the marketing site, these docs and the console.
 
-Colours, sizes, families and radii come from `braid-tokens.css`; never write one
-inline. `docs/stylesheets/tokens.css` maps those onto the names this site and
-Material use, and is where docs-specific values belong.
-
-UI lives in `docs/stylesheets/` and `overrides/`.
+Values the surfaces share come from `braid-tokens.css`.
+`docs/stylesheets/tokens.css` maps them onto the names this site and Material
+use, and is where docs-specific ones belong. UI lives in `docs/stylesheets/` and
+`overrides/`.
 
 ## Content
 
@@ -53,6 +51,5 @@ the corpus check, which regenerates `llms.txt`.
 Keep yours out of this file. Both tools read a personal layer that stacks with
 this one: `~/.claude/CLAUDE.md` for Claude Code, `~/.codex/AGENTS.md` for Codex.
 
-For notes about this repository alone, `CLAUDE.local.md` is gitignored and loads
-alongside `CLAUDE.md`. Codex's `AGENTS.override.md` replaces this file rather
-than adding to it, so everything above is lost while one exists.
+`CLAUDE.local.md` is gitignored and loads alongside `CLAUDE.md`. Codex's
+`AGENTS.override.md` is read *instead of* this file rather than as well as it.
