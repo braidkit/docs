@@ -14,6 +14,25 @@ import page_markdown  # noqa: E402
 import site_config  # noqa: E402
 
 
+class ThemeAdapterTests(unittest.TestCase):
+    def test_material_palette_is_bridged_to_braid_theme_and_metadata(self):
+        template = (ROOT / "overrides" / "main.html").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn('__md_get("__palette")', template)
+        self.assertIn('attributeFilter: ["data-md-color-scheme"]', template)
+        self.assertIn('meta[name=\'theme-color\']', template)
+        self.assertIn('meta[name=\'color-scheme\']', template)
+        self.assertIn("style.backgroundColor", template)
+        self.assertRegex(
+            template,
+            r"(?s)const applyTheme = theme => \{\s*"
+            r"root\.dataset\.bkTheme = theme\s*"
+            r"updateMetadata\(\)\s*\}",
+        )
+
+
 class SiteConfigTests(unittest.TestCase):
     def test_load_site_config_rejects_non_mapping_root(self):
         with tempfile.TemporaryDirectory() as temporary:
