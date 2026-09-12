@@ -22,6 +22,3 @@ logo/braid-mark-purple-512.png -> docs/assets/brand/logo/braid-mark-purple-512.p
 # The CI check itself, vendored like everything else.
 consumer/check.py -> scripts/brand/check.py
 
-# The design rules, so they are readable here without network access to a
-# private repository. AGENTS.md points at this copy.
-DESIGN.md -> scripts/brand/DESIGN.md

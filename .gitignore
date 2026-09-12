@@ -7,3 +7,7 @@ __pycache__/
 # Generated from the published pages at build time by scripts/build_llms.py.
 docs/llms.txt
 docs/llms-full.txt
+
+# Personal agent instructions. The shared ones are AGENTS.md and CLAUDE.md.
+CLAUDE.local.md
+AGENTS.override.md
