@@ -24,6 +24,63 @@
   #}
   <link rel="icon" sizes="any" href="{{ 'assets/brand/icons/favicon.ico' | url }}">
   <link rel="apple-touch-icon" href="{{ 'assets/brand/icons/apple-touch-icon.png' | url }}">
+  {#
+    The shared Braid tokens use data-bk-theme on <html> to distinguish an
+    explicit light choice from a dark operating system. Material stores its
+    palette choice separately and writes data-md-color-scheme on <body>.
+
+    Set the Braid theme before <body> is parsed to avoid a flash of the system
+    theme, then follow Material's body attribute when the reader uses the
+    palette control. The observer also survives Material's instant navigation.
+  #}
+  <script>
+    (() => {
+      const root = document.documentElement
+      const darkMedia = "(prefers-color-scheme: dark)"
+      const lightMedia = "(prefers-color-scheme: light)"
+      const palette = __md_get("__palette")
+      const savedMedia = palette?.color?.media
+
+      const updateMetadata = () => {
+        const header = document.querySelector("[data-md-component='header']")
+        if (!header)
+          return
+
+        const style = getComputedStyle(header)
+        const channels = style.backgroundColor.match(/\d+/g)
+        const themeColor = document.querySelector("meta[name='theme-color']")
+        const colorScheme = document.querySelector("meta[name='color-scheme']")
+
+        if (themeColor && channels?.length >= 3)
+          themeColor.content = `#${channels.slice(0, 3)
+            .map(value => Number(value).toString(16).padStart(2, "0"))
+            .join("")}`
+        if (colorScheme)
+          colorScheme.content = style.colorScheme
+      }
+
+      const applyTheme = theme => {
+        root.dataset.bkTheme = theme
+        updateMetadata()
+      }
+
+      applyTheme(savedMedia === lightMedia
+        ? "light"
+        : savedMedia === darkMedia || matchMedia(darkMedia).matches
+          ? "dark"
+          : "light")
+
+      new MutationObserver(() => {
+        const scheme = document.body?.dataset.mdColorScheme
+        if (scheme)
+          applyTheme(scheme === "slate" ? "dark" : "light")
+      }).observe(root, {
+        attributes: true,
+        attributeFilter: ["data-md-color-scheme"],
+        subtree: true
+      })
+    })()
+  </script>
 {% endblock %}
 
 {#
