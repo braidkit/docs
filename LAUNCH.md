@@ -16,7 +16,7 @@ holds exact rules, configuration, and recovery information.
 
 The sidebar has five root entries: Home, Get started, Guides, Concepts, and
 Reference. Sections are collapsed unless active or opened by the reader.
-Changelog remains in the header and Contact support stays at the sidebar foot.
+Changelog remains in the header and Get help stays at the sidebar foot.
 The homepage links directly to the main tasks and troubleshooting.
 
 ## Content map

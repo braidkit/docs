@@ -180,8 +180,7 @@ extra:
   # Rendered as the persistent link at the foot of the navigation rail.
   # Omit this block and the link disappears rather than 404s.
   support:
-    title: Contact support
-    description: Get help on Discord
+    title: Get help
     link: get-help/
   # Utility pages are published and validated, but rendered outside the main
   # documentation hierarchy by our navigation partial.

@@ -38,4 +38,4 @@ details are verified.
 
 ## Feedback
 
-[Contact support](get-help.md) to share a problem or question.
+To share a problem or question, see [Get help](get-help.md).
