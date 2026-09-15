@@ -162,7 +162,7 @@ def check_site(site_dir):
     require_text(home_html, 'class="braid-home"', "index.html", errors)
     require_text(home_html, 'class="braid-home__card"', "index.html", errors)
     require_text(home_html, 'class="braid-nav__footer"', "index.html", errors)
-    require_text(home_html, "Contact support", "index.html", errors)
+    require_text(home_html, "Get help", "index.html", errors)
     if "documentation is coming soon" in home_html:
         errors.append("index.html: the coming-soon placeholder must not be published")
 
@@ -182,7 +182,7 @@ def check_site(site_dir):
             'class="braid-nav__footer"',
             "data-braid-pageactions",
             "data-braid-copy-markdown",
-            "Contact support",
+            "Get help",
             source_url,
         ):
             require_text(page_html, contract, location, errors)

@@ -16,7 +16,7 @@ holds exact rules, configuration, and recovery information.
 
 The sidebar has five root entries: Home, Get started, Guides, Concepts, and
 Reference. Sections are collapsed unless active or opened by the reader.
-Changelog remains in the header and Contact support stays at the sidebar foot.
+Changelog remains in the header and Get help stays at the sidebar foot.
 The homepage links directly to the main tasks and troubleshooting.
 
 ## Content map
@@ -38,7 +38,7 @@ The homepage links directly to the main tasks and troubleshooting.
 | [CLI reference](docs/reference/cli.md) | Outline | Public commands and flags validated against released help, including auth requirements. [BRA-244](https://linear.app/braidkit/issue/BRA-244), [BRA-253](https://linear.app/braidkit/issue/BRA-253). |
 | [Braid on your machine](docs/braid-on-your-machine.md) | Existing prose; revalidate | Daemon startup, configuration, paths, and local state. [BRA-237](https://linear.app/braidkit/issue/BRA-237). |
 | [What Braid records](docs/what-braid-records.md) | Existing prose; revalidate | Capture limits, sensitive data, model-provider transmission, signing limits. [BRA-238](https://linear.app/braidkit/issue/BRA-238). |
-| [Get help](docs/get-help.md) | Existing Discord link | One persistent support destination. Confirm invited-developer expectations. [BRA-251](https://linear.app/braidkit/issue/BRA-251). |
+| [Get help](docs/get-help.md) | Discord, email, and report instructions | One persistent support destination. Confirm invited-developer expectations. [BRA-251](https://linear.app/braidkit/issue/BRA-251). |
 | [Changelog](docs/changelog.md) | Existing placeholder | First real release entry and channel links, without invented release notes. [BRA-247](https://linear.app/braidkit/issue/BRA-247). |
 
 ## Page boundaries and minimum scope

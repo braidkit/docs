@@ -49,4 +49,4 @@ draft: true
 <!-- Document safe diagnostics and what to remove before sharing.
      Logs and captures may contain source, prompts, and credentials. -->
 
-For help from the team, [contact support](get-help.md).
+For help from the team, see [Report a problem](get-help.md#report-a-problem).
