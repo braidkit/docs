@@ -7,6 +7,6 @@ hide:
 
 # Get help
 
-Reach us on [Discord](https://discord.gg/gzUevjYD9).
+Reach us on [Discord](https://discord.gg/gzUevjYD9) or email [hello@braidkit.io](mailto:hello@braidkit.io).
 
 We would rather hear about a rough edge than have you work around it silently.
