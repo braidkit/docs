@@ -8,10 +8,25 @@ description: Install Braid, sign in, set up capture, and take one small change t
 One small change, from install to a completed braid. This walkthrough uses one
 supported agent and shows what to expect at each step.
 
-## Install Braid
+## Before you start
 
-Braid runs on macOS, and needs Git 2.25 or later. See
-[Installation](../reference/installation.md) for the full requirements and install options.
+You need all of these:
+
+| | |
+|---|---|
+| **macOS** | Braid does not run on Linux or Windows yet. |
+| **Git** | 2.25 or later. |
+| **A GitHub repository** | Braid works on a project tracked in a repository hosted on GitHub. |
+| **A GitHub account** | Signing in to Braid goes through GitHub. |
+| **Claude Code** | The agent Braid captures today. |
+
+Braid also lists Codex on its capture screen, but Codex is not supported yet.
+Cursor is unavailable in this build.
+
+See [Installation](../reference/installation.md) for the architectures, shells,
+and command-line tools the installer needs.
+
+## Install Braid
 
 ```sh
 curl -fsSL https://braidkit.io/cli/install.sh | sh
