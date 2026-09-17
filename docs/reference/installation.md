@@ -22,8 +22,9 @@ are version-matched by construction. The installer installs the pair together.
 | **Shell** | bash, zsh, or fish, for `PATH` and completion setup |
 | **Also required** | `curl`, `tar`, `awk`, and either `sha256sum` or `shasum` |
 
-This covers installing. Using Braid also needs a GitHub repository, a GitHub
-account, and Claude Code; see [Quickstart](../getting-started/quickstart.md).
+This covers installing. Using Braid also needs a Git repository, a GitHub
+account to sign in with, and Claude Code; see
+[Quickstart](../getting-started/quickstart.md).
 
 !!! note "macOS only"
     The release pipeline can build Linux archives, but the current release does

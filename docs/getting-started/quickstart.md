@@ -16,8 +16,9 @@ You need all of these:
 |---|---|
 | **macOS** | Braid does not run on Linux or Windows yet. |
 | **Git** | 2.25 or later. |
-| **A GitHub repository** | Braid works on a project tracked in a repository hosted on GitHub. |
-| **A GitHub account** | Signing in to Braid goes through GitHub. |
+| **A Git repository** | Braid works on a branch in your local repository. It does not need a remote. |
+| **Committed work** | Braid ships from committed history. `braid ship` refuses a dirty working tree. |
+| **A GitHub account** | Braid signs you in through GitHub. Your repository does not have to be hosted there. |
 | **Claude Code** | The agent Braid captures today. |
 
 Braid also lists Codex on its capture screen, but Codex is not supported yet.
