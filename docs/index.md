@@ -13,7 +13,6 @@ Keep the understanding behind agent-written code. Start here, or pick up where y
 
 ## Start here
 
-- [Installation](getting-started/installation.md) — Requirements, install options, upgrading, and removal.
 - [Quickstart](getting-started/quickstart.md) — Install Braid, then take one change from capture to completion.
 - [Capture agent work](guides/capture-agent-work.md) — Set up capture and organize your sessions.
 
@@ -22,6 +21,7 @@ Keep the understanding behind agent-written code. Start here, or pick up where y
 - [Understand a change](guides/understand-a-change.md) — Read the decisions and evidence behind the code.
 - [Review a change](guides/review-a-change.md) — Check the work and complete the braid.
 - [CLI reference](reference/cli.md) — Find a command or flag.
+- [Installation](getting-started/installation.md) — Requirements, install options, upgrading, and removal.
 
 ## Explore the docs
 

@@ -129,10 +129,6 @@ extra:
       - id: start-here
         title: Start here
         cards:
-          - path: getting-started/installation.md
-            label: Installation
-            description: Requirements, install options, upgrading, and removal.
-            icon: download-outline
           - path: getting-started/quickstart.md
             label: Quickstart
             description: Install Braid, then take one change from capture to completion.
@@ -160,6 +156,10 @@ extra:
             description: Find a command or flag.
             icon: console
             draft: true
+          - path: getting-started/installation.md
+            label: Installation
+            description: Requirements, install options, upgrading, and removal.
+            icon: download-outline
     explore:
       id: explore-the-docs
       title: Explore the docs
