@@ -102,18 +102,12 @@ Doctor summary (to see every check, run braid --verbose doctor)
 [-] repo  global capture does not require repository initialization
 ```
 
-Each failure prints what is wrong and what to do about it. `[-]` marks a check
-that did not apply, not a problem.
-
 | Flag | Effect |
 |---|---|
 | `--scope <name>` | Run one scope: `all`, `install`, `user`, `daemon`, `harness`, or `repo`. |
 | `--offline` | Skip every live probe. |
 | `--json` | Machine-readable output. |
 | `--timeout <duration>` | Per-probe timeout. Default `3s`. |
-
-To see every individual check rather than the summary, run
-`braid --verbose doctor`.
 
 ### Build identity
 

@@ -39,17 +39,7 @@ per-user service that runs at login.
 
 ## Sign in
 
-When the install finishes, it asks:
-
-```text
-Sign in to Braid now? [y/N]
-```
-
-Answer `y`. Braid prints a URL and a one-time code. Open
-<https://github.com/login/device>, enter the code, and complete GitHub
-authentication.
-
-To sign in later instead:
+The installer offers to sign you in, through GitHub. To do it later instead:
 
 ```sh
 braid auth login
@@ -57,28 +47,8 @@ braid auth login
 
 ## Set up capture for this repository
 
-Next, the installer asks:
-
-```text
-Initialize Braid for this machine? [y/N]
-```
-
-Answer `y`. Braid sets up your machine identity and opens the agent capture
-screen:
-
-```text
-  AGENT          CAPTURE SETUP
-────────────────────────────────────────────────────────────────────────────────
-
-> [ ] Claude Code    Enabled
-> [ ] Codex          Available
-> [-] Cursor         Unavailable in this build
-```
-
-Move with the arrow keys or `j`/`k`, select with Space, and confirm with Enter.
-Nothing is captured unless you select it here.
-
-To initialize later instead:
+The installer then offers to initialize this machine and choose which agents
+Braid captures. Select Claude Code. To do it later instead:
 
 ```sh
 braid init
@@ -90,8 +60,7 @@ braid init
 braid doctor
 ```
 
-Every category should pass. `[-]` marks a check that did not apply, not a
-problem. Each failure prints what is wrong and what to do about it.
+Every category should pass.
 
 ## Capture a small change
 
