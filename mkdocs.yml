@@ -101,7 +101,6 @@ nav:
   - Home: index.md
   - Get started:
       - Why Braid?: why-braid.md
-      - Installation: getting-started/installation.md
       - Quickstart: getting-started/quickstart.md
   - Guides:
       - Capture agent work: guides/capture-agent-work.md
@@ -111,6 +110,7 @@ nav:
       - How Braid works: how-braid-works.md
       - What Braid records: what-braid-records.md
   - Reference:
+      - Installation: reference/installation.md
       - CLI reference: reference/cli.md
       - Account and devices: reference/account-and-devices.md
       - Braid on your machine: braid-on-your-machine.md
@@ -129,15 +129,10 @@ extra:
       - id: start-here
         title: Start here
         cards:
-          - path: getting-started/installation.md
-            label: Install Braid
-            description: Set up Braid on your Mac.
-            icon: download-outline
           - path: getting-started/quickstart.md
             label: Quickstart
-            description: Take one change from capture to completion.
+            description: Install Braid, then take one change from capture to completion.
             icon: source-branch
-            draft: true
           - path: guides/capture-agent-work.md
             label: Capture agent work
             description: Set up capture and organize your sessions.
@@ -161,6 +156,10 @@ extra:
             description: Find a command or flag.
             icon: console
             draft: true
+          - path: reference/installation.md
+            label: Installation
+            description: Requirements, install options, upgrading, and removal.
+            icon: download-outline
     explore:
       id: explore-the-docs
       title: Explore the docs

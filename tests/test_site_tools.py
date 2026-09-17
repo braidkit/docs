@@ -32,7 +32,7 @@ class SiteConfigTests(unittest.TestCase):
         self.assertEqual("", pages[0].url)
         self.assertEqual("index.html", pages[0].dest_uri)
         self.assertEqual(
-            "getting-started/installation/index.html",
+            "getting-started/quickstart/index.html",
             pages[2].dest_uri,
         )
 
