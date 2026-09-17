@@ -7,13 +7,10 @@ description: System requirements and how to install, verify, upgrade, and remove
 
 Braid installs as two binaries from one archive: `braid`, the CLI you drive, and
 `braid-daemon`, the server it talks to. Both come out of the same build, so they
-are version-matched by construction. The installer always installs the pair, and
-refuses to commit an install whose two halves do not match.
+are version-matched by construction. The installer installs the pair together.
 
 !!! note "This is a preview"
-    Braid is in preview. The installer and its releases are public, but the
-    preview is unannounced and carries no support commitment. Expect breaking
-    changes between releases.
+    Braid is in preview. Expect breaking changes between releases.
 
 ## System requirements
 
@@ -22,12 +19,12 @@ refuses to commit an install whose two halves do not match.
 | **Operating system** | macOS |
 | **Architecture** | `arm64` or `amd64` |
 | **Git** | 2.25 or later, on your `PATH` |
-| **Shell** | bash, zsh, or fish |
+| **Shell** | bash, zsh, or fish, for `PATH` and completion setup |
 | **Also required** | `curl`, `tar`, `awk`, and either `sha256sum` or `shasum` |
 
 Both binaries are built with cgo disabled and are statically linked, so they
-carry no runtime library dependency. The installer is a Bash script that stays
-within the Bash 3.2 dialect macOS ships, so run it with `bash`, not `sh`.
+carry no runtime library dependency. The installer is a Bash script, and macOS
+`/bin/sh` is Bash, so the command below runs it under Bash.
 
 !!! note "macOS only"
     The release pipeline can build Linux archives, but the current release does
@@ -37,22 +34,19 @@ within the Bash 3.2 dialect macOS ships, so run it with `bash`, not `sh`.
 ## Install
 
 ```sh
-curl --disable --proto '=https' --proto-redir '=https' --tlsv1.2 -fsSL \
-  https://braidkit.io/cli/install.sh | bash
+curl -fsSL https://braidkit.io/cli/install.sh | sh
 ```
-
-`--disable` comes first so a `~/.curlrc` you have forgotten about cannot rewrite
-the request that fetches the installer. The installer applies the same flags to
-its own downloads.
 
 With no version selector, the installer resolves the current preview from
 [`latest.txt`](https://braidkit.io/cli/latest.txt) and installs that release. To
 pin an exact release instead, pass the tag:
 
 ```sh
-curl --disable --proto '=https' --proto-redir '=https' --tlsv1.2 -fsSL \
-  https://braidkit.io/cli/install.sh | bash -s -- --version v0.2.0-alpha.9
+curl -fsSL https://braidkit.io/cli/install.sh | sh -s -- --version v0.2.0-alpha.9
 ```
+
+`-s` tells the shell to read the script from standard input, and `--` ends the
+shell's own option parsing so everything after it reaches the installer.
 
 ### What the installer does
 
@@ -68,13 +62,44 @@ curl --disable --proto '=https' --proto-redir '=https' --tlsv1.2 -fsSL \
    starts it.
 7. Writes an installation receipt recording exactly what it placed and changed.
 8. Runs `braid` once so its welcome box confirms the install.
+9. Offers to sign you in, and then to initialize this machine.
 
 The receipt is what makes the rest of this page work: `braid upgrade` and
 `braid uninstall` both act only on what the receipt records.
 
+### Signing in and initializing
+
+When it finishes, the installer asks whether to continue:
+
+```text
+Sign in to Braid now? [y/N]
+```
+
+Answer `y` and it runs `braid auth login`, which prints a URL and a one-time
+code. Open <https://github.com/login/device>, enter the code, and complete
+GitHub authentication. It then asks:
+
+```text
+Initialize Braid for this machine? [y/N]
+```
+
+Answer `y` and it runs `braid init`, which sets up your machine identity and
+opens the agent capture screen, where you choose which coding agents Braid
+captures. Nothing is captured unless you select it there.
+
+Both prompts default to no, and both steps are available later:
+
+```sh
+braid auth login
+braid init
+```
+
+The prompts are skipped when there is no terminal to read from, or when `CI` is
+set to a non-empty value.
+
 !!! note "What installing does not do"
-    The installer never calls `sudo`. It does not sign you in, enable capture,
-    or install agent hooks — those are separate, deliberate steps. It does not
+    The installer never calls `sudo`. It does not enable capture or install
+    agent hooks on its own — you choose those in `braid init`. It does not
     install `braid-intent`, which is a separate component the CLI does not
     require.
 
