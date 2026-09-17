@@ -1,71 +1,101 @@
 ---
 title: Quickstart
-description: Planned walkthrough from installation and hosted sign-in to capturing, understanding, reviewing, and completing your first change.
-draft: true
+description: Install Braid, sign in, set up capture, and take one small change through to a completed braid.
 ---
 
 # Quickstart
 
-One small change, from setup to a completed braid. This walkthrough will use
-one supported agent and show what to expect at each step.
-
-## Before you start
-
-<!-- State the exact Braid build, macOS and Claude versions from BRA-270.
-     Choose a disposable example repository and a reproducible small change.
-     Show an estimated duration only after timing the actual walkthrough.
-     Related: BRA-242, BRA-252. -->
+One small change, from install to a completed braid. This walkthrough uses one
+supported agent and shows what to expect at each step.
 
 ## Install Braid
 
-<!-- Include the verified primary install path and a success check.
-     Link to Installation for alternatives, upgrades, and removal.
-     Do not require access to the private source repository. -->
+Braid runs on macOS, and needs Git 2.25 or later. See
+[Installation](installation.md) for the full requirements and install options.
 
-## Sign in through your browser
+```sh
+curl -fsSL https://braidkit.io/cli/install.sh | sh
+```
 
-<!-- Show the supported CLI-to-hosted GitHub sign-in flow and how to confirm
-     the CLI registered this device. A browser session alone is not proof.
-     Verify the launch origin; Slack's api-dev deployment is not production
-     approval. Link Account and devices for sign-out and device management.
-     Confirm auth/init/daemon ordering against the selected build. BRA-243. -->
+This installs `braid` and `braid-daemon` into `$HOME/.local/bin`, adds that
+directory to your `PATH`, sets up shell completion, and starts the daemon as a
+per-user service that runs at login.
+
+## Sign in
+
+When the install finishes, it asks:
+
+```text
+Sign in to Braid now? [y/N]
+```
+
+Answer `y`. Braid prints a URL and a one-time code. Open
+<https://github.com/login/device>, enter the code, and complete GitHub
+authentication.
+
+To sign in later instead:
+
+```sh
+braid auth login
+```
 
 ## Set up capture for this repository
 
-<!-- Show init, explicit Claude selection, privacy notice, provider trust if
-     needed, and the configured-versus-active check. Link What Braid records
-     before consent. Installation alone does not enable hooks. Explain the
-     minimum daemon startup needed for later steps. BRA-59, BRA-269, BRA-270. -->
+Next, the installer asks:
+
+```text
+Initialize Braid for this machine? [y/N]
+```
+
+Answer `y`. Braid sets up your machine identity and opens the agent capture
+screen:
+
+```text
+  AGENT          CAPTURE SETUP
+────────────────────────────────────────────────────────────────────────────────
+
+> [ ] Claude Code    Enabled
+> [ ] Codex          Available
+> [-] Cursor         Unavailable in this build
+```
+
+Move with the arrow keys or `j`/`k`, select with Space, and confirm with Enter.
+Nothing is captured unless you select it here.
+
+To initialize later instead:
+
+```sh
+braid init
+```
+
+## Check your setup
+
+```sh
+braid doctor
+```
+
+Every category should pass. `[-]` marks a check that did not apply, not a
+problem. Each failure prints what is wrong and what to do about it.
 
 ## Capture a small change
 
-<!-- Run Claude normally on the chosen example; confirm evidence appeared.
-     Do not use hidden wrap/dispatch or unsupported Codex/Cursor fallbacks. -->
+*Not yet written.*
 
 ## Bring the work into a braid
 
-<!-- Demonstrate the qualified discovery/add flow, session choice, scope, and
-     expected status. Keep one happy path; link Guides for composition choices.
-     Distinguish the unsigned inbox from the daemon-signed attached copy. -->
+*Not yet written.*
 
 ## Read the explanation and evidence
 
-<!-- Show the qualified intent boundary, transmission consent, and local braid
-     view. Point out the goal, one decision, and its supporting evidence.
-     Do not imply opening a saved record necessarily regenerates intent. -->
+*Not yet written.*
 
 ## Check and review the change
 
-<!-- Run the example's real tests, explain any required verification record,
-     inspect the exact candidate and record a verdict. Resolve BRA-245 before
-     claiming what verify guarantees. Separate checks from human approval. -->
+*Not yet written.*
 
 ## Complete the braid
 
-<!-- Finish the same example; do not stop the quickstart at an external link.
-     Explain the actual Git effects for this discovery path: it may finalize
-     at existing HEAD without creating a merge. Confirm the resulting state
-     and where the record can be read. Use qualified names, not BRA-253 proposals. -->
+*Not yet written.*
 
 ## What next?
 

@@ -1,6 +1,6 @@
 ---
 title: Installation
-description: System requirements and how to install, verify, upgrade, and remove Braid on macOS.
+description: System requirements, install options, and how to verify, upgrade, and remove Braid on macOS.
 ---
 
 # Installation
@@ -22,10 +22,6 @@ are version-matched by construction. The installer installs the pair together.
 | **Shell** | bash, zsh, or fish, for `PATH` and completion setup |
 | **Also required** | `curl`, `tar`, `awk`, and either `sha256sum` or `shasum` |
 
-Both binaries are built with cgo disabled and are statically linked, so they
-carry no runtime library dependency. The installer is a Bash script, and macOS
-`/bin/sh` is Bash, so the command below runs it under Bash.
-
 !!! note "macOS only"
     The release pipeline can build Linux archives, but the current release does
     not publish them. macOS is the only platform you can install today. Native
@@ -42,66 +38,22 @@ With no version selector, the installer resolves the current preview from
 pin an exact release instead, pass the tag:
 
 ```sh
-curl -fsSL https://braidkit.io/cli/install.sh | sh -s -- --version v0.2.0-alpha.9
+curl -fsSL https://braidkit.io/cli/install.sh | sh -s -- --version <tag>
 ```
 
-`-s` tells the shell to read the script from standard input, and `--` ends the
-shell's own option parsing so everything after it reaches the installer.
+### What it changes
 
-### What the installer does
-
-1. Detects your platform and downloads only that archive and `checksums.txt`.
-2. Verifies the archive against the published SHA-256 before unpacking it, then
-   checks that the `braid` and `braid-daemon` inside carry the same build
-   identity. It keeps backups and rolls back if anything fails.
-3. Installs both binaries into `$HOME/.local/bin`.
-4. Adds that directory to your `PATH` in `~/.zprofile` and `~/.bash_profile`,
-   plus a fish drop-in if fish is already configured.
-5. Sets up shell completion for your current shell.
-6. Registers the daemon as a per-user launchd service so it starts at login, and
-   starts it.
-7. Writes an installation receipt recording exactly what it placed and changed.
-8. Runs `braid` once so its welcome box confirms the install.
-9. Offers to sign you in, and then to initialize this machine.
-
-The receipt is what makes the rest of this page work: `braid upgrade` and
-`braid uninstall` both act only on what the receipt records.
-
-### Signing in and initializing
-
-When it finishes, the installer asks whether to continue:
-
-```text
-Sign in to Braid now? [y/N]
-```
-
-Answer `y` and it runs `braid auth login`, which prints a URL and a one-time
-code. Open <https://github.com/login/device>, enter the code, and complete
-GitHub authentication. It then asks:
-
-```text
-Initialize Braid for this machine? [y/N]
-```
-
-Answer `y` and it runs `braid init`, which sets up your machine identity and
-opens the agent capture screen, where you choose which coding agents Braid
-captures. Nothing is captured unless you select it there.
-
-Both prompts default to no, and both steps are available later:
-
-```sh
-braid auth login
-braid init
-```
-
-The prompts are skipped when there is no terminal to read from, or when `CI` is
-set to a non-empty value.
+- `braid` and `braid-daemon` in `$HOME/.local/bin`
+- `PATH` in `~/.zprofile` and `~/.bash_profile`, plus a fish drop-in if fish is
+  configured
+- Shell completion for your current shell
+- A per-user launchd service that starts the daemon at login
 
 !!! note "What installing does not do"
-    The installer never calls `sudo`. It does not enable capture or install
-    agent hooks on its own — you choose those in `braid init`. It does not
-    install `braid-intent`, which is a separate component the CLI does not
-    require.
+    The installer never calls `sudo`, and enables no capture on its own. Signing
+    in and choosing which agents Braid captures happen in
+    [Quickstart](quickstart.md). It does not install `braid-intent`, which is a
+    separate component the CLI does not require.
 
 ### Options
 
@@ -112,15 +64,12 @@ set to a non-empty value.
 | `--no-modify-path` | Leave shell profiles untouched and print the `PATH` line to add yourself. Skips completion setup. |
 | `--dry-run` | Resolve and print the plan without changing anything. |
 
-Pass them after `-s --`, as in the pinned-version example above. Setting `CI` to
-a non-empty value also skips completion setup and the welcome run.
+Pass them after `-s --`. Setting `CI` to a non-empty value skips completion
+setup, the welcome run, and the sign-in prompts.
 
-!!! warning "The binaries are not notarized"
-    They are ad-hoc signed, not signed with a Developer ID and not notarized.
-    Installing with `curl` as above is unaffected, because a `curl` download
-    carries no quarantine attribute. If you instead download a release archive
-    in a browser, macOS will refuse to run the extracted binaries until you
-    clear that attribute yourself:
+!!! warning "If you download a release archive in a browser"
+    The binaries are not notarized, so macOS refuses to run them after a browser
+    download. Clear the quarantine attribute before running them:
 
     ```sh
     xattr -d com.apple.quarantine braid braid-daemon
@@ -131,10 +80,8 @@ takes effect, or add `$HOME/.local/bin` to `PATH` in the current one.
 
 ## Verify the installation
 
-`braid doctor` is the check to run. It inspects the installation, your user
-state, the daemon, your agent harnesses, and the current repository, and it is
-read-only: it never creates a Braid home, key, receipt, configuration, or
-database.
+`braid doctor` checks the installation, your user state, the daemon, your agent
+harnesses, and the current repository. It changes nothing.
 
 ```sh
 braid doctor
@@ -151,10 +98,8 @@ Doctor summary (to see every check, run braid --verbose doctor)
 [-] repo  global capture does not require repository initialization
 ```
 
-A closing `Result` line tallies passes, warnings, failures, and skips. Each
-failure prints what is wrong and what to do about it. `[-]` marks a check that
-did not apply — outside an initialized repository, the `repo` scope is skipped
-rather than failed.
+Each failure prints what is wrong and what to do about it. `[-]` marks a check
+that did not apply, not a problem.
 
 | Flag | Effect |
 |---|---|
@@ -168,9 +113,8 @@ To see every individual check rather than the summary, run
 
 ### Build identity
 
-`braid --version` prints the build the binary was stamped with. `braid-daemon
---version` prints the same block for its half, so comparing the two is how you
-confirm the pair matches:
+Compare `braid --version` with `braid-daemon --version` to confirm the pair
+matches:
 
 ```sh
 braid --version
@@ -185,8 +129,7 @@ braid:
   Platform:  darwin/arm64
 ```
 
-`braid version` — the subcommand, not the flag — prints the client build and
-then probes the running daemon:
+`braid version` prints the client build and probes the running daemon:
 
 ```sh
 braid version
@@ -220,13 +163,9 @@ it, by adding a startup line that calls the installed binary:
 | zsh | `${ZDOTDIR:-$HOME}/.zshrc` |
 | fish | `${XDG_CONFIG_HOME:-$HOME/.config}/fish/conf.d/braid-completion.fish` |
 
-Completion starts working in the next interactive shell. Nothing is cached, so
-an upgraded binary serves updated completions with no further setup.
+Completion starts working in the next interactive shell.
 
-Bash completion additionally needs `bash-completion`, which Braid does not
-install. On macOS a login shell reads `~/.bash_profile` rather than `~/.bashrc`,
-so the installer creates a `~/.bash_profile` that sources `~/.bashrc` when you
-do not already have one.
+Bash completion also needs `bash-completion`, which Braid does not install.
 
 PowerShell is not set up for you. `braid completion powershell` writes a script
 to standard output; add it to your `$PROFILE` yourself:
@@ -235,24 +174,16 @@ to standard output; add it to your `$PROFILE` yourself:
 braid completion powershell | Out-String | Invoke-Expression
 ```
 
-`braid completion <shell>` only ever writes to standard output. It never writes
-a file and never edits a shell profile.
+## Manage your installation
 
-## Upgrading
+### Upgrade
 
 ```sh
 braid upgrade
 ```
 
-Upgrade reads the installation receipt to identify how Braid was installed, then
-hands the binary swap back to that installer — for a standalone install, the
-`install.sh` embedded in the binary itself. It stops its own background service
-for the swap and restores it afterwards, and it refuses to replace a running
-daemon it does not manage.
-
-It resolves the current release from the same
-[`latest.txt`](https://braidkit.io/cli/latest.txt) pointer the installer uses,
-and refuses an implicit downgrade.
+Upgrade installs the current release, stopping and restarting the background
+service around the swap. It will not downgrade you.
 
 | Flag | Effect |
 |---|---|
@@ -261,15 +192,12 @@ and refuses an implicit downgrade.
 | `--yes` | Skip the confirmation prompt. |
 | `--json` | Machine-readable output. |
 
-There is no `--channel` flag: there is one channel.
-
-Upgrade never acts on an installation it cannot identify. If you placed the
-binaries yourself rather than using the installer, there is no receipt, and
-upgrade will tell you so rather than guess.
+If you placed the binaries yourself rather than using the installer, upgrade
+reports that it cannot identify the installation and stops.
 
 Upgrading replaces binaries. Your Braid data is untouched.
 
-## Uninstalling
+### Uninstall
 
 ```sh
 braid uninstall
@@ -283,10 +211,8 @@ Uninstall removes what the receipt records, and nothing else:
   and any profile file it created
 - the receipt itself, last
 
-Each file is checked against the digest recorded at install time before it is
-touched. If a file has changed since, uninstall reports it for you to handle
-rather than deleting it. An installation it did not make is described, never
-removed.
+If a file has changed since install, uninstall reports it instead of deleting
+it. An installation it did not make is reported, never removed.
 
 | Flag | Effect |
 |---|---|
@@ -301,8 +227,7 @@ braid uninstall --dry-run
 
 **Braid data is never removed by uninstalling.** Your Braid home, the daemon's
 configuration and database, captured sessions, logs, Git configuration, and Git
-notes all survive, so reinstalling picks up where you left off. Your service
-startup preference survives too, so a reinstall restores it.
+notes all survive, so reinstalling picks up where you left off.
 
 !!! note "Agent hooks are removed separately"
     Uninstall does not touch the capture hooks Braid installed into your coding
@@ -314,7 +239,7 @@ startup preference survives too, so a reinstall restores it.
     braid hooks uninstall cursor
     ```
 
-## Removing Braid data
+### Remove Braid data
 
 !!! danger "This is not part of uninstalling"
     Removing Braid leaves your data intact on purpose. Only run the commands in
@@ -331,8 +256,7 @@ braid home
 rm -rf ~/.braid
 ```
 
-Deleting `key.pem` destroys your contributor identity. Events you already signed
-stay in the record signed by a key you no longer hold, and a new key means a new
+Deleting `key.pem` destroys your contributor identity. A new key means a new
 contributor fingerprint.
 
 Three things live outside the Braid home:
@@ -343,10 +267,10 @@ Three things live outside the Braid home:
 | `~/Library/Caches/braid/` | Coordination locks only, never state. Safe to delete. |
 | Keychain, service `braid-cli-auth` | Your signed-in credentials, one entry per host. |
 
-Your repositories hold no Braid directory. What Braid records into a repository
-it records as signed Git notes under `refs/notes/braid`, which travel with the
-repository rather than with your machine.
+Your repositories hold no Braid directory. Braid records into a repository as
+signed Git notes under `refs/notes/braid`.
 
 ## Next steps
 
-[Get help](../get-help.md) if something here does not work.
+[Quickstart](quickstart.md) takes one small change from install to a completed
+braid. [Get help](../get-help.md) if something here does not work.

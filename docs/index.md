@@ -13,8 +13,8 @@ Keep the understanding behind agent-written code. Start here, or pick up where y
 
 ## Start here
 
-- [Install Braid](getting-started/installation.md) — Set up Braid on your Mac.
-- [Quickstart](getting-started/quickstart.md) — Take one change from capture to completion.
+- [Installation](getting-started/installation.md) — Requirements, install options, upgrading, and removal.
+- [Quickstart](getting-started/quickstart.md) — Install Braid, then take one change from capture to completion.
 - [Capture agent work](guides/capture-agent-work.md) — Set up capture and organize your sessions.
 
 ## Keep moving
