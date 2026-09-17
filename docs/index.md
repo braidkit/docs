@@ -21,7 +21,7 @@ Keep the understanding behind agent-written code. Start here, or pick up where y
 - [Understand a change](guides/understand-a-change.md) — Read the decisions and evidence behind the code.
 - [Review a change](guides/review-a-change.md) — Check the work and complete the braid.
 - [CLI reference](reference/cli.md) — Find a command or flag.
-- [Installation](getting-started/installation.md) — Requirements, install options, upgrading, and removal.
+- [Installation](reference/installation.md) — Requirements, install options, upgrading, and removal.
 
 ## Explore the docs
 

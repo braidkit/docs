@@ -52,7 +52,7 @@ curl -fsSL https://braidkit.io/cli/install.sh | sh -s -- --version <tag>
 !!! note "What installing does not do"
     The installer never calls `sudo`, and enables no capture on its own. Signing
     in and choosing which agents Braid captures happen in
-    [Quickstart](quickstart.md). It does not install `braid-intent`, which is a
+    [Quickstart](../getting-started/quickstart.md). It does not install `braid-intent`, which is a
     separate component the CLI does not require.
 
 ### Options
@@ -272,5 +272,5 @@ signed Git notes under `refs/notes/braid`.
 
 ## Next steps
 
-[Quickstart](quickstart.md) takes one small change from install to a completed
+[Quickstart](../getting-started/quickstart.md) takes one small change from install to a completed
 braid. [Get help](../get-help.md) if something here does not work.

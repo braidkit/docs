@@ -110,7 +110,7 @@ nav:
       - How Braid works: how-braid-works.md
       - What Braid records: what-braid-records.md
   - Reference:
-      - Installation: getting-started/installation.md
+      - Installation: reference/installation.md
       - CLI reference: reference/cli.md
       - Account and devices: reference/account-and-devices.md
       - Braid on your machine: braid-on-your-machine.md
@@ -156,7 +156,7 @@ extra:
             description: Find a command or flag.
             icon: console
             draft: true
-          - path: getting-started/installation.md
+          - path: reference/installation.md
             label: Installation
             description: Requirements, install options, upgrading, and removal.
             icon: download-outline

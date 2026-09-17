@@ -11,7 +11,7 @@ supported agent and shows what to expect at each step.
 ## Install Braid
 
 Braid runs on macOS, and needs Git 2.25 or later. See
-[Installation](installation.md) for the full requirements and install options.
+[Installation](../reference/installation.md) for the full requirements and install options.
 
 ```sh
 curl -fsSL https://braidkit.io/cli/install.sh | sh
