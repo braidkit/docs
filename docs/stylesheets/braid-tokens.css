@@ -53,7 +53,7 @@
  * it. The ratio is part of the token, not a nice-to-have.
  *
  * THREE THINGS WORTH KNOWING BEFORE YOU CHANGE A VALUE
- *   1. The annotation tier is 10px in compact and 11px elsewhere. Nothing a
+ *   1. The annotation tier is 9px in compact and 11px elsewhere. Nothing a
  *      reader needs in order to act belongs in it, at either size.
  *   2. Radius carries meaning: a control takes a small one, a panel takes none,
  *      and the pill is for status dots.
@@ -139,7 +139,7 @@
    * The size floors are accessibility commitments, not preferences:
    *   required body text  >= 16px   controls >= 14px   essential metadata >= 12px
    * Nothing a reader needs in order to act may sit in the annotation tier,
-   * which is 11px here and 10px in compact. */
+   * which is 11px here and 9px in compact. Compact has its own floors, below. */
   --bk-size-2xs: 0.6875rem;   /* 11px — decorative annotation ONLY, never required */
   --bk-size-xs:  0.75rem;     /* 12px — label, uppercase, tracked. Metadata floor. */
   --bk-size-sm:  0.8125rem;   /* 13px — data, tabular */
@@ -205,21 +205,23 @@
  *
  *   <div data-bk-density="compact">  or on the console's <html>
  *
- * The annotation tier is 10px here, against 11px on reading surfaces, because
- * this is a scanned surface rather than a read one. At 10px the guard on the
- * tier is doing the real work: nothing a reader needs in order to act may sit
- * in it, on any surface, at either density.
+ * The console puts a decision, its workstreams and the evidence behind them
+ * on one screen, so its floors sit below the reading ones:
+ *   required body text >= 13px   controls >= 12px   essential metadata >= 10px
+ * They are still floors. Anything smaller is annotation, and at 9px the guard
+ * on that tier does the real work: nothing a reader needs in order to act may
+ * sit in it, on any surface, at either density.
  * ========================================================================== */
 [data-bk-density="compact"] {
-  --bk-size-2xs: 0.625rem;    /* 10px — decorative annotation ONLY, never required */
-  --bk-size-xs:  0.75rem;     /* 12px — metadata floor holds even here */
-  --bk-size-sm:  0.8125rem;   /* 13px */
-  --bk-size-md:  0.875rem;    /* 14px — control floor holds even here */
-  --bk-size-base:0.875rem;    /* 14px — body, compact */
-  --bk-size-lg:  1rem;        /* 16px */
-  --bk-size-xl:  1.125rem;    /* 18px */
-  --bk-size-2xl: 1.375rem;    /* 22px */
-  --bk-size-3xl: 1.75rem;     /* 28px */
+  --bk-size-2xs: 0.5625rem;   /*  9px — decorative annotation ONLY, never required */
+  --bk-size-xs:  0.625rem;    /* 10px — label. Compact metadata floor. */
+  --bk-size-sm:  0.6875rem;   /* 11px — data, tabular */
+  --bk-size-md:  0.75rem;     /* 12px — secondary prose. Compact control floor. */
+  --bk-size-base:0.8125rem;   /* 13px — body. Compact required-text floor. */
+  --bk-size-lg:  0.875rem;    /* 14px — lead */
+  --bk-size-xl:  1rem;        /* 16px — heading */
+  --bk-size-2xl: 1.125rem;    /* 18px — page title */
+  --bk-size-3xl: 1.375rem;    /* 22px — display */
 
   --bk-leading-body: 1.5;
   --bk-space-9: 48px;         /* the big steps collapse; the small ones do not */
