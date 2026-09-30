@@ -62,6 +62,10 @@
  * ========================================================================== */
 
 :root {
+  /* Tells the browser which theme these values are, so native scrollbars and
+   * form controls match, and so a consumer can pair values with light-dark(). */
+  color-scheme: light;
+
   /* -- brand ---------------------------------------------------------------
    * One interaction colour. Links, focus rings, primary actions, the current
    * item. It is never a status. */
@@ -86,11 +90,12 @@
   --bk-text-subtle: #736a7c;        /*  4.9:1 — labels only, never a paragraph */
 
   /* -- state ---------------------------------------------------------------
-   * Four meanings, deliberately far from the brand hue so an error can never
+   * Five meanings, deliberately far from the brand hue so an error can never
    * be the most on-brand thing on the screen. Colour always reinforces a text
    * label; it is never the only signal. */
   --bk-signed: #186c66;           /*  5.9:1 — the signature verified. NOT a claim about content. */
-  --bk-promoted: #2f7d5c;           /*  4.7:1 — the only green; folded and sealed */
+  --bk-promoted: #2f7d5c;           /*  4.7:1 — folded and sealed */
+  --bk-passed: #3a7a2a;             /*  5.0:1 — a recorded check passed. NOT a claim about the change. */
   --bk-attention: #9c5b25;          /*  5.1:1 — a person is needed, or evidence is absent */
   --bk-blocked: #a8323c;            /*  6.2:1 — technical failure or a contradicted claim */
   --bk-neutral: #736a7c;            /*  4.9:1 — recorded, inactive, contextual */
@@ -247,6 +252,7 @@
  * ========================================================================== */
 @media (prefers-color-scheme: dark) {
   :root:not([data-bk-theme="light"]) {
+    color-scheme: dark;
     --bk-brand: #dda9c8;     /* 9.5:1 */
     --bk-brand-strong: #ecc6dd;
     --bk-on-brand: #1a1018;     /* 9.4:1 on --bk-brand */
@@ -265,6 +271,7 @@
 
     --bk-signed: #5cbcb2;     /* 8.4:1 */
     --bk-promoted: #59b98d;     /* 7.9:1 */
+    --bk-passed: #74b964;     /* 8.0:1 */
     --bk-attention: #d1904f;     /* 7.0:1 */
     --bk-blocked: #e58a94;     /* 7.6:1 */
     --bk-neutral: #8d8399;
@@ -292,6 +299,7 @@
  * copy the values into that surface's stylesheet. */
 [data-bk-theme="dark"],
 [data-md-color-scheme="slate"] {
+  color-scheme: dark;
   --bk-brand: #dda9c8;     /* 9.5:1 */
   --bk-brand-strong: #ecc6dd;
   --bk-on-brand: #1a1018;     /* 9.4:1 on --bk-brand */
@@ -310,6 +318,7 @@
 
   --bk-signed: #5cbcb2;     /* 8.4:1 */
   --bk-promoted: #59b98d;     /* 7.9:1 */
+  --bk-passed: #74b964;     /* 8.0:1 */
   --bk-attention: #d1904f;     /* 7.0:1 */
   --bk-blocked: #e58a94;     /* 7.6:1 */
   --bk-neutral: #8d8399;
