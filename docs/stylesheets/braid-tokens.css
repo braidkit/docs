@@ -69,25 +69,34 @@
   /* -- brand ---------------------------------------------------------------
    * One interaction colour. Links, focus rings, primary actions, the current
    * item. It is never a status. */
-  --bk-brand: #5c2d4a;              /* 10.3:1 */
+  --bk-brand: #5c2d4a;              /* 10.2:1 */
   --bk-brand-strong: #46213a;       /* hover/active */
   --bk-on-brand: #ffffff;           /* 10.9:1 on --bk-brand */
   --bk-brand-wash: #efe7f3;         /* selected row, never text */
 
-  /* -- surfaces ------------------------------------------------------------ */
-  --bk-canvas: #faf8fc;             /* the page ground */
+  /* -- emphasis ------------------------------------------------------------
+   * A wash groups; an edge emphasises. The selected item, or a state, gets a
+   * light wash plus one solid line of this width in the brand or state
+   * colour, so the mark clears 3:1 while text on the wash keeps its contrast.
+   * Faint text on a wash steps up to --bk-text-muted. */
+  --bk-edge: 3px;
+
+  /* -- surfaces ------------------------------------------------------------
+   * Near-neutral, so only the brand and the state colours carry hue and the
+   * interface recedes behind the text. */
+  --bk-canvas: #f7f8fa;             /* the page ground */
   --bk-surface: #ffffff;            /* a raised panel */
-  --bk-sunken: #f2ecf6;             /* an inset well: code, table head */
+  --bk-sunken: #eff1f4;             /* an inset well: code, table head */
 
   /* -- lines ---------------------------------------------------------------
    * Hairlines separate things. A border is not a container. */
-  --bk-line: #e4dcec;
-  --bk-line-strong: #d2c8de;
+  --bk-line: #e1e4e9;
+  --bk-line-strong: #cdd2d9;
 
   /* -- text ---------------------------------------------------------------- */
-  --bk-text: #1f1a22;               /* 16.2:1 */
-  --bk-text-muted: #5f5566;         /*  6.7:1 — secondary prose */
-  --bk-text-subtle: #736a7c;        /*  4.9:1 — labels only, never a paragraph */
+  --bk-text: #1b1d21;               /* 15.9:1 */
+  --bk-text-muted: #555b65;         /*  6.4:1 — secondary prose */
+  --bk-text-subtle: #656b76;        /*  5.0:1, 4.7:1 on --bk-sunken — labels only, never a paragraph */
 
   /* -- state ---------------------------------------------------------------
    * Five meanings, deliberately far from the brand hue so an error can never
@@ -95,10 +104,10 @@
    * label; it is never the only signal. */
   --bk-signed: #186c66;           /*  5.9:1 — the signature verified. NOT a claim about content. */
   --bk-promoted: #2f7d5c;           /*  4.7:1 — folded and sealed */
-  --bk-passed: #3a7a2a;             /*  5.0:1 — a recorded check passed. NOT a claim about the change. */
-  --bk-attention: #9c5b25;          /*  5.1:1 — a person is needed, or evidence is absent */
+  --bk-passed: #3a7a2a;             /*  4.9:1 — a recorded check passed. NOT a claim about the change. */
+  --bk-attention: #9c5b25;          /*  5.0:1 — a person is needed, or evidence is absent */
   --bk-blocked: #a8323c;            /*  6.2:1 — technical failure or a contradicted claim */
-  --bk-neutral: #736a7c;            /*  4.9:1 — recorded, inactive, contextual */
+  --bk-neutral: #656b76;            /*  5.0:1 — recorded, inactive, contextual */
 
   /* Absent evidence is drawn as a hatch in --bk-attention, never a flat fill
    * and never red. Red means wrong; a gap means unknown. */
@@ -108,8 +117,8 @@
   /* -- code and shell ------------------------------------------------------
    * The dark shell is the one dark surface allowed inside the light theme. It
    * reads as a quotation from the machine. */
-  --bk-code-bg: #f2ecf6;
-  --bk-code-text: #4a2d55;          /* 10.1:1 on --bk-code-bg */
+  --bk-code-bg: #eff1f4;
+  --bk-code-text: #4a2d55;          /* 10.3:1 on --bk-code-bg */
   --bk-shell: #191320;              /* terminal ground */
   --bk-shell-text: #ddd4e6;         /* 12.7:1 on --bk-shell */
   --bk-shell-dim: #8d80a0;          /*  5.0:1 on --bk-shell */
@@ -123,9 +132,9 @@
 
   /* -- elevation -----------------------------------------------------------
    * Depth is an offset shadow or a hairline. Never a zero-offset glow. */
-  --bk-shadow-sm: 0 1px 2px rgb(31 26 34 / 6%);
-  --bk-shadow-md: 0 2px 4px rgb(31 26 34 / 5%), 0 8px 24px rgb(31 26 34 / 7%);
-  --bk-scrim: rgb(31 26 34 / 45%);
+  --bk-shadow-sm: 0 1px 2px rgb(27 29 33 / 6%);
+  --bk-shadow-md: 0 2px 4px rgb(27 29 33 / 5%), 0 8px 24px rgb(27 29 33 / 7%);
+  --bk-scrim: rgb(27 29 33 / 45%);
 
   /* -- type ----------------------------------------------------------------
    * Type is assigned by information role, not by author. Three origins:
@@ -240,11 +249,9 @@
  * Redesigned, not inverted. Surfaces get their own values, the brand hue is
  * lightened until it is legible as text, and every ratio is remeasured.
  *
- * These values come from the docs site's slate palette, which shipped first and
- * carried a measured ratio per token. They beat the ones originally drafted here
- * on every single value, so they replaced them rather than the other way round:
- *   brand 9.5 vs 9.0 · accent 8.4 vs 7.7 · text 15.6 vs 15.1
- *   muted 7.5 vs 6.6 · subtle 5.3 vs 4.7
+ * The brand and state values come from the docs site's slate palette, which
+ * shipped first and carried a measured ratio per token. The greys have since
+ * been cooled to near-neutral, as in light, and remeasured.
  *
  * Two selectors, deliberately. The media query is guarded so an explicit light
  * choice beats a dark OS, and the attribute selector lets a toggle win in the
@@ -253,31 +260,31 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-bk-theme="light"]) {
     color-scheme: dark;
-    --bk-brand: #dda9c8;     /* 9.5:1 */
+    --bk-brand: #dda9c8;     /* 9.4:1 */
     --bk-brand-strong: #ecc6dd;
     --bk-on-brand: #1a1018;     /* 9.4:1 on --bk-brand */
-    --bk-brand-wash: #2a1f2e;
+    --bk-brand-wash: #30243a;     /* 1.2:1 on --bk-surface */
 
-    --bk-canvas: #121016;
-    --bk-surface: #1a1722;
-    --bk-sunken: #221d2b;
+    --bk-canvas: #111316;
+    --bk-surface: #181a1f;
+    --bk-sunken: #1f2228;
 
-    --bk-line: #2e2837;
-    --bk-line-strong: #3f3849;
+    --bk-line: #2a2e35;
+    --bk-line-strong: #3b4049;
 
-    --bk-text: #ece7f0;     /* 15.6:1 */
-    --bk-text-muted: #a99fb3;     /* 7.5:1 */
-    --bk-text-subtle: #8d8399;     /* 5.3:1 */
+    --bk-text: #e8eaee;     /* 15.4:1 */
+    --bk-text-muted: #a4aab4;     /* 8.0:1 */
+    --bk-text-subtle: #89909b;     /* 5.8:1 */
 
-    --bk-signed: #5cbcb2;     /* 8.4:1 */
-    --bk-promoted: #59b98d;     /* 7.9:1 */
-    --bk-passed: #74b964;     /* 8.0:1 */
-    --bk-attention: #d1904f;     /* 7.0:1 */
-    --bk-blocked: #e58a94;     /* 7.6:1 */
-    --bk-neutral: #8d8399;
+    --bk-signed: #5cbcb2;     /* 8.2:1 */
+    --bk-promoted: #59b98d;     /* 7.8:1 */
+    --bk-passed: #74b964;     /* 7.9:1 */
+    --bk-attention: #d1904f;     /* 6.9:1 */
+    --bk-blocked: #e58a94;     /* 7.4:1 */
+    --bk-neutral: #89909b;
 
-    --bk-code-bg: #221e29;
-    --bk-code-text: #e4d5ec;     /* 11.7:1 on --bk-code-bg */
+    --bk-code-bg: #1f2228;
+    --bk-code-text: #e4d5ec;     /* 11.4:1 on --bk-code-bg */
     --bk-shell: #100c15;
 
     --bk-shadow-sm: 0 1px 2px rgb(0 0 0 / 30%);
@@ -300,31 +307,31 @@
 [data-bk-theme="dark"],
 [data-md-color-scheme="slate"] {
   color-scheme: dark;
-  --bk-brand: #dda9c8;     /* 9.5:1 */
+  --bk-brand: #dda9c8;     /* 9.4:1 */
   --bk-brand-strong: #ecc6dd;
   --bk-on-brand: #1a1018;     /* 9.4:1 on --bk-brand */
-  --bk-brand-wash: #2a1f2e;
+  --bk-brand-wash: #30243a;     /* 1.2:1 on --bk-surface */
 
-  --bk-canvas: #121016;
-  --bk-surface: #1a1722;
-  --bk-sunken: #221d2b;
+  --bk-canvas: #111316;
+  --bk-surface: #181a1f;
+  --bk-sunken: #1f2228;
 
-  --bk-line: #2e2837;
-  --bk-line-strong: #3f3849;
+  --bk-line: #2a2e35;
+  --bk-line-strong: #3b4049;
 
-  --bk-text: #ece7f0;     /* 15.6:1 */
-  --bk-text-muted: #a99fb3;     /* 7.5:1 */
-  --bk-text-subtle: #8d8399;     /* 5.3:1 */
+  --bk-text: #e8eaee;     /* 15.4:1 */
+  --bk-text-muted: #a4aab4;     /* 8.0:1 */
+  --bk-text-subtle: #89909b;     /* 5.8:1 */
 
-  --bk-signed: #5cbcb2;     /* 8.4:1 */
-  --bk-promoted: #59b98d;     /* 7.9:1 */
-  --bk-passed: #74b964;     /* 8.0:1 */
-  --bk-attention: #d1904f;     /* 7.0:1 */
-  --bk-blocked: #e58a94;     /* 7.6:1 */
-  --bk-neutral: #8d8399;
+  --bk-signed: #5cbcb2;     /* 8.2:1 */
+  --bk-promoted: #59b98d;     /* 7.8:1 */
+  --bk-passed: #74b964;     /* 7.9:1 */
+  --bk-attention: #d1904f;     /* 6.9:1 */
+  --bk-blocked: #e58a94;     /* 7.4:1 */
+  --bk-neutral: #89909b;
 
-  --bk-code-bg: #221e29;
-  --bk-code-text: #e4d5ec;     /* 11.7:1 on --bk-code-bg */
+  --bk-code-bg: #1f2228;
+  --bk-code-text: #e4d5ec;     /* 11.4:1 on --bk-code-bg */
   --bk-shell: #100c15;
 
   --bk-shadow-sm: 0 1px 2px rgb(0 0 0 / 30%);
