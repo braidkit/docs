@@ -1,5 +1,5 @@
 {
-  "upstream": "5a365616bf3b84395ef8d9b5a9cb34b1aa20cf28",
+  "upstream": "52bbcb0c35ac9e0fd057a7a0a300fd7c368d60df",
   "source": "git@github.com:braidkit/brand.git",
   "files": {
     "docs/assets/brand/icons/apple-touch-icon.png": "5a8aa323caf071889643c6cfb995f18b2d869bb466b8147f911db98dba491a2b",
