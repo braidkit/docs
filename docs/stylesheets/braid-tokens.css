@@ -221,14 +221,14 @@
  *
  * The console puts a decision, its workstreams and the evidence behind them
  * on one screen, so its floors sit below the reading ones:
- *   required body text >= 13px   controls >= 12px   essential metadata >= 10px
+ *   required body text >= 13px   controls >= 12px   essential metadata >= 11px
  * They are still floors. Anything smaller is annotation, and at 9px the guard
  * on that tier does the real work: nothing a reader needs in order to act may
  * sit in it, on any surface, at either density.
  * ========================================================================== */
 [data-bk-density="compact"] {
   --bk-size-2xs: 0.5625rem;   /*  9px — decorative annotation ONLY, never required */
-  --bk-size-xs:  0.625rem;    /* 10px — label. Compact metadata floor. */
+  --bk-size-xs:  0.6875rem;   /* 11px — label. Compact metadata floor; sm's size, set apart by case. */
   --bk-size-sm:  0.6875rem;   /* 11px — data, tabular */
   --bk-size-md:  0.75rem;     /* 12px — secondary prose. Compact control floor. */
   --bk-size-base:0.8125rem;   /* 13px — body. Compact required-text floor. */

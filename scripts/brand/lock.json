@@ -1,5 +1,5 @@
 {
-  "upstream": "52bbcb0c35ac9e0fd057a7a0a300fd7c368d60df",
+  "upstream": "f736f44dc5dd616189dc318af06adce42a58b178",
   "source": "git@github.com:braidkit/brand.git",
   "files": {
     "docs/assets/brand/icons/apple-touch-icon.png": "5a8aa323caf071889643c6cfb995f18b2d869bb466b8147f911db98dba491a2b",
@@ -11,7 +11,7 @@
     "docs/assets/fonts/OFL.txt": "5843a692aa2ebab7321d8551718422280a7141dfc5a254bd6ff8fcc40dc75783",
     "docs/assets/fonts/archivo-variable.woff2": "7150c0ec5ad356453013d11affec1fbab95de0dd2dcecb043b4f1cb7f87c4ba4",
     "docs/assets/fonts/jetbrains-mono.woff2": "d3dcdccdaba31643defe2317942155d4af3ee03951d058adbe8bc02b13e61b0a",
-    "docs/stylesheets/braid-tokens.css": "7fe0e9b769c215a6e15bb3433f1d64cb6ff16a78a4744b0768298ec14784b8d6",
+    "docs/stylesheets/braid-tokens.css": "042ed4358cd74fa19e19a40bcc986b1cf87c6eaa556c79b7027f7fb9bcfc4c1b",
     "scripts/brand/check.py": "e9e4ae3477084aad08d4ef7ba9042602cc06770f17492e6f2a2f0d46081c7cc8"
   }
 }
