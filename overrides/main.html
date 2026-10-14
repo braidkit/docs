@@ -35,49 +35,37 @@
 {% endblock %}
 
 {#
-  Breadcrumbs. The open-source Material theme has no breadcrumb feature, so we
-  render them from the page's nav ancestors, which the home page does not have.
+  Only the outline. The site is one page, so Material's navigation rail, and the
+  drawer it becomes on small screens, have nothing to list.
 #}
+{% block site_nav %}
+  {% if page.meta and page.meta.hide %}
+    {% set hidden = "hidden" if "toc" in page.meta.hide %}
+  {% endif %}
+  <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" {{ hidden }}>
+    <div class="md-sidebar__scrollwrap">
+      <div class="md-sidebar__inner">
+        {% include "partials/toc.html" %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
 {% block content %}
   {#
-    The page bar carries the breadcrumb on the left and the Markdown actions on
-    the right. Both are page-level chrome and share a row, so the actions cost
-    no additional vertical space.
+    The page bar carries the Markdown actions above the article.
 
     `page_markdown.py` publishes every page's source at its own URL with a .md
     extension, which is what both actions point at.
   #}
   {#
     `page_markdown.py` writes both shapes of Markdown URL for every page. Link
-    the bare one, `why-braid.md`, because that is what Linear and Mintlify
+    the bare one, `index.md`, because that is what Linear and Mintlify
     serve and so the shape a reader is most likely to recognise.
   #}
   {% set md_path = (page.url[:-1] if page.url[-1:] == '/' else page.url) ~ '.md' %}
   {% if page %}
     <div class="braid-pagebar">
-      {% if page.ancestors %}
-    <nav class="braid-crumbs" aria-label="Breadcrumb">
-      <ol>
-        {# The homepage's own url is the empty string, which is falsy — test for
-           the page, not its url, or Home silently drops off every crumb. The
-           `url` filter turns "" into a correct relative link. #}
-        {% if nav.homepage %}
-          <li><a href="{{ nav.homepage.url | url }}">Home</a></li>
-          <li class="braid-crumbs__sep" aria-hidden="true">/</li>
-        {% endif %}
-        {% for ancestor in page.ancestors | reverse %}
-          {% if not loop.first %}
-            <li class="braid-crumbs__sep" aria-hidden="true">/</li>
-          {% endif %}
-          {% if ancestor.url %}
-            <li><a href="{{ ancestor.url | url }}">{{ ancestor.title }}</a></li>
-          {% else %}
-            <li><span>{{ ancestor.title }}</span></li>
-          {% endif %}
-        {% endfor %}
-      </ol>
-    </nav>
-      {% endif %}
       {#
         Split button, after Linear's: the face copies straight away, the chevron
         opens the menu for both actions. Hidden below the desktop breakpoint,

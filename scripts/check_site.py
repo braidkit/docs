@@ -107,9 +107,9 @@ def check_site(site_dir):
             f"{shell_page.src_uri}"
         )
         for contract in (
-            'class="md-sidebar md-sidebar--primary"',
             'class="md-sidebar md-sidebar--secondary"',
-            'class="braid-nav__footer"',
+            'class="braid-header__help"',
+            'class="md-header__option braid-theme"',
             "data-braid-pageactions",
             "data-braid-copy-markdown",
             "Get help",
@@ -120,11 +120,11 @@ def check_site(site_dir):
     shell_css = SHELL_CSS.read_text(encoding="utf-8")
     for contract in (
         "@media screen and (min-width: 64em)",
-        "@media screen and (min-width: 64em) and (max-width: 76.234375em)",
         "@media screen and (max-width: 63.984375em)",
-        ".md-sidebar--primary .md-sidebar__scrollwrap",
-        "height: 100% !important;",
-        '[data-md-toggle="drawer"]:checked ~ .md-container .md-sidebar--primary',
+        ".md-sidebar--secondary:not([hidden]) ~ .md-content > .md-content__inner.md-typeset",
+        ".braid-theme__option:has(:checked)",
+        "margin-block-start: 160px;",
+        "margin-block-start: -160px;",
     ):
         require_text(shell_css, contract, "docs/stylesheets/shell.css", errors)
 

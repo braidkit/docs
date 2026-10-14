@@ -1,20 +1,11 @@
 /* Braid Docs — application shell
  *
- * Header, navigation rail, page outline, search palette, footer, and the
- * three-column grid that holds them.
+ * Header, page actions, outline, footer, and the two-column grid that holds the
+ * article and its outline.
  *
- * Structure of this file, and the rule that keeps the shell working:
- *
- *   1. Chrome that applies at every width (header, search palette, focus).
- *   2. The full header from 720px up, independent of the content columns.
- *   3. The three-column grid, entirely inside the desktop media query.
- *   4. Below the desktop breakpoint, Material's own drawer runs. Its trigger
- *      is shown only on phone-sized screens; we otherwise adjust colours only.
- *
- * Point 4 is deliberate. Material's mobile drawer is a stack of absolutely
- * positioned nav levels that slide horizontally, with a per-level title that
- * doubles as the back button. Custom layout rules that leak below the
- * breakpoint collapse that stack. Keep structural CSS inside the media query.
+ * The site is one page, so there is no navigation rail, drawer or search. Below
+ * the desktop breakpoint the outline is hidden and the article takes the full
+ * width; Material's own layout runs there untouched.
  */
 
 /* ===================================================================== header
@@ -29,9 +20,6 @@
   position: sticky;
   top: 0;
 
-  /* Must stay below Material's drawer (z-index 5) — at a higher value the
-     header covers the open drawer's back button and the drawer cannot be
-     navigated up. */
   z-index: var(--z-header);
 }
 
@@ -83,262 +71,107 @@
   margin-left: auto;
 }
 
-/* Material styles this element as `.md-header__button:not([hidden])`, which is
-   specificity (0,2,0). A single-class rule here is (0,1,0) and loses silently,
-   so the selector below deliberately matches Material's weight rather than
-   reading like an accident. Get this wrong and the trigger is visible at every
-   width with no error anywhere. */
-.md-header__button.braid-header__menu {
-  color: var(--text-muted);
-  display: none;
-  margin: 0 0 0 calc(var(--space-1) * -1);
-  padding: var(--space-2);
-}
+/* -- help ------------------------------------------------------------------ */
 
-/* -- search trigger -------------------------------------------------------- */
-
-.braid-search-trigger {
+.braid-header__help {
   align-items: center;
-  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  color: var(--text-subtle);
-  cursor: pointer;
+  color: var(--text-muted);
   display: inline-flex;
-  font-size: var(--text-md);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
   gap: var(--space-2);
-  height: 34px;
-  min-width: 200px;
-  padding: 0 var(--space-2) 0 var(--space-3);
+  height: 30px;
+  padding: 0 var(--space-3);
+  text-decoration: none;
   transition: border-color var(--duration) var(--ease),
               color var(--duration) var(--ease);
 }
 
-.braid-search-trigger:hover {
+.braid-header__help:hover {
   border-color: var(--border-strong);
   color: var(--text);
 }
 
-.braid-search-trigger svg {
+.braid-header__help-icon {
+  display: inline-flex;
+  flex: 0 0 16px;
+  height: 16px;
+}
+
+.braid-header__help-icon svg {
   fill: currentcolor;
-  flex: 0 0 16px;
-  height: 16px;
-  width: 16px;
-}
-
-.braid-search-trigger__label {
-  flex: 1;
-  text-align: start;
-}
-
-.braid-search-trigger kbd {
-  background: var(--canvas);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  box-shadow: none;
-  color: var(--text-subtle);
-  font-family: var(--font-sans);
-  font-size: var(--text-2xs);
-  line-height: 1;
-  padding: 3px 5px;
-}
-
-/* Circular icon buttons (palette toggle). */
-.braid-header__tools .md-header__button {
-  align-items: center;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-pill);
-  color: var(--text-muted);
-  display: flex;
-  height: 34px;
-  justify-content: center;
-  margin: 0;
-  padding: var(--space-2);
-  width: 34px;
-}
-
-/* Material sizes every `.md-icon svg` at 1.2rem, which is 24px, and this
-   button's content box is 16px once its padding and border are taken out. The
-   icon was therefore left to whatever flex-shrink allowed at layout time,
-   rendering 16x24 on load and 24x24 once the palette had been cycled. Pin it to
-   the 16px the search trigger beside it already uses. */
-.braid-header__tools .md-header__button svg {
-  flex: 0 0 16px;
-  height: 16px;
-  width: 16px;
-}
-
-.braid-header__tools .md-header__button:hover {
-  border-color: var(--border-strong);
-  color: var(--text);
-}
-
-.braid-header__tools .md-header__button[hidden] {
-  display: none;
-}
-
-/* ============================================================ search palette
- * Presented as a centred command palette at every width.
- */
-
-/* Hidden with visibility rather than `display: none`: an element inside a
-   `display: none` subtree cannot take focus, so the input would stay unfocused
-   on open and the palette would need a second click to type into. */
-.braid-header .md-search {
-  background: var(--scrim);
-  height: 100dvh;
-  inset: 0;
-  opacity: 0;
-  padding: var(--space-8) var(--space-4) var(--space-4);
-  pointer-events: none;
-  position: fixed;
-  transition: opacity var(--duration) var(--ease),
-              visibility 0s linear var(--duration);
-  visibility: hidden;
-  width: auto;
-  z-index: var(--z-search);
-}
-
-[data-md-toggle="search"]:checked ~ .braid-header .md-search {
-  opacity: 1;
-  pointer-events: auto;
-  transition: opacity var(--duration) var(--ease), visibility 0s;
-  visibility: visible;
-}
-
-.braid-header .md-search__overlay {
-  background: transparent;
-}
-
-.braid-header .md-search__inner {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-overlay);
-  display: flex;
-  flex-direction: column;
-  float: none;
-  margin: 0 auto;
-  max-height: min(600px, calc(100dvh - var(--space-8) * 2));
-  overflow: hidden;
-  position: relative;
-  top: 0;
-  transform: none;
-  width: min(640px, 100%);
-}
-
-.braid-header .md-search__form {
-  background: transparent;
-  border-bottom: 1px solid var(--border);
-  border-radius: 0;
-  flex: 0 0 auto;
-  height: 48px;
-}
-
-.braid-header .md-search__input {
-  background: transparent;
-  color: var(--text);
-  font-size: var(--text-base);
-  height: 48px;
-}
-
-.braid-header .md-search__input::placeholder {
-  color: var(--text-subtle);
-}
-
-.braid-header .md-search__output {
-  background: transparent;
-  border-radius: 0;
-  position: relative;
-  top: auto;
+  height: 100%;
   width: 100%;
 }
 
-.braid-header .md-search__scrollwrap {
-  max-height: none;
-  overflow-y: auto;
+/* -- theme switch -----------------------------------------------------------
+ * The Review UI's switch, value for value (web/developer-ui/styles/shell.css in
+ * braidkit/braid). The radio inside each option is the control; it is hidden
+ * visually but stays focusable, so the option shows its focus and its state. */
+
+.braid-theme {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  flex: none;
+  gap: 2px;
+  padding: 2px;
 }
 
-.braid-header .md-search-result__meta {
-  background: transparent;
+.braid-theme__option {
+  border-radius: 6px;
   color: var(--text-subtle);
-  font-size: var(--text-xs);
-  padding: var(--space-3) var(--space-4) var(--space-1);
+  cursor: pointer;
+  display: grid;
+  height: 24px;
+  place-items: center;
+  position: relative;
+  transition: background-color var(--duration) var(--ease),
+              color var(--duration) var(--ease);
+  width: 24px;
 }
 
-.braid-header .md-search-result__list {
-  padding: 0 var(--space-2) var(--space-2);
-}
-
-.braid-header .md-search-result__item {
-  border: 0;
-  box-shadow: none;
-}
-
-.braid-header .md-search-result__link {
-  border-radius: var(--radius-sm);
+.braid-theme__option:hover {
+  background: var(--surface-sunken);
   color: var(--text);
 }
 
-.braid-header .md-search-result__link:is(:hover, :focus) {
-  background: color-mix(in srgb, var(--brand) var(--tint-weak), transparent);
+.braid-theme__option:has(:checked) {
+  background: var(--bk-brand-wash);
+  color: var(--brand);
 }
 
-.braid-header .md-search-result__article {
-  padding: var(--space-2) var(--space-3) var(--space-2) var(--space-7);
+.braid-theme__option:has(:focus-visible) {
+  outline: 2px solid var(--brand);
+  outline-offset: 1px;
 }
 
-.braid-header .md-search-result__article :is(h1, h2) {
-  color: var(--text);
-  font-family: var(--font-sans);
-  font-size: var(--text-md);
-  font-weight: 600;
-  line-height: var(--leading-tight);
+.braid-theme__option svg {
+  height: 16px;
+  width: 16px;
+}
+
+.braid-theme__input {
+  appearance: none;
+  inset: 0;
   margin: 0;
-  padding: 0;
+  opacity: 0;
+  position: absolute;
 }
 
-.braid-header .md-search-result__article p {
-  color: var(--text-muted);
-  font-size: var(--text-xs);
-  line-height: var(--leading-snug);
-  margin: var(--space-1) 0 0;
-  overflow: hidden;
-  /* stylelint-disable-next-line property-no-vendor-prefix -- no standard equivalent */
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+/* The option above draws the focus ring, so the radio's own is not shown. */
+.braid-theme__input:focus-visible {
+  outline: none;
 }
 
-.braid-header .md-search-result__article :is(p:nth-of-type(n + 2), pre) {
-  display: none;
-}
-
-.braid-header .md-search-result__icon {
-  color: var(--text-subtle);
-  height: 18px;
-  left: var(--space-3);
-  width: 18px;
-}
-
-.braid-header .md-search-result mark {
-  background: color-mix(in srgb, var(--brand) var(--tint) , transparent);
-  border-radius: 2px;
-  color: inherit;
-}
-
-.braid-header .md-search-result__more summary {
-  background: transparent;
-  color: var(--text-subtle);
-  font-size: var(--text-xs);
-  padding: var(--space-1) var(--space-3) var(--space-1) var(--space-7);
-}
-
-/* ================================================================ breadcrumbs
+/* =============================================================== page actions
  */
 
-/* Breadcrumb on the left, Markdown actions on the right, sharing one row so
-   the actions cost no vertical space of their own. */
+/* The Markdown actions sit above the article, against its right edge. */
 .md-typeset .braid-pagebar {
   align-items: center;
   display: flex;
@@ -349,14 +182,8 @@
   min-height: 26px;
 }
 
-.md-typeset .braid-crumbs {
-  margin: 0;
-}
-
 .md-typeset .braid-pageactions {
   display: flex;
-  /* Top-level pages have no ancestors and so no breadcrumb. Keep the actions
-     against the right edge rather than letting them slide left. */
   margin-inline-start: auto;
   position: relative;
 }
@@ -419,7 +246,7 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg, 0 12px 32px rgb(0 0 0 / 32%));
+  box-shadow: var(--bk-shadow-md);
   display: flex;
   flex-direction: column;
   inset-block-start: calc(100% + var(--space-2));
@@ -497,127 +324,6 @@
   .md-typeset .braid-pageactions {
     display: none;
   }
-}
-
-.md-typeset .braid-crumbs ol {
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  /* Body leading is a computed length inherited from the 16px content size, so
-     it gives this 12.5px row a 26px line box. Set leading here or the crumb
-     occupies twice the height its text needs. */
-  line-height: var(--leading-tight);
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-/* Material indents list items with `[dir=ltr] .md-typeset ol li`, which is
-   more specific than a two-class selector and so beat `.braid-crumbs li`. That
-   left every crumb carrying a 20px left margin on top of the flex gap. Match
-   its specificity and win on order: extra_css loads after the theme. */
-.md-typeset .braid-crumbs ol li {
-  margin: 0;
-}
-
-/* A breadcrumb names where you are rather than arguing anything, so it takes
-   the captured voice along with the rest of the page chrome. */
-.md-typeset .braid-crumbs :is(a, span) {
-  color: var(--text-subtle);
-  font-family: var(--font-mono);
-  font-size: var(--text-2xs);
-  font-weight: 400;
-  letter-spacing: var(--tracking-caps);
-  text-transform: uppercase;
-}
-
-.md-typeset .braid-crumbs a {
-  text-decoration: none;
-  transition: color var(--duration) var(--ease);
-}
-
-.md-typeset .braid-crumbs a:hover {
-  color: var(--brand);
-}
-
-/* ============================================================= navigation rail
- */
-
-.braid-nav {
-  font-size: var(--text-sm);
-}
-
-/* Only ever seen in the drawer, where it is the same brand lockup as the site
-   header and so carries the same colour and size. */
-.braid-nav__wordmark {
-  color: var(--brand);
-  font-family: var(--font-mono);
-  font-size: var(--text-lg);
-  font-weight: 400;
-  letter-spacing: var(--tracking-caps);
-}
-
-.braid-nav > .braid-nav__list > .md-nav__item--nested > .md-nav__link {
-  color: var(--text-subtle);
-  font-family: var(--font-mono);
-  font-size: var(--text-2xs);
-  font-weight: 400;
-  letter-spacing: var(--tracking-caps);
-  margin: var(--space-1) 0;
-  text-transform: uppercase;
-}
-
-.braid-nav > .braid-nav__list > .md-nav__item--nested:first-child > .md-nav__link {
-  margin-top: 0;
-}
-
-.braid-nav .md-nav__link {
-  border-radius: var(--radius-sm);
-  color: var(--text-muted);
-  margin-top: 0;
-  min-height: 30px;
-  padding: var(--space-1) var(--space-2);
-  transition: color var(--duration) var(--ease),
-              background var(--duration) var(--ease);
-}
-
-.braid-nav .md-nav__link:hover {
-  color: var(--text);
-}
-
-.braid-nav .md-nav__item .md-nav__link--active {
-  background: color-mix(in srgb, var(--brand) var(--tint) , transparent);
-  color: var(--brand);
-  font-weight: 600;
-}
-
-.braid-nav__support {
-  align-items: center;
-  border-radius: var(--radius-sm);
-  color: var(--text-muted);
-  display: flex;
-  gap: var(--space-3);
-  min-height: 30px;
-  padding: var(--space-1) var(--space-2);
-  text-decoration: none;
-  transition: color var(--duration) var(--ease);
-}
-
-.braid-nav__support:hover {
-  color: var(--text);
-}
-
-.braid-nav__support-icon {
-  display: inline-flex;
-  flex: 0 0 18px;
-  height: 18px;
-}
-
-.braid-nav__support-icon svg {
-  fill: currentcolor;
-  height: 100%;
-  width: 100%;
 }
 
 /* ============================================================== page outline
@@ -776,8 +482,7 @@
   outline-offset: 2px;
 }
 
-/* Honour the OS setting without disabling transitions Material relies on for
-   state (the drawer would jump rather than slide, but nothing breaks). */
+/* Honour the OS setting. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -788,95 +493,43 @@
   }
 }
 
-/* =================================================== three-column shell (desktop)
- * Everything structural is confined to this block and the two that follow it.
- * Below them, Material's own responsive layout and drawer navigation run
- * untouched.
- *
- * Material puts the navigation into a drawer below 76.25em, which is 1220px: a
- * hamburger on screens with room for the rail several times over. Mintlify
- * shows its rail from 1024px and Linear from 768px. This block therefore starts
- * at 64em, and the block after next undoes the drawer over the range Material
- * still considers narrow.
+/* ===================================================== two-column shell (desktop)
+ * The article at its reading measure, and the outline beside it. With no rail
+ * on the left, the outline has room from 1024px, which is where Mintlify shows
+ * its rail; Material would wait for 1220px.
  */
 
 @media screen and (min-width: 64em) {
 
   .md-main__inner.md-grid {
-    column-gap: var(--space-6);
-    /* Material opens the grid 30px below the header. The rails and the content
-       column set their own top spacing, so this only pushed all three down
-       together. */
-    margin-block-start: 0;
+    column-gap: var(--space-7);
     display: grid;
     /* The outline track is `auto`: it sizes to the outline when Material
-       renders one, and collapses to zero on pages with `hide: [toc]`. No
-       content-sniffing rule is needed to switch between two and three
-       columns. */
-    grid-template-columns: var(--nav-width) minmax(0, 1fr) auto;
+       renders one, and collapses to zero on a page with `hide: [toc]`. */
+    grid-template-columns: minmax(0, 1fr) auto;
     margin-inline: auto;
     max-width: var(--shell-max);
-    padding: 0;
-  }
-
-  .md-sidebar {
-    grid-row: 1;
-    height: calc(100dvh - var(--header-height));
-    padding: var(--space-5) 0;
-    position: sticky;
-    top: var(--header-height);
-    width: auto;
-  }
-
-  .md-sidebar--primary {
-    border-inline-end: 1px solid var(--border);
-    grid-column: 1;
-    height: calc(100dvh - var(--header-height));
-    left: max(0px, calc((100vw - var(--shell-max)) / 2));
-    padding-inline: var(--space-5) var(--space-3);
-    position: fixed;
-    top: var(--header-height);
-    width: var(--nav-width);
-  }
-
-  /* Material scrolls the whole primary rail by default. That can carry the
-     support action below the fold. Make the rail a flex container instead, so
-     only the document list scrolls and the support action always keeps its
-     reserved space. The secondary rail retains Material's normal scrolling. */
-  .md-sidebar--primary .md-sidebar__scrollwrap {
-    display: flex;
-    /* Material writes a shorter inline height as the page footer enters the
-       viewport. The desktop rail is fixed, so its contents should continue to
-       use the rail's full height instead of following that page-end offset. */
-    height: 100% !important;
-    margin: 0;
-    overflow: hidden;
-  }
-
-  .md-sidebar--primary .md-sidebar__inner {
-    display: flex;
-    flex: 1;
-    min-height: 0;
+    padding: 0 var(--space-5);
   }
 
   .md-content {
-    grid-column: 2;
+    grid-column: 1;
+    grid-row: 1;
     margin: 0;
     max-width: none;
     min-width: 0;
   }
 
-  /* Material pins this block to the rail with
-     `[dir=ltr] .md-sidebar--primary:not([hidden]) ~ .md-content > .md-content__inner`,
-     a (0,5,0) selector that beat a bare `.md-content__inner` and left the
-     column's spare width piled up on the right. Matching its shape gets to
-     (0,4,0); adding the element's other class ties at (0,5,0), and extra_css
-     loads after the theme so the tie falls our way. */
-  .md-sidebar--primary:not([hidden]) ~ .md-content > .md-content__inner.md-typeset {
+  /* Material sets this block's margins with
+     `[dir=ltr] .md-sidebar--secondary:not([hidden]) ~ .md-content > .md-content__inner`,
+     which is (0,5,0). Matching its shape and adding the element's other class
+     ties it, and extra_css loads after the theme, so the tie falls our way. */
+  .md-sidebar--secondary:not([hidden]) ~ .md-content > .md-content__inner.md-typeset,
+  .md-content > .md-content__inner.md-typeset {
     margin-inline: auto;
     max-width: var(--measure);
-    /* Matches the rails' own top padding so the breadcrumb, the outline
-       heading, and the navigation all begin on the same line. */
+    /* Matches the outline's own top padding, so the page actions and the
+       outline heading begin on the same line. */
     padding: var(--space-5) 0 var(--space-8);
   }
 
@@ -884,53 +537,20 @@
     display: none;
   }
 
-  /* Material's nav title is the drawer header and per-level back button. Both
-     are mobile concerns; on desktop the site header already names the site. */
-  .braid-nav > .md-nav__title {
-    display: none;
-  }
-
-  /* The rail's support link sits at the bottom of the rail, not the bottom of
-     the page. */
-  .braid-nav {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    min-height: 0;
-  }
-
-  .braid-nav__list {
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-    scrollbar-width: thin;
-  }
-
-  .braid-nav__footer {
-    border-top: 1px solid var(--border);
-    flex-shrink: 0;
-    margin-top: var(--space-5);
-    padding-top: var(--space-3);
-  }
-}
-
-/* ================================================== the outline (1220px and up)
- * The third rail asks for another 250px on top of the rail and the measure, so
- * it waits for the width Material used for the whole shell. Mintlify makes the
- * same call: rail and prose first, outline only once there is room.
- */
-
-@media screen and (min-width: 76.25em) {
   .md-sidebar--secondary {
     display: block;
-    grid-column: 3;
-    padding-inline-end: var(--space-5);
+    grid-column: 2;
+    grid-row: 1;
+    height: calc(100dvh - var(--header-height));
+    padding: var(--space-5) 0;
+    position: sticky;
+    top: var(--header-height);
     width: var(--toc-width);
   }
 
   /* The class rule above is more specific than the browser's [hidden]
-     default. Restate the semantic state so pages that opt out of a table of
-     contents do not retain an empty third rail. */
+     default. Restate the semantic state so a page that opts out of an outline
+     does not keep an empty column. */
   .md-sidebar--secondary[hidden] {
     display: none;
   }
@@ -938,10 +558,10 @@
   /* Which entry is current is Material's decision, and it draws the line a
      heading must cross at
      `header height + 0.8 x (grid.offsetTop - main.offsetTop)`.
-     Braid's top spacing sits on the content block and on the rails rather than
-     on the grid, so that second term is zero and the line lands at 56px, which
-     is exactly the bottom edge of the sticky header: an entry lit up only once
-     its heading had already gone behind it.
+     Braid's top spacing sits on the content block and on the outline rather
+     than on the grid, so that second term is zero and the line lands at 56px,
+     which is exactly the bottom edge of the sticky header: an entry lit up only
+     once its heading had already gone behind it.
 
      That gap is the only term available, so open it on the grid and close it
      again on main. Both boxes move, the content between them does not, and the
@@ -957,212 +577,38 @@
   }
 }
 
-/* Material reveals the outline from 60em, which put it on screen beside the
-   hamburger and with no rail. It belongs to the three-column shell, so it is
-   hidden everywhere below it. The selector matches Material's own
-   `.md-sidebar--secondary:not([hidden])`, which is (0,2,0); a bare class loses
-   and the outline wraps onto a second grid row under the rail. */
-@media screen and (max-width: 76.234375em) {
-  .md-sidebar--secondary:not([hidden]) {
-    display: none;
-  }
-}
-
-/* ==================================================== rail, no outline (1024px)
- * Material's drawer rules run until 76.234375em, so over the range where the
- * shell above now applies but Material still expects a drawer, they are undone
- * here. Nothing in this block is new design: it is the rail the block above
- * describes, minus what the drawer did to it.
- */
-
-@media screen and (min-width: 64em) and (max-width: 76.234375em) {
-  /* Material parks the rail off-canvas at `[dir=ltr] .md-sidebar--primary`,
-     which is (0,2,0) and beats the single-class rule that positions it above.
-     Match that shape to win the `left` back. */
-  [dir="ltr"] .md-sidebar--primary {
-    left: max(0px, calc((100vw - var(--shell-max)) / 2));
-  }
-
-  .md-sidebar--primary {
-    transform: none;
-    transition: none;
-    z-index: auto;
-  }
-
-  /* The drawer slides in on this transform when its checkbox is checked. The
-     checkbox survives a resize, so a rail opened as a drawer and then widened
-     would otherwise sit 242px to the right of its column. */
-  [data-md-toggle="drawer"]:checked ~ .md-container .md-sidebar--primary {
-    transform: none;
-  }
-
-  .md-sidebar--primary .md-sidebar__scrollwrap {
-    inset: auto;
-    position: static;
-  }
-
-  /* Each nav level is an absolutely positioned drawer panel. On a rail they
-     are one column again. The root keeps the flex layout the block above gives
-     it, which is what holds the support link at the bottom. */
-  .md-nav--primary {
-    height: auto;
-    position: static;
-    z-index: auto;
-  }
-
-  .md-nav--primary .md-nav {
-    display: block;
-    height: auto;
-    position: static;
-    z-index: auto;
-  }
-
-  /* Sub-levels slide in from the right in the drawer and expand in place on
-     the rail. This is Material's own row animation from above 76.25em. */
-  .md-nav__toggle ~ .md-nav {
-    display: grid;
-    grid-template-rows: minmax(0, 0fr);
-    opacity: 0;
-    transform: none;
-    transition: grid-template-rows 0.25s var(--ease), opacity 0.25s;
-  }
-
-  .md-nav__toggle ~ .md-nav > .md-nav__list {
-    overflow: hidden;
-  }
-
-  .md-nav__toggle:checked ~ .md-nav {
-    grid-template-rows: minmax(0, 1fr);
-    opacity: 1;
-    transform: none;
-  }
-
-  .md-nav__item--nested .md-nav__toggle:checked ~ .md-nav__link .md-nav__icon::after {
-    transform: rotate(90deg);
-  }
-
-  /* Drawer chrome: the per-level header, the row separators, and the inset
-     shadow that divided the header from the list. */
-  .md-nav__item--nested > .md-nav > .md-nav__title {
-    display: none;
-  }
-
-  .md-nav--primary .md-nav__item {
-    border-top: 0;
-  }
-
-  .md-nav--primary .md-nav__title ~ .md-nav__list {
-    background: none;
-    box-shadow: none;
-  }
-
-  /* Material hides this only from 76.25em, and the rail is present here. */
-  .md-header__button.braid-header__menu {
-    display: none;
-  }
-
-  /* Two tracks, so the collapsed outline column leaves no gap on the right. */
-  .md-main__inner.md-grid {
-    grid-template-columns: var(--nav-width) minmax(0, 1fr);
-  }
-
-}
-
-/* ================================================= below the desktop breakpoint
- * Cosmetic only. Material's drawer supplies the structure.
- */
-
+/* Material shows the outline from 60em, beside an article that has no room
+   for it. The selector matches Material's own
+   `.md-sidebar--secondary:not([hidden])`, which is (0,2,0); a bare class
+   loses. */
 @media screen and (max-width: 63.984375em) {
-  /* The trigger has to exist exactly where the navigation lives in the drawer.
-     Gating it on pointer type instead left every fine-pointer device below the
-     shell breakpoint — an ordinary laptop, or a desktop browser in a split
-     pane — with the nav off-screen and no control to reach it. */
-  .md-header__button.braid-header__menu {
-    display: inline-flex;
-  }
-
-  .braid-search-trigger {
-    border-radius: var(--radius-pill);
-    justify-content: center;
-    min-width: 34px;
-    padding: 0;
-    width: 34px;
-  }
-
-  .braid-search-trigger :is(.braid-search-trigger__label, kbd) {
+  .md-sidebar--secondary:not([hidden]) {
     display: none;
   }
 
   .md-content__inner {
     padding: var(--space-5) 0 var(--space-7);
   }
-
-  /* Drawer chrome: keep Material's sliding levels, restate their surfaces in
-     Braid colours. The per-level title is the back button — it needs a solid
-     background to stay legible over the level beneath it. */
-  .md-sidebar--primary {
-    background: var(--canvas);
-  }
-
-  .md-nav--primary :is(.md-nav__title, .md-nav__title[for="__drawer"]) {
-    background: var(--surface);
-    box-shadow: 0 1px 0 var(--border);
-    color: var(--text);
-    font-family: var(--font-display);
-    font-weight: 600;
-  }
-
-  /* Material's drawer header is a two-row lockup: the logo is positioned
-     absolutely across the top and the site name sits on the line below it. The
-     site header puts the two side by side, and this is the same lockup, so it
-     is laid out the same way. */
-  .md-nav--primary .md-nav__title[for="__drawer"] {
-    align-items: center;
-    display: flex;
-    gap: var(--space-2);
-    height: var(--header-height);
-    line-height: 1;
-    padding: 0 var(--space-4);
-  }
-
-  .md-nav--primary .md-nav__title .md-nav__button.md-logo {
-    display: inline-flex;
-    height: 24px;
-    margin: 0;
-    padding: 0;
-    position: static;
-    width: auto;
-  }
-
-  .md-nav--primary .md-nav__title .md-nav__button.md-logo :is(img, svg) {
-    height: 24px;
-    width: auto;
-  }
-
-  .md-nav--primary :is(.md-nav__link, .braid-nav__support) {
-    font-size: var(--text-base);
-  }
-
-  .braid-nav__footer {
-    border-top: 1px solid var(--border);
-    margin: var(--space-4) var(--space-2) 0;
-    padding: var(--space-3) 0;
-  }
 }
 
+/* On a phone the help link keeps its icon and drops its label. */
 @media screen and (max-width: 44.984375em) {
 
   .braid-header__inner {
     padding: 0 var(--space-3);
   }
 
-  /* A five-level trail wraps to three lines on a phone. The immediate parent
-     is the only ancestor worth the space. */
-  .md-typeset .braid-crumbs li:not(:nth-last-child(-n + 3)) {
-    display: none;
+  .braid-header__help {
+    padding: 0 var(--space-2);
   }
 
-  .braid-header .md-search {
-    padding: var(--space-5) var(--space-3) var(--space-3);
+  .braid-header__help > span:not(.braid-header__help-icon) {
+    border: 0;
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
   }
 }
