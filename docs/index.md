@@ -1,6 +1,6 @@
 ---
 title: Braid
-description: Set up Braid, review your first change from inside Claude Code, and learn the habits, limits and data handling that matter in the private preview.
+description: Set up Braid, review your first change from inside your coding agent, and learn the habits, limits and data handling that matter in the private preview.
 ---
 
 # Braid
@@ -17,8 +17,8 @@ doesn't match what you see, tell us on [Discord](https://discord.gg/gzUevjYD9).
 
 ## Set up
 
-You need a Mac, Git 2.25 or later, Claude Code, and a GitHub account to sign
-in with. Your code doesn't have to be on GitHub.
+You need a Mac, Git 2.25 or later, Claude Code or Codex, and a GitHub account
+to sign in with. Your code doesn't have to be on GitHub.
 
 Run this in a terminal:
 
@@ -27,14 +27,15 @@ curl -fsSL https://braidkit.io/cli/install.sh | bash
 ```
 
 Say yes when the installer offers to sign you in and to set up this machine.
-On the setup screen, select Claude Code with ++space++ and press ++enter++.
-That turns on recording and teaches Claude Code how to use Braid.
+On the setup screen, select your agents with ++space++ and press ++enter++.
+That turns on recording and teaches your agent how to use Braid.
 
-Then **start a new Claude Code session**. Sessions that were already open
-aren't recorded. To check that everything worked, ask Claude Code "is braid set
-up correctly?"
+Then **start a new agent session**. Sessions that were already open aren't
+recorded. In Codex, also run `/hooks` and approve Braid's hooks, and approve
+them again whenever Codex asks. To check that everything worked, ask your agent
+"is braid set up correctly?"
 
-From here on, you stay in Claude Code. You don't need to learn Braid's
+From here on, you stay in your agent. You don't need to learn Braid's
 commands. You ask your agent in plain words.
 
 ## Your first review
@@ -44,7 +45,7 @@ checked. You read it next to the diff.
 
 1. **Start a new branch before you describe the task.** Braid ties the work to
    the branch it happens on.
-2. **Ask Claude Code for the change**, as you normally would.
+2. **Ask your agent for the change**, as you normally would.
 3. **Have it commit the work.**
 4. **In a new message, say "open this for review".** An agent can't review the
    message it's still answering, so this has to be a message of its own.
@@ -64,7 +65,7 @@ then ship it. You can ignore both during the preview.
 | "open this for review" | Builds a review of the work on this branch and gives you the link. |
 | "push the braid to the PR" | Uploads the review and links it to your pull request. See [Share a review](#share-a-review). |
 | "is braid set up correctly?" | Checks the install, the background service and recording. |
-| "why wasn't my session recorded?" | Checks how Braid is hooked into Claude Code. |
+| "why wasn't my session recorded?" | Checks how Braid is hooked into your agent. |
 
 ## Habits that keep reviews accurate
 
@@ -104,12 +105,13 @@ repository can see it. If the repository isn't on GitHub, only you can.
 Braid doesn't redact anything yet. Anything the agent read or wrote, secrets
 included, can end up in what's sent.
 
-To stop recording, run `braid hooks uninstall claude`. To remove Braid
-completely, run `braid uninstall`.
+To stop recording, run `braid hooks uninstall claude` or
+`braid hooks uninstall codex`. To remove Braid completely, run
+`braid uninstall`.
 
 ## Known limits
 
-- This preview supports macOS and Claude Code only.
+- Braid runs on macOS only, and records Claude Code and Codex.
 - Braid can't review work started on a detached HEAD.
 - If the agent works in another repository, those changes aren't part of this
   branch's review.
