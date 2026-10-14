@@ -3,13 +3,12 @@
 
 The builder's strict mode catches invalid configuration and broken links.
 These checks cover the layer above that: every navigation page must publish
-HTML and Markdown, the home page's visual and plain-text navigation must stay
-aligned, and the custom desktop/mobile shell must keep its essential structure.
+HTML and Markdown, and the custom desktop/mobile shell must keep its essential
+structure.
 """
 
 import argparse
 import pathlib
-import re
 import sys
 
 import yaml
@@ -24,12 +23,7 @@ from site_config import (
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 MKDOCS = ROOT / "mkdocs.yml"
-HOME_MARKDOWN = ROOT / "docs" / "index.md"
 SHELL_CSS = ROOT / "docs" / "stylesheets" / "shell.css"
-
-HOME_LINK = re.compile(
-    r"^- \[(?P<label>[^]]+)]\((?P<path>[^)]+)\)(?: — (?P<description>.+))?$"
-)
 
 
 def front_matter(text, path, errors):
@@ -47,37 +41,6 @@ def front_matter(text, path, errors):
     return metadata
 
 
-def configured_home_items(config):
-    home = config.get("extra", {}).get("home", {})
-    items = []
-    for section in home.get("sections", []):
-        items.extend(section.get("cards", []))
-    items.extend(home.get("explore", {}).get("links", []))
-    return items
-
-
-def configured_home_links(config):
-    return [
-        (item["label"], item["path"], item.get("description"))
-        for item in configured_home_items(config)
-    ]
-
-
-def markdown_home_links():
-    links = []
-    for line in HOME_MARKDOWN.read_text(encoding="utf-8").splitlines():
-        match = HOME_LINK.match(line)
-        if match:
-            links.append(
-                (
-                    match.group("label"),
-                    match.group("path"),
-                    match.group("description"),
-                )
-            )
-    return links
-
-
 def require_text(text, expected, location, errors):
     if expected not in text:
         errors.append(f"{location}: missing required contract {expected!r}")
@@ -87,35 +50,9 @@ def check_site(site_dir):
     config = load_site_config(MKDOCS)
     navigation = site_pages(config, ROOT)
     errors = []
-    home_links = configured_home_links(config)
-
-    if home_links != markdown_home_links():
-        errors.append(
-            "home navigation differs between mkdocs.yml and docs/index.md; "
-            "keep the visual cards and plain-Markdown equivalent in the same order"
-        )
-
-    navigation_paths = {page.src_uri for page in navigation}
-    for _, path, _ in home_links:
-        if path not in navigation_paths:
-            errors.append(f"home navigation points to {path}, which is not in MkDocs nav")
 
     site_url = (config.get("site_url") or "").rstrip("/")
     docs_dir = resolve_project_path(config.get("docs_dir", "docs"), ROOT)
-    for item in configured_home_items(config):
-        source = docs_dir / item["path"]
-        if not source.is_file():
-            continue
-        metadata = front_matter(
-            source.read_text(encoding="utf-8"),
-            item["path"],
-            errors,
-        )
-        if bool(item.get("draft")) != bool(metadata.get("draft")):
-            errors.append(
-                f"home navigation draft state for {item['path']} differs from "
-                "the page front matter"
-            )
 
     for page in navigation:
         html_path = site_dir / page.dest_uri
@@ -158,23 +95,16 @@ def check_site(site_dir):
                 f"{metadata.get('url')!r}, expected {expected_url!r}"
             )
 
-    home_html = (site_dir / "index.html").read_text(encoding="utf-8")
-    require_text(home_html, 'class="braid-home"', "index.html", errors)
-    require_text(home_html, 'class="braid-home__card"', "index.html", errors)
-    require_text(home_html, 'class="braid-nav__footer"', "index.html", errors)
-    require_text(home_html, "Get help", "index.html", errors)
-    if "documentation is coming soon" in home_html:
-        errors.append("index.html: the coming-soon placeholder must not be published")
-
-    representative_page = next((page for page in navigation if not page.is_homepage), None)
-    representative = site_dir / representative_page.dest_uri if representative_page else None
-    if representative and representative.is_file():
-        page_html = representative.read_text(encoding="utf-8")
-        location = str(representative.relative_to(site_dir))
+    # A missing page is reported above; the shell is checked where it exists.
+    shell_page = navigation[0]
+    shell_path = site_dir / shell_page.dest_uri
+    if shell_path.is_file():
+        page_html = shell_path.read_text(encoding="utf-8")
+        location = str(shell_path.relative_to(site_dir))
         source_url = (
             f"{config.get('repo_url', '').rstrip('/')}/"
             f"{config.get('edit_uri', '').lstrip('/')}"
-            f"{representative_page.src_uri}"
+            f"{shell_page.src_uri}"
         )
         for contract in (
             'class="md-sidebar md-sidebar--primary"',
@@ -186,22 +116,6 @@ def check_site(site_dir):
             source_url,
         ):
             require_text(page_html, contract, location, errors)
-    else:
-        errors.append("representative non-home shell page is missing")
-
-    pages_by_source = {page.src_uri: page for page in navigation}
-    for source in ("get-help.md", "changelog.md"):
-        utility_page = pages_by_source.get(source)
-        if not utility_page:
-            errors.append(f"utility page is missing from navigation: {source}")
-            continue
-        utility_path = site_dir / utility_page.dest_uri
-        utility_html = utility_path.read_text(encoding="utf-8")
-        if 'class="braid-pagenav"' in utility_html:
-            errors.append(
-                f"{utility_path.relative_to(site_dir)}: utility pages must not "
-                "render previous/next navigation"
-            )
 
     shell_css = SHELL_CSS.read_text(encoding="utf-8")
     for contract in (

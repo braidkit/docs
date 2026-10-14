@@ -95,33 +95,6 @@
   padding: var(--space-2);
 }
 
-.braid-header__sections {
-  align-items: center;
-  display: none;
-  gap: var(--space-1);
-}
-
-.braid-header__section {
-  border-radius: var(--radius-pill);
-  color: var(--text-muted);
-  font-family: var(--font-display);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  padding: var(--space-2) var(--space-3);
-  text-decoration: none;
-  transition: background var(--duration) var(--ease),
-              color var(--duration) var(--ease);
-}
-
-.braid-header__section:hover {
-  color: var(--text);
-}
-
-.braid-header__section--active {
-  background: var(--surface-sunken);
-  color: var(--text);
-}
-
 /* -- search trigger -------------------------------------------------------- */
 
 .braid-search-trigger {
@@ -585,10 +558,6 @@
   letter-spacing: var(--tracking-caps);
 }
 
-.braid-nav__destinations {
-  display: none;
-}
-
 .braid-nav > .braid-nav__list > .md-nav__item--nested > .md-nav__link {
   color: var(--text-subtle);
   font-family: var(--font-mono);
@@ -816,42 +785,6 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-  }
-}
-
-/* ==================================================== full header (desktop)
- * The destination switcher and the drawer offer the same two links, so they
- * share the shell's breakpoint: the switcher appears exactly when the rail
- * does, and the drawer that also lists Documentation and Changelog is gone.
- * Any other cutoff leaves a band where both are on screen at once.
- *
- * Width alone gates it. An earlier pointer-type clause kept this header on any
- * fine-pointer device, which on a narrow desktop window put the switcher on top
- * of the wordmark: brand, switcher and tools want more room than 390px has.
- */
-
-@media screen and (min-width: 64em) {
-  /* Three tracks so the switcher sits dead centre regardless of how wide the
-     brand and the tools are. The tools are placed by the grid here; below this
-     width the header is the flex row declared above, where `margin-left: auto`
-     is what holds them against the right edge. */
-  .braid-header__inner {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  }
-
-  .braid-header__brand {
-    justify-self: start;
-  }
-
-  .braid-header__sections {
-    display: flex;
-    justify-self: center;
-  }
-
-  .braid-header__tools {
-    justify-self: end;
-    margin-left: 0;
   }
 }
 
@@ -1208,31 +1141,6 @@
 
   .md-nav--primary :is(.md-nav__link, .braid-nav__support) {
     font-size: var(--text-base);
-  }
-
-  .braid-nav__destinations {
-    border-bottom: 1px solid var(--border);
-    display: grid;
-    gap: var(--space-1);
-    grid-template-columns: 1fr 1fr;
-    margin: 0 var(--space-2) var(--space-4);
-    padding: var(--space-3) 0 var(--space-4);
-  }
-
-  .braid-nav__destinations a {
-    border-radius: var(--radius-pill);
-    color: var(--text-muted);
-    font-family: var(--font-display);
-    font-size: var(--text-sm);
-    font-weight: 600;
-    padding: var(--space-2);
-    text-align: center;
-    text-decoration: none;
-  }
-
-  .braid-nav__destinations .braid-nav__destination--active {
-    background: var(--surface-sunken);
-    color: var(--text);
   }
 
   .braid-nav__footer {

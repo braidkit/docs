@@ -36,7 +36,7 @@
 
 {#
   Breadcrumbs. The open-source Material theme has no breadcrumb feature, so we
-  render them from the page's nav ancestors. Every page except the home page.
+  render them from the page's nav ancestors, which the home page does not have.
 #}
 {% block content %}
   {#
@@ -53,7 +53,7 @@
     serve and so the shape a reader is most likely to recognise.
   #}
   {% set md_path = (page.url[:-1] if page.url[-1:] == '/' else page.url) ~ '.md' %}
-  {% if page and not page.is_homepage %}
+  {% if page %}
     <div class="braid-pagebar">
       {% if page.ancestors %}
     <nav class="braid-crumbs" aria-label="Breadcrumb">

@@ -1,5 +1,5 @@
 {#
-  Braid's documentation header: brand, site destinations, search, theme control.
+  Braid's documentation header: brand, search, theme control.
 
   The search trigger is a <label> because Material's search overlay is driven
     by the `#__search` checkbox. It is given button semantics here and the
@@ -26,12 +26,6 @@
         <span class="braid-header__wordmark">braid</span>
       </a>
     </div>
-
-    {% set on_changelog = page and page.url == "changelog/" %}
-    <nav class="braid-header__sections" aria-label="Primary">
-      <a href="{{ nav.homepage.url | url }}" class="braid-header__section{% if not on_changelog %} braid-header__section--active{% endif %}"{% if not on_changelog %} aria-current="page"{% endif %}>Documentation</a>
-      <a href="{{ 'changelog/' | url }}" class="braid-header__section{% if on_changelog %} braid-header__section--active{% endif %}"{% if on_changelog %} aria-current="page"{% endif %}>Changelog</a>
-    </nav>
 
     <div class="braid-header__tools">
       {% if "material/search" in config.plugins %}
