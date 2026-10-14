@@ -5,9 +5,12 @@ description: What Braid is, how to install it, how to review your first change, 
 
 # Braid
 
-Braid captures the work you do with a coding agent on a branch and rebuilds
-the intent behind it: what you asked for, what was decided, and why. You review
-that intent next to the diff, before the change ships.
+Braid keeps the intent behind code written with an AI agent, and the
+understanding needed to work on it. As the work happens, Braid records what was
+done, what was decided, what was noticed and what was checked. People and
+agents then share the same picture of what the code is for and why it is the
+way it is, so reviewers, teammates and future you can pick up the work and own
+it.
 
 Braid is in private preview and changes often. This page covers only what you
 need to get going. For anything else, the CLI is the reference, because it
