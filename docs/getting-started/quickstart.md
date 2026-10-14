@@ -84,6 +84,4 @@ Every category should pass.
 
 ## What next?
 
-- [Capture agent work](../guides/capture-agent-work.md) to manage capture beyond this example.
-- [Understand a change](../guides/understand-a-change.md) to inspect a braid in more detail.
 - [Troubleshooting](../troubleshooting.md) if a step does not behave as expected.

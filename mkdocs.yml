@@ -102,10 +102,6 @@ nav:
   - Get started:
       - Why Braid?: why-braid.md
       - Quickstart: getting-started/quickstart.md
-  - Guides:
-      - Capture agent work: guides/capture-agent-work.md
-      - Understand a change: guides/understand-a-change.md
-      - Review a change: guides/review-a-change.md
   - Concepts:
       - How Braid works: how-braid-works.md
       - What Braid records: what-braid-records.md
@@ -133,24 +129,9 @@ extra:
             label: Quickstart
             description: Install Braid, then take one change from capture to completion.
             icon: source-branch
-          - path: guides/capture-agent-work.md
-            label: Capture agent work
-            description: Set up capture and organize your sessions.
-            icon: record-circle-outline
-            draft: true
       - id: keep-moving
         title: Keep moving
         cards:
-          - path: guides/understand-a-change.md
-            label: Understand a change
-            description: Read the decisions and evidence behind the code.
-            icon: text-box-search-outline
-            draft: true
-          - path: guides/review-a-change.md
-            label: Review a change
-            description: Check the work and complete the braid.
-            icon: check-decagram-outline
-            draft: true
           - path: reference/cli.md
             label: CLI reference
             description: Find a command or flag.

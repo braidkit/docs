@@ -27,7 +27,7 @@ class SiteConfigTests(unittest.TestCase):
         config = site_config.load_site_config()
         pages = site_config.site_pages(config)
 
-        self.assertEqual(17, len(pages))
+        self.assertEqual(14, len(pages))
         self.assertEqual("Documentation", pages[0].title)
         self.assertEqual("", pages[0].url)
         self.assertEqual("index.html", pages[0].dest_uri)
