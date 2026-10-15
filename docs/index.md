@@ -32,6 +32,10 @@ The installer puts `braid` and `braid-daemon` in `~/.local/bin`, adds that to
 your `PATH`, and starts the daemon as a login service. It never uses `sudo`.
 Accept its prompts to sign in and to set up your agents.
 
+Setting up an agent also installs Braid's skills into it, in `~/.claude/skills`
+or `~/.codex/skills`. The skills teach your agent to run Braid for you, so you
+ask for what you want in plain words instead of learning Braid's commands.
+
 Then:
 
 - Start a new agent session. Sessions that were already open aren't recorded.
@@ -58,6 +62,9 @@ You get a link to the review in a minute or two. Ignore the approve and ship
 commands on the review page for now.
 
 ## What to ask your agent
+
+Braid's skills recognise requests like these, so the exact wording doesn't
+matter.
 
 | Ask | To |
 |---|---|
