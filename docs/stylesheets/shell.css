@@ -48,7 +48,8 @@
   color: var(--brand);
   display: inline-flex;
   font-family: var(--font-mono);
-  font-size: var(--text-lg);
+  /* 18px, the Review UI's lockup, whatever size the page text is. */
+  font-size: 0.9rem;
   font-weight: 400;
   gap: var(--space-2);
   letter-spacing: var(--tracking-caps);
