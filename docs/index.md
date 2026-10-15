@@ -32,6 +32,10 @@ The installer puts `braid` and `braid-daemon` in `~/.local/bin`, adds that to
 your `PATH`, and starts the daemon as a login service. It never uses `sudo`.
 Accept its prompts to sign in and to set up your agents.
 
+When it finishes, start a new agent session, because sessions that were already
+open aren't recorded. In Codex, also run `/hooks` and approve Braid's hooks,
+and again whenever Codex asks.
+
 !!! tip "Braid's skills do the work"
     Setting up an agent also installs Braid's skills, so you ask your agent in
     plain words instead of learning Braid's commands:
@@ -42,11 +46,6 @@ Accept its prompts to sign in and to set up your agents.
     | "ship the braid" | Finish the braid |
     | "is braid set up correctly?" | Check the install and recording |
     | "why wasn't my session recorded?" | Check Braid's hooks in your agent |
-
-Then:
-
-- Start a new agent session. Sessions that were already open aren't recorded.
-- In Codex, run `/hooks` and approve Braid's hooks, and again whenever Codex asks.
 
 ## Understand your agent's work
 
