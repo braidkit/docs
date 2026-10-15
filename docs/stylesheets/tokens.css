@@ -96,8 +96,8 @@
   --text-2xs: 0.6rem;     /* 12px — kbd, labels. The brand's metadata floor. */
   --text-xs:  0.625rem;   /* 12.5px — outline */
   --text-sm:  0.7rem;     /* 14px — table cells. The brand's control floor. */
-  --text-md:  0.75rem;    /* 15px — callouts */
-  --text-base:0.8rem;     /* 16px — body. The brand's required-text floor. */
+  --text-md:  0.7rem;     /* 14px — callouts */
+  --text-base:0.75rem;    /* 15px — body, a step below the brand's 16px floor */
   --text-lg:  0.9rem;     /* 18px — h3 */
   --text-xl:  1.1rem;     /* 22px — h2 */
   --text-2xl: 1.5rem;     /* 30px — page title */
@@ -136,7 +136,7 @@
                              * does not drift a screen-width away from the text
                              * on an ultrawide monitor. Below this the shell
                              * fills the viewport. */
-  --measure: 32rem;         /* 640px ≈ 81 characters at 16px.
+  --measure: 30rem;         /* 600px ≈ 80 characters at 15px.
                              * Reference tables share this column, so it sits
                              * at the long end of a comfortable line. */
 
