@@ -50,6 +50,11 @@ and again whenever Codex asks.
 
 ## Understand your agent's work
 
+Reconstructing the intent sends what Braid recorded, your requests, the agent's
+replies and the code changes, to Braid's service, which uses a third-party AI
+model. Braid currently does not redact information, so anything the agent saw
+can be included.
+
 1. Create a branch before your first request. Braid groups the work by branch.
 2. Have your agent make the change and commit it.
 3. In a new message, ask it to "reconstruct the intent". It can't include the
@@ -63,9 +68,8 @@ You get a link to the intent in a minute or two.
 The intent gives you the context to understand the work: what it set out to
 do, what was decided and why, and how the code changed. With that, you can
 steer your agent where it went wrong, or [approve and ship](#finish-with-braid-ship)
-with confidence. Braid's service reconstructs the intent from what Braid
-recorded, using a third-party AI model, so check anything that matters against
-the code.
+with confidence. An AI model reconstructs the intent, so check anything that
+matters against the code.
 
 Start with the **Overview**: the goal, the outcome so far and why this
 direction. If the goal isn't what you asked for, tell your agent before going
@@ -94,7 +98,7 @@ The intent is private until you share it. The Braid bot shares it on your pull
 request: it comments with a brief of the intent and a link to the full page,
 which anyone who can read the repository can open after signing in with GitHub.
 Sharing uploads the intent and a summary of the session, including your
-prompts, and nothing is redacted yet.
+prompts. Please exercise care when sharing intent.
 
 To turn the bot on:
 

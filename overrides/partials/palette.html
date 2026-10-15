@@ -30,3 +30,23 @@
     </label>
   {% endfor %}
 </form>
+{#
+  Material restores the saved theme but never ticks its radio, so the switch
+  showed no selection on load and assistive technology heard no selected
+  option. Tick it here, before first paint, the way Material chooses: the
+  saved index, otherwise the first entry whose media query matches.
+#}
+<script>
+  (function () {
+    var inputs = document.querySelectorAll(".braid-theme__input");
+    var saved = null;
+    try { saved = __md_get("__palette"); } catch (error) {}
+    var index = saved && typeof saved.index === "number" ? saved.index : -1;
+    if (!inputs[index]) {
+      index = Array.prototype.findIndex.call(inputs, function (input) {
+        return matchMedia(input.getAttribute("data-md-color-media")).matches;
+      });
+    }
+    if (inputs[index]) inputs[index].checked = true;
+  })();
+</script>

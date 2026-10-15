@@ -118,6 +118,20 @@ def check_site(site_dir):
         ):
             require_text(page_html, contract, location, errors)
 
+        # The theme switch offers one radio per palette entry, and ticks the
+        # saved one on load; Material restores the theme but not the radio.
+        palette = config.get("theme", {}).get("palette", [])
+        radios = re.findall(
+            r'<input class="md-option braid-theme__input"[^>]*name="__palette"',
+            page_html,
+        )
+        if len(radios) != len(palette):
+            errors.append(
+                f"{location}: theme switch has {len(radios)} options, "
+                f"expected {len(palette)} from mkdocs.yml"
+            )
+        require_text(page_html, '__md_get("__palette")', location, errors)
+
         # Both Markdown actions link a published file. The home page's URL is
         # empty, and building the link from it alone once produced `.md`.
         for target in re.findall(
