@@ -13,7 +13,10 @@ html {
 }
 
 body {
-  background: var(--canvas);
+  /* The Review UI's backdrop. Fixed, because the Review UI fills one screen
+     and this page scrolls: the gradient stays the size of the viewport. */
+  background: var(--backdrop), var(--canvas);
+  background-attachment: fixed;
   color: var(--text);
   font-family: var(--font-sans);
 }

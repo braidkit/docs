@@ -11,9 +11,12 @@
 /* ===================================================================== header
  */
 
+/* Frosted glass over the backdrop, as the Review UI's top bar. */
 .md-header.braid-header {
-  background: var(--canvas);
-  border-bottom: 1px solid var(--border);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  background: var(--glass-fill-strong);
+  border-bottom: 1px solid var(--glass-border);
   box-shadow: none;
   color: var(--text);
   height: var(--header-height);
@@ -30,7 +33,7 @@
   height: 100%;
   margin: 0;
   max-width: none;
-  padding: 0 var(--space-4);
+  padding: 0 var(--space-5);
 }
 
 .braid-header__brand {
@@ -52,16 +55,24 @@
   text-decoration: none;
 }
 
-/* The mark is 309x512, so only its height can be set: giving it a square box
-   stretched it half as wide again as it should be. */
-.braid-header__logo {
-  display: inline-flex;
+/* The Review UI's lockup: the brand artwork used as a mask and filled with the
+   brand colour, so the mark matches the word in either theme. */
+.braid-header__mark {
+  aspect-ratio: 388 / 642;
+  background: currentcolor;
+  display: block;
+  flex: none;
+  forced-color-adjust: none;
   height: 24px;
+  mask: url("../assets/brand/logo/braid-mark-purple.svg") center / contain no-repeat;
 }
 
-.braid-header__logo :is(img, svg) {
-  height: 100%;
-  width: auto;
+/* Forced colours would blank the background, so the mark takes the system
+   text colour the word is forced to. */
+@media (forced-colors: active) {
+  .braid-header__mark {
+    background: CanvasText;
+  }
 }
 
 .braid-header__tools {
@@ -446,9 +457,10 @@
 /* ==================================================================== footer
  */
 
+/* Transparent, so the backdrop runs to the foot of the page. */
 .md-footer,
 .md-footer-meta {
-  background: var(--canvas);
+  background: transparent;
   color: var(--text-subtle);
 }
 
@@ -463,7 +475,7 @@
 }
 
 .md-footer {
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--glass-border);
 }
 
 .md-footer__link {

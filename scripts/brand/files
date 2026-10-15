@@ -15,9 +15,11 @@ tokens/ -> docs/stylesheets/
 fonts/  -> docs/assets/fonts/
 icons/  -> docs/assets/brand/icons/
 
-# The header wordmark, referenced by theme.logo in mkdocs.yml. A file line
-# rather than logo/, which carries every mark and avatar variant.
+# File lines rather than logo/, which carries every mark and avatar variant.
+# The PNG is theme.logo in mkdocs.yml. The SVG is the header mark, used as a
+# mask and filled with the brand colour, as the Review UI does.
 logo/braid-mark-purple-512.png -> docs/assets/brand/logo/braid-mark-purple-512.png
+logo/braid-mark-purple.svg -> docs/assets/brand/logo/braid-mark-purple.svg
 
 # The CI check itself, vendored like everything else.
 consumer/check.py -> scripts/brand/check.py

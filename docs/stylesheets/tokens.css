@@ -147,6 +147,35 @@
   --z-header: 3;
 }
 
+/* -- glass ------------------------------------------------------------- *
+ * The Review UI's backdrop and frosted chrome, copied value for value from
+ * web/developer-ui/styles/tokens.css in braidkit/braid so the two surfaces
+ * look the same. They are not in braid-tokens.css yet; when braidkit/brand
+ * takes them, take them from there instead.
+ *
+ * They are declared on <body> as well as :root because Material switches
+ * the theme on <body>. A custom property substitutes var() where it is
+ * declared, so declared only on :root, the glass fill would keep the light
+ * surface colour in dark mode. light-dark() resolves where the value is used,
+ * against the color-scheme the dark palette sets on <body>. */
+:root,
+[data-md-color-scheme] {
+  --backdrop-start: light-dark(#fbfafc, #0d0f12);
+  --backdrop-mid: light-dark(#f5f6f8, #141219);
+  --backdrop-end: light-dark(#f4f2f7, #1b1420);
+  --backdrop-glow: light-dark(rgb(92 45 74 / 3.5%), rgb(221 169 200 / 7%));
+  --backdrop-glow-far: light-dark(rgb(92 45 74 / 2%), rgb(221 169 200 / 4%));
+  --backdrop-sheen: light-dark(rgb(255 255 255 / 40%), rgb(255 255 255 / 3%));
+  --backdrop:
+    radial-gradient(120% 90% at 0% 0%, var(--backdrop-glow), transparent 60%),
+    radial-gradient(90% 80% at 100% 100%, var(--backdrop-glow-far), transparent 60%),
+    linear-gradient(135deg, transparent 36%, var(--backdrop-sheen) 48%, transparent 60%),
+    linear-gradient(135deg, var(--backdrop-start), var(--backdrop-mid) 50%, var(--backdrop-end));
+  --glass-fill-strong: color-mix(in srgb, var(--bk-surface) 80%, transparent);
+  --glass-border: light-dark(rgb(92 45 74 / 12%), rgb(221 169 200 / 12%));
+  --glass-blur: blur(20px) saturate(160%);
+}
+
 /* Material writes this attribute onto <body> for the dark palette. */
 [data-md-color-scheme="slate"] {
   --brand: var(--bk-brand);             /* 9.5:1 on canvas */
@@ -249,4 +278,29 @@
 [data-md-color-scheme="default"] {
   --md-code-hl-constant-color: #6551c7;
   --md-code-hl-number-color: #c32626;
+}
+
+/* Without backdrop blur, or when the reader asks for less transparency or more
+   contrast, glass turns solid and the sheen goes. As in the Review UI. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root,
+  [data-md-color-scheme] {
+    --glass-fill-strong: var(--bk-surface);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  :root,
+  [data-md-color-scheme] {
+    --glass-fill-strong: var(--bk-surface);
+    --glass-blur: none;
+    --backdrop-sheen: transparent;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root,
+  [data-md-color-scheme] {
+    --glass-border: var(--bk-line-strong);
+  }
 }
