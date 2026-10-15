@@ -94,13 +94,15 @@ matter.
 | "is braid set up correctly?" | Check the install and recording |
 | "why wasn't my session recorded?" | Check Braid's hooks in your agent |
 
-## Keep the intent accurate
+## Tips to successfully work with Braid
 
 - One task per branch, or the intent mixes them.
 - Plan and build on the same branch, or the planning is left out.
 - Don't squash, rebase or amend before Braid reconstructs the intent. Squash
   when you merge.
-- Keep the worktree until the pull request is merged.
+- If your agent app gives each task its own copy of the repository (a Git
+  worktree), keep that copy until the pull request is merged. Braid needs the
+  folder the work happened in.
 
 ## Share the intent
 
