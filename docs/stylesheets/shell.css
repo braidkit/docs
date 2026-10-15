@@ -56,6 +56,19 @@
   text-decoration: none;
 }
 
+/* Names the site, as the Review UI's top-bar chip names where you are, and
+   drawn the same way. */
+.braid-header__chip {
+  background: var(--bk-brand-wash);
+  border-radius: 5px;
+  color: var(--brand);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 500;
+  line-height: 1.45;
+  padding: 1px var(--space-2);
+}
+
 /* The Review UI's lockup: the brand artwork used as a mask and filled with the
    brand colour, so the mark matches the word in either theme. */
 .braid-header__mark {
