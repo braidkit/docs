@@ -12,6 +12,15 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Material grows the root to 137.5% above 100em and to 150% above 125em, so on
+   a large monitor every size on the page grew with it. Hold it at Material's
+   own 125%, which still follows the reader's browser default. */
+@media screen and (min-width: 100em) {
+  html {
+    font-size: 125%;
+  }
+}
+
 body {
   /* The Review UI's backdrop. Fixed, because the Review UI fills one screen
      and this page scrolls: the gradient stays the size of the viewport. */
@@ -41,7 +50,7 @@ body {
 }
 
 .md-typeset h1 {
-  font-size: var(--text-3xl);
+  font-size: var(--text-2xl);
   /* The display voice holds at 400. Size and space already carry the
      hierarchy, and a bold heading is the loudest thing on the page. */
   font-weight: 400;
@@ -53,14 +62,14 @@ body {
    ~5:1 split, so the gap unambiguously belongs to the heading beneath it —
    a near-symmetric gap leaves the reader unsure which section it opens. */
 .md-typeset h2 {
-  font-size: var(--text-2xl);
+  font-size: var(--text-xl);
   font-weight: 400;
   letter-spacing: -0.015em;
   margin: var(--space-8) 0 var(--space-3);
 }
 
 .md-typeset h3 {
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);
   font-weight: 500;
   margin: var(--space-6) 0 var(--space-3);
 }
@@ -69,14 +78,6 @@ body {
   font-size: var(--text-base);
   font-weight: 600;
   margin: var(--space-5) 0 var(--space-2);
-}
-
-/* Lead paragraph: the first paragraph after the page title. */
-.md-typeset h1 + p {
-  color: var(--text-muted);
-  font-size: var(--text-lg);
-  line-height: var(--leading-snug);
-  margin-bottom: var(--space-5);
 }
 
 .md-typeset hr {
@@ -423,7 +424,7 @@ body {
 }
 
 .md-typeset .braid-empty-state h2 {
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);
   margin: 0 0 var(--space-2);
 }
 
