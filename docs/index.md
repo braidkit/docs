@@ -130,6 +130,11 @@ work. Neither has to wait for your pull request to merge:
    braid". It confirms the branch and commit with you first, because the note
    goes on the commit you have checked out.
 
+    If you ship before you squash-merge, the note stays on your branch's commit
+    and doesn't follow the squashed commit onto your default branch. To keep
+    the note with the code that landed, ship after the merge, from your updated
+    default branch.
+
 ## What leaves your machine
 
 - **While you work:** nothing.
