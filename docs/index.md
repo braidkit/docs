@@ -53,22 +53,26 @@ commands on the review page for now.
 
 ### Read the review
 
-An AI model writes the review from what Braid recorded. Use it as a guide to
-the work, and check anything that matters against the code.
+An AI model writes the review from what Braid recorded, so check anything that
+matters against the code.
 
-1. **Overview.** The goal, the outcome so far and why this direction. If the
-   goal isn't what you asked for, stop here and say so to your agent.
-2. **Steps.** The work in the order it happened. Open a step to see what it
-   did, the decision behind it and the files it changed. Select a file to read
-   its code in the side panel.
-3. **Decisions.** Each choice the agent made: the approach it took, the
-   alternatives it set aside and why, and the checks that cover it.
-4. **Agent work trace.** Your prompts, the agent's replies, its tool calls and
-   checkpoints, searchable. Use it to confirm what the review says.
+Start with the **Overview**: the goal, the outcome so far and why this
+direction. If the goal isn't what you asked for, tell your agent before going
+further.
 
-**Workstreams** lists each agent session that contributed, such as subagents.
-**Diagrams** draws the components the change touched and how they call each
-other. Press `?` for keyboard shortcuts.
+Then explore the work in whichever way suits you, using the tabs below the
+Overview:
+
+| Tab | Shows the work |
+|---|---|
+| **Steps** | In the order it happened |
+| **Decisions** | By the choices the agent made |
+| **Workstreams** | By agent session, including subagents |
+
+In each, open an item to see what was accepted and what was rejected and why,
+the code it affected, and the agent trace behind it. Code and traces open in
+the side panel. **Diagrams** draws the components the change touched. Press
+`?` for keyboard shortcuts.
 
 ## What to ask your agent
 
