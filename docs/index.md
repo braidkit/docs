@@ -32,27 +32,17 @@ The installer puts `braid` and `braid-daemon` in `~/.local/bin`, adds that to
 your `PATH`, and starts the daemon as a login service. It never uses `sudo`.
 Accept its prompts to sign in and to set up your agents.
 
-Setting up an agent also installs Braid's skills into it, in `~/.claude/skills`
-or `~/.codex/skills`. The skills teach your agent to run Braid for you, so you
+Setting up an agent also installs Braid's skills. The skills teach your agent to run Braid for you, so you
 ask for what you want in plain words instead of learning Braid's commands.
 
 Then:
 
 - Start a new agent session. Sessions that were already open aren't recorded.
-- In Codex, run `/hooks` and approve Braid's hooks, and again whenever Codex
-  asks.
-- If `braid` isn't found, open a new shell.
+- In Codex, run `/hooks` and approve Braid's hooks, and again whenever Codex asks.
 
-## Check your setup
+## Review your first agent work with Braid
 
-Ask your agent "is braid set up correctly?" It runs Braid's checks and tells
-you what to fix.
-
-From here on, you work through your agent.
-
-## Review your first change
-
-1. Create a branch before your first request. Braid ties work to its branch.
+1. Create a local branch. Braid ties the boundary of work to a branch.
 2. Have your agent make the change and commit it.
 3. In a new message, ask it to "open this for review". An agent can't review the
    turn it's in.
@@ -60,6 +50,25 @@ From here on, you work through your agent.
 
 You get a link to the review in a minute or two. Ignore the approve and ship
 commands on the review page for now.
+
+### Read the review
+
+An AI model writes the review from what Braid recorded. Use it as a guide to
+the work, and check anything that matters against the code.
+
+1. **Overview.** The goal, the outcome so far and why this direction. If the
+   goal isn't what you asked for, stop here and say so to your agent.
+2. **Steps.** The work in the order it happened. Open a step to see what it
+   did, the decision behind it and the files it changed. Select a file to read
+   its code in the side panel.
+3. **Decisions.** Each choice the agent made: the approach it took, the
+   alternatives it set aside and why, and the checks that cover it.
+4. **Agent work trace.** Your prompts, the agent's replies, its tool calls and
+   checkpoints, searchable. Use it to confirm what the review says.
+
+**Workstreams** lists each agent session that contributed, such as subagents.
+**Diagrams** draws the components the change touched and how they call each
+other. Press `?` for keyboard shortcuts.
 
 ## What to ask your agent
 
@@ -105,7 +114,14 @@ Nothing is redacted yet, so secrets the agent saw can be included.
 To stop recording, run `braid hooks uninstall claude` or
 `braid hooks uninstall codex`. To remove Braid, run `braid uninstall`.
 
-## Known limitations
+## Troubleshooting
+
+### Check your setup
+
+You can ask your agent "is braid set up correctly?" It runs Braid's checks and tells
+you what to fix.
+
+### Known limitations
 
 - No reviews of work started on a detached HEAD.
 - Changes the agent makes in another repository aren't in this branch's review.
@@ -113,7 +129,7 @@ To stop recording, run `braid hooks uninstall claude` or
   the checkout or branch changed.
 - For BRD-9001, update Braid and try again.
 
-## Update Braid
+### Update Braid
 
 Braid doesn't update itself, and an outdated install can fail reviews.
 
@@ -121,7 +137,7 @@ Braid doesn't update itself, and an outdated install can fail reviews.
 braid upgrade
 ```
 
-## Get help
+### Get help
 
 Ask on [Discord](https://discord.gg/gzUevjYD9) or email
 [hello@braidkit.io](mailto:hello@braidkit.io).
