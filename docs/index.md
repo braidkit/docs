@@ -147,7 +147,6 @@ you what to fix.
 - Changes the agent makes in another repository aren't in this branch's intent.
 - "Review boundary is incomplete" usually means the history was rewritten, or
   the checkout or branch changed.
-- For BRD-9001, update Braid and try again.
 
 ### Update Braid
 
