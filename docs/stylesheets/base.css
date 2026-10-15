@@ -12,8 +12,20 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Material grows the root to 137.5% above 100em and to 150% above 125em, so on
+   a large monitor every size on the page grew with it. Hold it at Material's
+   own 125%, which still follows the reader's browser default. */
+@media screen and (min-width: 100em) {
+  html {
+    font-size: 125%;
+  }
+}
+
 body {
-  background: var(--canvas);
+  /* The Review UI's backdrop. Fixed, because the Review UI fills one screen
+     and this page scrolls: the gradient stays the size of the viewport. */
+  background: var(--backdrop), var(--canvas);
+  background-attachment: fixed;
   color: var(--text);
   font-family: var(--font-sans);
 }
@@ -38,42 +50,36 @@ body {
 }
 
 .md-typeset h1 {
-  font-size: var(--text-3xl);
+  font-size: var(--text-2xl);
   /* The display voice holds at 400. Size and space already carry the
      hierarchy, and a bold heading is the loudest thing on the page. */
   font-weight: 400;
   letter-spacing: -0.02em;
-  margin: 0 0 var(--space-5);
+  margin: 0 0 var(--space-3);
 }
 
-/* Space is the section separator, not a rule. 64px above and 12px below is a
-   ~5:1 split, so the gap unambiguously belongs to the heading beneath it —
-   a near-symmetric gap leaves the reader unsure which section it opens. */
+/* Space is the section separator, not a rule. 28px above and 8px below is a
+   ~3:1 split, so the gap still belongs to the heading beneath it, sized for
+   12px body copy. */
 .md-typeset h2 {
-  font-size: var(--text-2xl);
+  font-size: var(--text-xl);
   font-weight: 400;
   letter-spacing: -0.015em;
-  margin: var(--space-8) 0 var(--space-3);
+  margin: 1.4rem 0 var(--space-2);
 }
 
+/* Semibold, because at 14px over 12px body text, size alone does not set a
+   subheading apart. */
 .md-typeset h3 {
-  font-size: var(--text-xl);
-  font-weight: 500;
-  margin: var(--space-6) 0 var(--space-3);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  margin: var(--space-4) 0 var(--space-1);
 }
 
 .md-typeset h4 {
   font-size: var(--text-base);
   font-weight: 600;
   margin: var(--space-5) 0 var(--space-2);
-}
-
-/* Lead paragraph: the first paragraph after the page title. */
-.md-typeset h1 + p {
-  color: var(--text-muted);
-  font-size: var(--text-lg);
-  line-height: var(--leading-snug);
-  margin-bottom: var(--space-5);
 }
 
 .md-typeset hr {
@@ -164,18 +170,27 @@ body {
 
 /* --------------------------------------------------------------------- code */
 
+/* Narrow side padding, so punctuation after inline code does not look like it
+   follows a space. */
 .md-typeset code {
   background: var(--code-bg);
   border-radius: var(--radius-sm);
   color: var(--code-fg);
   font-size: 0.875em;
-  padding: 0.1em 0.4em;
+  padding: 0.1em 0.25em;
+}
+
+/* A command split across two lines reads as two commands. Inline code is
+   short on this page, so it stays on one line; blocks keep their own
+   scrolling. */
+.md-typeset :not(pre) > code {
+  white-space: nowrap;
 }
 
 .md-typeset pre > code {
   font-size: var(--text-sm);
   line-height: var(--leading-snug);
-  padding: var(--space-4);
+  padding: var(--space-3);
 }
 
 .md-typeset pre {
@@ -209,15 +224,20 @@ body {
   width: 100%;
 }
 
-/* A header cell names a column rather than arguing anything, so it takes the
-   captured voice: mono, uppercase, tracked. Figures below it line up. */
+/* Material pads cells at 0.9375em 1.25em, which made a five-row table
+   nearly 250px tall. Rows are as tight as the Review UI's lists. */
+.md-typeset table:not([class]) :is(th, td) {
+  padding: 0.3rem 0.5rem;
+}
+
+/* Column headings drawn like the Review UI's: medium, uppercase and tracked,
+   in the muted text colour, a step below the cells. */
 .md-typeset table:not([class]) th {
   background: var(--surface-sunken);
-  color: var(--text-subtle);
-  font-family: var(--font-mono);
+  color: var(--text-muted);
   font-size: var(--text-2xs);
-  font-weight: 400;
-  letter-spacing: var(--tracking-caps);
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -260,7 +280,7 @@ body {
   border-radius: 0;
   box-shadow: none;
   font-size: var(--text-md);
-  padding: var(--space-3) 0 var(--space-4);
+  padding: var(--space-2) 0 var(--space-3);
 
   /* Every callout resolves one variable. Adding a severity below is one line,
      not a new block of border/background/icon rules. */
@@ -420,7 +440,7 @@ body {
 }
 
 .md-typeset .braid-empty-state h2 {
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);
   margin: 0 0 var(--space-2);
 }
 

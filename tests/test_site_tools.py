@@ -27,14 +27,10 @@ class SiteConfigTests(unittest.TestCase):
         config = site_config.load_site_config()
         pages = site_config.site_pages(config)
 
-        self.assertEqual(17, len(pages))
-        self.assertEqual("Documentation", pages[0].title)
+        self.assertEqual(1, len(pages))
+        self.assertEqual("Get started with Braid", pages[0].title)
         self.assertEqual("", pages[0].url)
         self.assertEqual("index.html", pages[0].dest_uri)
-        self.assertEqual(
-            "getting-started/quickstart/index.html",
-            pages[2].dest_uri,
-        )
 
     def test_nested_navigation_keeps_page_order(self):
         config = {

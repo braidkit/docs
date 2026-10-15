@@ -45,6 +45,13 @@ use, and is where docs-specific ones belong. UI lives in `docs/stylesheets/` and
 
 ## Content
 
+The site is one page, `docs/index.md`, on purpose. Braid is in a gated preview
+and changes often, and a stale page misleads readers and agents more than a
+missing one. The page covers what Braid is, how to install it, the review loop
+and how to get help. Everything else is left to `braid <command> --help`,
+which always matches the installed version, and to Discord. Ask before you add
+a page or extend this one beyond that.
+
 Adding or renaming a page means updating the nav in `mkdocs.yml` and re-running
 the corpus check, which regenerates `llms.txt`.
 

@@ -13,37 +13,28 @@ theme:
   logo: assets/brand/logo/braid-mark-purple-512.png
   favicon: assets/brand/icons/icon.svg
   font: false
+  # System, Light and Dark, in that order: overrides/partials/palette.html
+  # draws them as the Review UI's theme switch.
   palette:
     - media: "(prefers-color-scheme)"
-      toggle:
-        icon: material/brightness-auto
-        name: Use light theme
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      toggle:
-        icon: material/brightness-7
-        name: Use dark theme
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      toggle:
-        icon: material/brightness-4
-        name: Use system theme
   icon:
     repo: fontawesome/brands/github
   features:
     - navigation.instant
     - navigation.instant.progress
     - navigation.tracking
-    - navigation.top
     - navigation.footer
     - toc.follow
     - content.code.copy
     - content.code.annotate
     - content.tooltips
-    - search.suggest
-    - search.highlight
-plugins:
-  - search
+# One page needs no search. An empty list, because leaving the key out turns
+# MkDocs' default search plugin back on.
+plugins: []
 
 # Generate the agent-readable corpus for local, CI, and Cloudflare builds.
 hooks:
@@ -61,12 +52,9 @@ extra_css:
   - stylesheets/tokens.css
   - stylesheets/base.css
   - stylesheets/shell.css
-  - stylesheets/home.css
 
 extra_javascript:
-  - javascripts/search-shortcut.js
   - javascripts/heading-links.js
-  - javascripts/header-sections.js
   - javascripts/copy-markdown.js
 
 markdown_extensions:
@@ -98,91 +86,14 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
 
 nav:
-  - Home: index.md
-  - Get started:
-      - Why Braid?: why-braid.md
-      - Quickstart: getting-started/quickstart.md
-  - Guides:
-      - Capture agent work: guides/capture-agent-work.md
-      - Understand a change: guides/understand-a-change.md
-      - Review a change: guides/review-a-change.md
-  - Concepts:
-      - How Braid works: how-braid-works.md
-      - What Braid records: what-braid-records.md
-  - Reference:
-      - Installation: reference/installation.md
-      - CLI reference: reference/cli.md
-      - Account and devices: reference/account-and-devices.md
-      - Braid on your machine: braid-on-your-machine.md
-      - Braid and thread lifecycle: lifecycle.md
-      - Troubleshooting: troubleshooting.md
-      - Preview status: preview-status.md
-  - Get help: get-help.md
-  - Changelog: changelog.md
+  - Braid: index.md
 
 extra:
-  # One source of truth for the visual home-page navigation. docs/index.md
-  # carries the plain-Markdown equivalent; scripts/check_site.py keeps the two
-  # in sync for readers of the agent corpus.
-  home:
-    sections:
-      - id: start-here
-        title: Start here
-        cards:
-          - path: getting-started/quickstart.md
-            label: Quickstart
-            description: Install Braid, then take one change from capture to completion.
-            icon: source-branch
-          - path: guides/capture-agent-work.md
-            label: Capture agent work
-            description: Set up capture and organize your sessions.
-            icon: record-circle-outline
-            draft: true
-      - id: keep-moving
-        title: Keep moving
-        cards:
-          - path: guides/understand-a-change.md
-            label: Understand a change
-            description: Read the decisions and evidence behind the code.
-            icon: text-box-search-outline
-            draft: true
-          - path: guides/review-a-change.md
-            label: Review a change
-            description: Check the work and complete the braid.
-            icon: check-decagram-outline
-            draft: true
-          - path: reference/cli.md
-            label: CLI reference
-            description: Find a command or flag.
-            icon: console
-            draft: true
-          - path: reference/installation.md
-            label: Installation
-            description: Requirements, install options, upgrading, and removal.
-            icon: download-outline
-    explore:
-      id: explore-the-docs
-      title: Explore the docs
-      links:
-        - path: why-braid.md
-          label: Why Braid?
-        - path: how-braid-works.md
-          label: How Braid works
-        - path: what-braid-records.md
-          label: What Braid records
-        - path: troubleshooting.md
-          label: Troubleshooting
-          draft: true
-        - path: preview-status.md
-          label: Preview status
-          draft: true
-  # Rendered as the persistent link at the foot of the navigation rail.
-  # Omit this block and the link disappears rather than 404s.
+  # Rendered as the help link in the header. Omit this block and the link
+  # disappears rather than 404s.
   support:
     title: Get help
-    link: get-help/
-  # Utility pages are published and validated, but rendered outside the main
-  # documentation hierarchy by our navigation partial.
+    link: https://discord.gg/gzUevjYD9
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/braidkit/docs
