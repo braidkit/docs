@@ -58,20 +58,22 @@ body {
   margin: 0 0 var(--space-5);
 }
 
-/* Space is the section separator, not a rule. 64px above and 12px below is a
-   ~5:1 split, so the gap unambiguously belongs to the heading beneath it —
-   a near-symmetric gap leaves the reader unsure which section it opens. */
+/* Space is the section separator, not a rule. 40px above and 12px below is a
+   ~3:1 split, so the gap still belongs to the heading beneath it, without
+   leaving more white space than text around 14px body copy. */
 .md-typeset h2 {
   font-size: var(--text-xl);
   font-weight: 400;
   letter-spacing: -0.015em;
-  margin: var(--space-8) 0 var(--space-3);
+  margin: 2rem 0 var(--space-3);
 }
 
+/* Semibold, because at 16px over 14px body text, size alone does not set a
+   subheading apart. */
 .md-typeset h3 {
   font-size: var(--text-lg);
-  font-weight: 500;
-  margin: var(--space-6) 0 var(--space-3);
+  font-weight: 600;
+  margin: var(--space-5) 0 var(--space-2);
 }
 
 .md-typeset h4 {
@@ -168,12 +170,14 @@ body {
 
 /* --------------------------------------------------------------------- code */
 
+/* Narrow side padding, so punctuation after inline code does not look like it
+   follows a space. */
 .md-typeset code {
   background: var(--code-bg);
   border-radius: var(--radius-sm);
   color: var(--code-fg);
   font-size: 0.875em;
-  padding: 0.1em 0.4em;
+  padding: 0.1em 0.25em;
 }
 
 .md-typeset pre > code {

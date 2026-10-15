@@ -1,9 +1,9 @@
 ---
-title: Braid
+title: Get started with Braid
 description: Install Braid, review your first change from your coding agent, and what to know during the private preview.
 ---
 
-# Braid
+# Get started with Braid
 
 Braid keeps the intent behind code written with an AI agent, and the
 understanding needed to work on it. As the work happens, Braid records what was

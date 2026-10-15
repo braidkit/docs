@@ -374,6 +374,19 @@
   border-left: 1px solid var(--border);
 }
 
+/* One line, whatever the heading level. A nested list draws no line of its
+   own and starts flush with its parent's links, so the active marker below
+   lands on the same line at every level; the nesting shows as indent on the
+   link instead. */
+.md-sidebar--secondary .md-nav__list .md-nav__list {
+  border-left: 0;
+  padding-inline-start: 0;
+}
+
+.md-sidebar--secondary .md-nav__list .md-nav__list .md-nav__link {
+  padding-inline-start: calc(var(--space-3) * 2);
+}
+
 .md-sidebar--secondary .md-nav__link {
   border-radius: 0;
   color: var(--text-muted);

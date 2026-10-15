@@ -28,7 +28,7 @@ class SiteConfigTests(unittest.TestCase):
         pages = site_config.site_pages(config)
 
         self.assertEqual(1, len(pages))
-        self.assertEqual("Braid", pages[0].title)
+        self.assertEqual("Get started with Braid", pages[0].title)
         self.assertEqual("", pages[0].url)
         self.assertEqual("index.html", pages[0].dest_uri)
 
