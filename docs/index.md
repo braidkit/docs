@@ -43,7 +43,7 @@ and again whenever Codex asks.
     | Ask | To |
     |---|---|
     | "reconstruct the intent" | Understand the work on this branch |
-    | "push the braid to the PR" | [Share the intent](#share-the-intent) on your pull request |
+    | "push the braid to the PR" | [Share the intent](#share-the-intent-with-the-braid-bot) on your pull request |
     | "ship the braid" | Finish the braid |
     | "is braid set up correctly?" | Check the install and recording |
     | "why wasn't my session recorded?" | Check Braid's hooks in your agent |
@@ -89,17 +89,22 @@ the side panel.
 parts it touched and a sequence diagram of how they call each other. Press `?`
 for keyboard shortcuts.
 
-## Share the intent
+## Share the intent with the Braid bot
 
-The intent is private until you share it. First:
+The intent is private until you share it. The Braid bot shares it on your pull
+request: it comments with a brief of the intent and a link to the full page,
+which anyone who can read the repository can open after signing in with GitHub.
+Sharing uploads the intent and a summary of the session, including your
+prompts, and nothing is redacted yet.
+
+To turn the bot on:
 
 1. Install the [Braid GitHub App](https://github.com/apps/braidkit) on the
    repository.
-2. Run `braid bot enable`, once. Your agent won't run it for you.
+2. Run `braid bot enable`, once. It covers every repository, and your agent
+   won't run it for you. `braid bot disable` turns it off.
 
-Then ask your agent to "push the braid to the PR". Braid comments on the pull
-request with a link. Anyone who can read the repository can open it after
-signing in with GitHub.
+Then ask your agent to "push the braid to the PR".
 
 ## Finish with braid ship
 
@@ -117,21 +122,6 @@ to merge.
 
 2. **Ship** by asking your agent to "ship the braid". Shipping is final. If you
    squash-merge, ship after the merge so the note lands on the squashed commit.
-
-## What leaves your machine
-
-- **While you work:** nothing.
-- **When the intent is reconstructed:** your requests, the agent's replies,
-  its tool activity and the code changes go to Braid's service, which writes
-  the intent with a third-party AI model.
-- **When you share:** Braid stores the intent and a summary of the session.
-- **When you ship:** the braid's record goes to Braid's service again, to write
-  the intent into the note.
-
-Nothing is redacted yet, so secrets the agent saw can be included.
-
-To stop recording, run `braid hooks uninstall claude` or
-`braid hooks uninstall codex`. To remove Braid, run `braid uninstall`.
 
 ## Tips to successfully work with Braid
 
@@ -165,6 +155,11 @@ the intent.
 ```sh
 braid upgrade
 ```
+
+### Stop or remove Braid
+
+To stop recording, run `braid hooks uninstall claude` or
+`braid hooks uninstall codex`. To remove Braid, run `braid uninstall`.
 
 ### Get help
 
