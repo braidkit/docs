@@ -12,9 +12,6 @@ agents then share the same picture of what the code is for and why it is the
 way it is, so reviewers, teammates and future you can pick up the work and own
 it.
 
-Braid is in private preview and changes often. If something here is out of
-date, tell us on [Discord](https://discord.gg/gzUevjYD9).
-
 ## Before you start
 
 | You need | Notes |
