@@ -53,8 +53,9 @@ commands on the review page for now.
 
 ### Read the review
 
-An AI model writes the review from what Braid recorded, so check anything that
-matters against the code.
+The review gives you the context to understand the work: what it set out to
+do, what was decided and why, and how the code changed. An AI model writes it
+from what Braid recorded, so check anything that matters against the code.
 
 Start with the **Overview**: the goal, the outcome so far and why this
 direction. If the goal isn't what you asked for, tell your agent before going
@@ -71,8 +72,11 @@ Overview:
 
 In each, open an item to see what was accepted and what was rejected and why,
 the code it affected, and the agent trace behind it. Code and traces open in
-the side panel. **Diagrams** draws the components the change touched. Press
-`?` for keyboard shortcuts.
+the side panel.
+
+**Diagrams** shows how the change fits together: a component diagram of the
+parts it touched and a sequence diagram of how they call each other. Press `?`
+for keyboard shortcuts.
 
 ## What to ask your agent
 
