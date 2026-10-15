@@ -43,6 +43,7 @@ and again whenever Codex asks.
     | Ask | To |
     |---|---|
     | "reconstruct the intent" | Understand the work on this branch |
+    | "push the braid to the PR" | [Share the intent](#share-the-intent) on your pull request |
     | "ship the braid" | Finish the braid |
     | "is braid set up correctly?" | Check the install and recording |
     | "why wasn't my session recorded?" | Check Braid's hooks in your agent |
@@ -88,6 +89,18 @@ the side panel.
 parts it touched and a sequence diagram of how they call each other. Press `?`
 for keyboard shortcuts.
 
+## Share the intent
+
+The intent is private until you share it. First:
+
+1. Install the [Braid GitHub App](https://github.com/apps/braidkit) on the
+   repository.
+2. Run `braid bot enable`, once. Your agent won't run it for you.
+
+Then ask your agent to "push the braid to the PR". Braid comments on the pull
+request with a link. Anyone who can read the repository can open it after
+signing in with GitHub.
+
 ## Finish with braid ship
 
 Approving signs that you understood and accepted the intent. Shipping marks the
@@ -111,6 +124,7 @@ to merge.
 - **When the intent is reconstructed:** your requests, the agent's replies,
   its tool activity and the code changes go to Braid's service, which writes
   the intent with a third-party AI model.
+- **When you share:** Braid stores the intent and a summary of the session.
 - **When you ship:** the braid's record goes to Braid's service again, to write
   the intent into the note.
 
