@@ -15,30 +15,41 @@ it.
 Braid is in private preview and changes often. If something here is out of
 date, tell us on [Discord](https://discord.gg/gzUevjYD9).
 
-## Requirements
+## Before you start
 
-- macOS
-- Git 2.25 or later
-- Claude Code or Codex
-- A GitHub account to sign in with. Your code can be hosted anywhere.
+| You need | Notes |
+|---|---|
+| **macOS** | Linux and Windows aren't supported yet. |
+| **Git 2.25 or later** | On your `PATH`. |
+| **A Git repository** | Braid works on local branches. It doesn't need a remote. |
+| **Claude Code or Codex** | The agents Braid records. |
+| **A GitHub account** | You sign in with it. Your code can be hosted anywhere. |
 
-## Install
+## Install Braid
 
 ```sh
 curl -fsSL https://braidkit.io/cli/install.sh | bash
 ```
 
-Accept the prompts to sign in and to set up your agents. Then:
+The installer puts `braid` and `braid-daemon` in `~/.local/bin`, adds that to
+your `PATH`, and starts the daemon as a login service. It never uses `sudo`.
+Accept its prompts to sign in and to set up your agents.
+
+Then:
 
 - Start a new agent session. Sessions that were already open aren't recorded.
 - In Codex, run `/hooks` and approve Braid's hooks, and again whenever Codex
   asks.
+- If `braid` isn't found, open a new shell.
 
-To check, ask your agent "is braid set up correctly?"
+## Check your setup
+
+Ask your agent "is braid set up correctly?" It runs Braid's checks and tells
+you what to fix.
 
 From here on, you work through your agent.
 
-## Your first review
+## Review your first change
 
 1. Create a branch before your first request. Braid ties work to its branch.
 2. Have your agent make the change and commit it.
@@ -49,7 +60,7 @@ From here on, you work through your agent.
 You get a link to the review in a minute or two. Ignore the approve and ship
 commands on the review page for now.
 
-## Ask your agent
+## What to ask your agent
 
 | Ask | To |
 |---|---|
@@ -58,7 +69,7 @@ commands on the review page for now.
 | "is braid set up correctly?" | Check the install and recording |
 | "why wasn't my session recorded?" | Check Braid's hooks in your agent |
 
-## Habits that keep reviews accurate
+## Get better reviews
 
 - One task per branch, or the review mixes them.
 - Plan and build on the same branch, or the planning is left out.
@@ -90,23 +101,25 @@ Nothing is redacted yet, so secrets the agent saw can be included.
 To stop recording, run `braid hooks uninstall claude` or
 `braid hooks uninstall codex`. To remove Braid, run `braid uninstall`.
 
-## Known limits
+## Known limitations
 
 - No reviews of work started on a detached HEAD.
 - Changes the agent makes in another repository aren't in this branch's review.
-- "Review boundary is incomplete" usually means the history was rewritten, or the
-  checkout or branch changed.
+- "Review boundary is incomplete" usually means the history was rewritten, or
+  the checkout or branch changed.
 - For BRD-9001, update Braid and try again.
 
-## Updates
+## Update Braid
 
-Braid doesn't update itself, and an outdated install can fail reviews. Run
-`braid upgrade`.
+Braid doesn't update itself, and an outdated install can fail reviews.
+
+```sh
+braid upgrade
+```
 
 ## Get help
 
-Ask your agent "is braid set up correctly?" first. Still stuck? Ask on
-[Discord](https://discord.gg/gzUevjYD9) or email
+Ask on [Discord](https://discord.gg/gzUevjYD9) or email
 [hello@braidkit.io](mailto:hello@braidkit.io).
 
 If we ask for a support file, ask your agent for a "Braid support dump". It
