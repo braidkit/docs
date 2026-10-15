@@ -89,7 +89,7 @@ matter.
 | Ask | To |
 |---|---|
 | "reconstruct the intent" | Understand the work on this branch |
-| "the PR is merged, ship the braid" | [Finish the braid](#finish-with-braid-ship) |
+| "ship the braid" | [Finish the braid](#finish-with-braid-ship) |
 | "is braid set up correctly?" | Check the install and recording |
 | "why wasn't my session recorded?" | Check Braid's hooks in your agent |
 
@@ -100,23 +100,24 @@ matter.
 - Don't squash, rebase or amend before Braid reconstructs the intent. Squash
   when you merge.
 - If your agent app gives each task its own copy of the repository (a Git
-  worktree), keep that copy until the pull request is merged. Braid needs the
+  worktree), keep that copy until you're done with the braid. Braid needs the
   folder the work happened in.
 
 ## Finish with braid ship
 
 Approving records, signed, that you understood and accepted this intent for
 this exact commit. Shipping then marks the braid done and writes the intent
-onto the commit that landed, as a signed Git note, so whoever reads that history
-later can see why the code is the way it is, and who signed off. Shipping is
-final: a shipped braid takes no more work.
+onto the commit you ship from, as a signed Git note, so whoever reads that
+history later can see why the code is the way it is, and who signed off.
+Shipping is final: a shipped braid takes no more work.
 
 Both are optional during the preview. The note stays in your local repository,
 because shipping doesn't push it, so the value today is in understanding the
-work. To finish a braid once its pull request has merged:
+work. Neither has to wait for your pull request to merge:
 
-1. **Approve the braid.** Copy the approve command from the intent page and
-   run it. Your agent won't approve for you.
+1. **Approve the braid as soon as you understand the work,** ideally before
+   you open or merge the pull request. Copy the approve command from the
+   intent page and run it. Your agent won't approve for you.
 
     ```sh
     braid review <braid-id> --verdict approved
@@ -125,9 +126,9 @@ work. To finish a braid once its pull request has merged:
     If your agent does more work on the branch afterwards, the braid goes back
     to Active. Reconstruct the intent and approve it again.
 
-2. **Merge the pull request,** then check out your default branch and pull.
-3. **Ask your agent to "ship the braid".** It confirms the branch and commit
-   with you before it ships.
+2. **Ship when you're done with the braid.** Ask your agent to "ship the
+   braid". It confirms the branch and commit with you first, because the note
+   goes on the commit you have checked out.
 
 ## What leaves your machine
 
