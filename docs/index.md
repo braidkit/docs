@@ -49,7 +49,7 @@ Then:
 4. Pick the request where the work started.
 
 You get a link to the intent in a minute or two. When you're confident in the
-work, you approve it and ship the braid; see
+work, you can approve it and ship the braid; see
 [Finish with braid ship](#finish-with-braid-ship).
 
 ### Explore the intent
@@ -105,9 +105,15 @@ matter.
 
 ## Finish with braid ship
 
-Ship a braid once its pull request has merged. Shipping marks the braid done
-and ties its intent to the commit that landed, as a signed Git note. It's
+Approving records, signed, that you understood and accepted this intent for
+this exact commit. Shipping then marks the braid done and writes the intent
+onto the commit that landed, as a signed Git note, so whoever reads that history
+later can see why the code is the way it is, and who signed off. Shipping is
 final: a shipped braid takes no more work.
+
+Both are optional during the preview. The note stays in your local repository,
+because shipping doesn't push it, so the value today is in understanding the
+work. To finish a braid once its pull request has merged:
 
 1. **Approve the braid.** Copy the approve command from the intent page and
    run it. Your agent won't approve for you.
@@ -122,8 +128,6 @@ final: a shipped braid takes no more work.
 2. **Merge the pull request,** then check out your default branch and pull.
 3. **Ask your agent to "ship the braid".** It confirms the branch and commit
    with you before it ships.
-
-The note stays in your local repository. Shipping doesn't push it.
 
 ## What leaves your machine
 
