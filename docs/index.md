@@ -32,8 +32,16 @@ The installer puts `braid` and `braid-daemon` in `~/.local/bin`, adds that to
 your `PATH`, and starts the daemon as a login service. It never uses `sudo`.
 Accept its prompts to sign in and to set up your agents.
 
-Setting up an agent also installs Braid's skills. The skills teach your agent to run Braid for you, so you
-ask for what you want in plain words instead of learning Braid's commands.
+!!! tip "Braid's skills do the work"
+    Setting up an agent also installs Braid's skills, so you ask your agent in
+    plain words instead of learning Braid's commands:
+
+    | Ask | To |
+    |---|---|
+    | "reconstruct the intent" | Understand the work on this branch |
+    | "ship the braid" | Finish the braid |
+    | "is braid set up correctly?" | Check the install and recording |
+    | "why wasn't my session recorded?" | Check Braid's hooks in your agent |
 
 Then:
 
@@ -81,28 +89,6 @@ the side panel.
 parts it touched and a sequence diagram of how they call each other. Press `?`
 for keyboard shortcuts.
 
-## What to ask your agent
-
-Braid's skills recognise requests like these, so the exact wording doesn't
-matter.
-
-| Ask | To |
-|---|---|
-| "reconstruct the intent" | Understand the work on this branch |
-| "ship the braid" | [Finish the braid](#finish-with-braid-ship) |
-| "is braid set up correctly?" | Check the install and recording |
-| "why wasn't my session recorded?" | Check Braid's hooks in your agent |
-
-## Tips to successfully work with Braid
-
-- One task per branch, or the intent mixes them.
-- Plan and build on the same branch, or the planning is left out.
-- Don't squash, rebase or amend before Braid reconstructs the intent. Squash
-  when you merge.
-- If your agent app gives each task its own copy of the repository (a Git
-  worktree), keep that copy until you're done with the braid. Braid needs the
-  folder the work happened in.
-
 ## Finish with braid ship
 
 Approving signs that you understood and accepted the intent. Shipping marks the
@@ -133,6 +119,16 @@ Nothing is redacted yet, so secrets the agent saw can be included.
 
 To stop recording, run `braid hooks uninstall claude` or
 `braid hooks uninstall codex`. To remove Braid, run `braid uninstall`.
+
+## Tips to successfully work with Braid
+
+- One task per branch, or the intent mixes them.
+- Plan and build on the same branch, or the planning is left out.
+- Don't squash, rebase or amend before Braid reconstructs the intent. Squash
+  when you merge.
+- If your agent app gives each task its own copy of the repository (a Git
+  worktree), keep that copy until you're done with the braid. Braid needs the
+  folder the work happened in.
 
 ## Troubleshooting
 
