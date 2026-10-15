@@ -42,31 +42,30 @@ and again whenever Codex asks.
 
     | Ask | To |
     |---|---|
-    | "reconstruct the intent" | Understand the work on this branch |
-    | "push the braid to the PR" | [Share the intent](#share-the-intent-with-the-braid-bot) on your pull request |
-    | "ship the braid" | Finish the braid |
-    | "is braid set up correctly?" | Check the install and recording |
-    | "why wasn't my session recorded?" | Check Braid's hooks in your agent |
+    | "reconstruct the intent" | [Understand the work](#understand-your-agents-work) on this branch |
+    | "push the braid to the PR" | [Share the intent](#share-with-the-braid-bot) on your pull request |
+    | "ship the braid" | [Finish the braid](#finish-with-braid-ship) |
+    | "is braid set up correctly?" | [Check the install](#check-your-setup) and recording |
+    | "why wasn't my session recorded?" | [Check Braid's hooks](#check-your-setup) in your agent |
 
 ## Understand your agent's work
 
-1. Create a local branch. Braid ties the boundary of work to a branch.
+1. Create a branch before your first request. Braid groups the work by branch.
 2. Have your agent make the change and commit it.
-3. In a new message, ask it to "reconstruct the intent". An agent can't include
-   the turn it's in.
+3. In a new message, ask it to "reconstruct the intent". It can't include the
+   message it's still answering.
 4. Pick the request where the work started.
 
-You get a link to the intent in a minute or two. When you're confident in the
-work, you can approve it and ship the braid; see
-[Finish with braid ship](#finish-with-braid-ship).
+You get a link to the intent in a minute or two.
 
 ### Explore the intent
 
 The intent gives you the context to understand the work: what it set out to
 do, what was decided and why, and how the code changed. With that, you can
-steer your agent where it went wrong, or approve and ship with confidence. An
-AI model reconstructs the intent from what Braid recorded, so check anything
-that matters against the code.
+steer your agent where it went wrong, or [approve and ship](#finish-with-braid-ship)
+with confidence. Braid's service reconstructs the intent from what Braid
+recorded, using a third-party AI model, so check anything that matters against
+the code.
 
 Start with the **Overview**: the goal, the outcome so far and why this
 direction. If the goal isn't what you asked for, tell your agent before going
@@ -89,7 +88,7 @@ the side panel.
 parts it touched and a sequence diagram of how they call each other. Press `?`
 for keyboard shortcuts.
 
-## Share the intent with the Braid bot
+## Share with the Braid bot
 
 The intent is private until you share it. The Braid bot shares it on your pull
 request: it comments with a brief of the intent and a link to the full page,
@@ -123,7 +122,7 @@ to merge.
 2. **Ship** by asking your agent to "ship the braid". Shipping is final. If you
    squash-merge, ship after the merge so the note lands on the squashed commit.
 
-## Tips to successfully work with Braid
+## Tips for working with Braid
 
 - One task per branch, or the intent mixes them.
 - Plan and build on the same branch, or the planning is left out.

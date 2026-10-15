@@ -203,7 +203,7 @@
   flex-wrap: wrap;
   gap: var(--space-3);
   justify-content: space-between;
-  margin: 0 0 var(--space-3);
+  margin: 0 0 var(--space-2);
   min-height: 26px;
 }
 
@@ -344,9 +344,10 @@
 }
 
 /* Neither action earns its space on a phone: there is rarely anywhere to paste
-   to, and the Markdown view is the same text the reader already has. */
+   to, and the Markdown view is the same text the reader already has. The bar
+   goes with them, or it leaves an empty row above the title. */
 @media screen and (max-width: 63.984375em) {
-  .md-typeset .braid-pageactions {
+  .md-typeset .braid-pagebar {
     display: none;
   }
 }
@@ -569,7 +570,7 @@
     max-width: var(--measure);
     /* Matches the outline's own top padding, so the page actions and the
        outline heading begin on the same line. */
-    padding: var(--space-5) 0 var(--space-8);
+    padding: var(--space-4) 0 var(--space-7);
   }
 
   .md-content__inner::before {
@@ -581,7 +582,7 @@
     grid-column: 2;
     grid-row: 1;
     height: calc(100dvh - var(--header-height));
-    padding: var(--space-5) 0;
+    padding: var(--space-4) 0;
     position: sticky;
     top: var(--header-height);
     width: var(--toc-width);
@@ -625,8 +626,14 @@
     display: none;
   }
 
+  /* Material opens the grid 30px below the header; the content's own padding
+     is enough. */
+  .md-main__inner {
+    margin-top: 0;
+  }
+
   .md-content__inner {
-    padding: var(--space-5) 0 var(--space-7);
+    padding: var(--space-4) 0 var(--space-6);
   }
 }
 

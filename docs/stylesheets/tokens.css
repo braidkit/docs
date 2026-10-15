@@ -79,10 +79,11 @@
    *   captured       JetBrains Mono       emitted and signed as it happened
    *   reconstructed  Archivo + plum rule  a model inferred it from events */
 
-  /* Sized after Stripe's docs: 14px body, a 28px page title, 20px and 16px
-   * headings. That is denser than the brand's reading density in
-   * braid-tokens.css, which puts docs body text at 16px; this page follows the
-   * founder's call to match Stripe instead.
+  /* A dense page: 12px body, a 22px page title, 16px and 14px headings, and
+   * 11px for tables, callouts and the outline. That is below the brand's
+   * reading density in braid-tokens.css, which puts docs body text at 16px and
+   * its metadata floor at 12px; this page follows the founder's call to keep
+   * it small.
    *
    * Material sets `html { font-size: 125% }`, 125% of whatever the reader has
    * chosen as their browser default, so 1rem is 20px here. base.css stops
@@ -92,14 +93,14 @@
    *
    * The px comments below are therefore "at browser defaults", not fixed sizes.
    */
-  --text-2xs: 0.6rem;     /* 12px — kbd, outline heading */
-  --text-xs:  0.6rem;     /* 12px — outline */
-  --text-sm:  0.65rem;    /* 13px — table cells, controls */
-  --text-md:  0.65rem;    /* 13px — callouts */
-  --text-base:0.7rem;     /* 14px — body */
-  --text-lg:  0.8rem;     /* 16px — h3 */
-  --text-xl:  1rem;       /* 20px — h2 */
-  --text-2xl: 1.4rem;     /* 28px — page title */
+  --text-2xs: 0.5rem;     /* 10px — kbd, labels */
+  --text-xs:  0.55rem;    /* 11px — outline */
+  --text-sm:  0.55rem;    /* 11px — table cells, controls */
+  --text-md:  0.55rem;    /* 11px — callouts */
+  --text-base:0.6rem;     /* 12px — body */
+  --text-lg:  0.7rem;     /* 14px — h3 */
+  --text-xl:  0.8rem;     /* 16px — h2 */
+  --text-2xl: 1.1rem;     /* 22px — page title */
 
   --leading-tight: 1.25;
   --leading-snug: 1.45;
@@ -130,12 +131,12 @@
 
   /* -- layout ------------------------------------------------------------ */
   --header-height: 56px;
-  --toc-width: 220px;
-  --shell-max: 48rem;       /* caps the article and outline so the outline
+  --toc-width: 200px;
+  --shell-max: 42rem;       /* caps the article and outline so the outline
                              * does not drift a screen-width away from the text
                              * on an ultrawide monitor. Below this the shell
                              * fills the viewport. */
-  --measure: 28rem;         /* 560px ≈ 80 characters of 14px Archivo.
+  --measure: 24rem;         /* 480px ≈ 80 characters of 12px Archivo.
                              * Reference tables share this column, so it sits
                              * at the long end of a comfortable line. */
 

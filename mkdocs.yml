@@ -27,7 +27,6 @@ theme:
     - navigation.instant
     - navigation.instant.progress
     - navigation.tracking
-    - navigation.top
     - navigation.footer
     - toc.follow
     - content.code.copy

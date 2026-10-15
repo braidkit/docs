@@ -55,25 +55,25 @@ body {
      hierarchy, and a bold heading is the loudest thing on the page. */
   font-weight: 400;
   letter-spacing: -0.02em;
-  margin: 0 0 var(--space-5);
+  margin: 0 0 var(--space-3);
 }
 
-/* Space is the section separator, not a rule. 40px above and 12px below is a
-   ~3:1 split, so the gap still belongs to the heading beneath it, without
-   leaving more white space than text around 14px body copy. */
+/* Space is the section separator, not a rule. 28px above and 8px below is a
+   ~3:1 split, so the gap still belongs to the heading beneath it, sized for
+   12px body copy. */
 .md-typeset h2 {
   font-size: var(--text-xl);
   font-weight: 400;
   letter-spacing: -0.015em;
-  margin: 2rem 0 var(--space-3);
+  margin: 1.4rem 0 var(--space-2);
 }
 
-/* Semibold, because at 16px over 14px body text, size alone does not set a
+/* Semibold, because at 14px over 12px body text, size alone does not set a
    subheading apart. */
 .md-typeset h3 {
   font-size: var(--text-lg);
   font-weight: 600;
-  margin: var(--space-5) 0 var(--space-2);
+  margin: var(--space-4) 0 var(--space-1);
 }
 
 .md-typeset h4 {
@@ -180,10 +180,17 @@ body {
   padding: 0.1em 0.25em;
 }
 
+/* A command split across two lines reads as two commands. Inline code is
+   short on this page, so it stays on one line; blocks keep their own
+   scrolling. */
+.md-typeset :not(pre) > code {
+  white-space: nowrap;
+}
+
 .md-typeset pre > code {
   font-size: var(--text-sm);
   line-height: var(--leading-snug);
-  padding: var(--space-4);
+  padding: var(--space-3);
 }
 
 .md-typeset pre {
@@ -220,15 +227,15 @@ body {
 /* Material pads cells at 0.9375em 1.25em, which made a five-row table
    nearly 250px tall. Rows are as tight as the Review UI's lists. */
 .md-typeset table:not([class]) :is(th, td) {
-  padding: var(--space-2) var(--space-3);
+  padding: 0.3rem 0.5rem;
 }
 
-/* Column headings as the Review UI draws them: 11px, medium, uppercase and
-   tracked, in the muted text colour. */
+/* Column headings drawn like the Review UI's: medium, uppercase and tracked,
+   in the muted text colour, a step below the cells. */
 .md-typeset table:not([class]) th {
   background: var(--surface-sunken);
   color: var(--text-muted);
-  font-size: 0.55rem;
+  font-size: var(--text-2xs);
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -273,7 +280,7 @@ body {
   border-radius: 0;
   box-shadow: none;
   font-size: var(--text-md);
-  padding: var(--space-3) 0 var(--space-4);
+  padding: var(--space-2) 0 var(--space-3);
 
   /* Every callout resolves one variable. Adding a severity below is one line,
      not a new block of border/background/icon rules. */
