@@ -570,7 +570,7 @@
     max-width: var(--measure);
     /* Matches the outline's own top padding, so the page actions and the
        outline heading begin on the same line. */
-    padding: var(--space-4) 0 var(--space-7);
+    padding: var(--space-5) 0 var(--space-8);
   }
 
   .md-content__inner::before {
@@ -582,7 +582,7 @@
     grid-column: 2;
     grid-row: 1;
     height: calc(100dvh - var(--header-height));
-    padding: var(--space-4) 0;
+    padding: var(--space-5) 0;
     position: sticky;
     top: var(--header-height);
     width: var(--toc-width);
@@ -630,6 +630,14 @@
      is enough. */
   .md-main__inner {
     margin-top: 0;
+  }
+
+  /* The measure applies here too. Without it, text between a phone and 1024px
+     ran the full window width, twice a comfortable line. Material's own
+     0.8rem gutters sit inside the cap. */
+  .md-content {
+    margin-inline: auto;
+    max-width: calc(var(--measure) + 1.6rem);
   }
 
   .md-content__inner {
