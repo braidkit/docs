@@ -48,8 +48,8 @@ Then:
    turn it's in.
 4. Pick the request where the work started.
 
-You get a link to the review in a minute or two. Ignore the approve and ship
-commands on the review page for now.
+You get a link to the review in a minute or two. When the work is done, you
+approve it and ship the braid; see [Finish with braid ship](#finish-with-braid-ship).
 
 ### Read the review
 
@@ -87,6 +87,7 @@ matter.
 |---|---|
 | "open this for review" | Build a review of this branch |
 | "push the braid to the PR" | [Share the review](#share-a-review) on your pull request |
+| "the PR is merged, ship the braid" | [Finish the braid](#finish-with-braid-ship) |
 | "is braid set up correctly?" | Check the install and recording |
 | "why wasn't my session recorded?" | Check Braid's hooks in your agent |
 
@@ -109,6 +110,28 @@ Then ask your agent to "push the braid to the PR". Braid comments on the pull
 request with a link. Anyone who can read the repository can open it after
 signing in with GitHub.
 
+## Finish with braid ship
+
+Ship a braid once its pull request has merged. Shipping marks the braid done
+and ties its intent to the commit that landed, as a signed Git note. It's
+final: a shipped braid takes no more work or reviews.
+
+1. **Approve the review.** Copy the approve command from the review page and
+   run it. Your agent won't approve for you.
+
+    ```sh
+    braid review <braid-id> --verdict approved
+    ```
+
+    If your agent does more work on the branch afterwards, the braid goes back
+    to Active and needs a new review.
+
+2. **Merge the pull request,** then check out your default branch and pull.
+3. **Ask your agent to "ship the braid".** It confirms the branch and commit
+   with you before it ships.
+
+The note stays in your local repository. Shipping doesn't push it.
+
 ## What leaves your machine
 
 - **While you work:** nothing.
@@ -116,6 +139,8 @@ signing in with GitHub.
   activity and the code changes go to Braid's service, which writes the review
   with a third-party AI model.
 - **When you share:** Braid stores the review and a summary of the session.
+- **When you ship:** the braid's record goes to Braid's service again, to write
+  the intent into the note.
 
 Nothing is redacted yet, so secrets the agent saw can be included.
 
