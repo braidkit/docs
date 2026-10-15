@@ -105,35 +105,20 @@ matter.
 
 ## Finish with braid ship
 
-Approving records, signed, that you understood and accepted this intent for
-this exact commit. Shipping then marks the braid done and writes the intent
-onto the commit you ship from, as a signed Git note, so whoever reads that
-history later can see why the code is the way it is, and who signed off.
-Shipping is final: a shipped braid takes no more work.
+Approving signs that you understood and accepted the intent. Shipping marks the
+braid done and writes the intent onto your commit as a signed Git note. Both
+are optional during the preview, and neither has to wait for your pull request
+to merge.
 
-Both are optional during the preview. The note stays in your local repository,
-because shipping doesn't push it, so the value today is in understanding the
-work. Neither has to wait for your pull request to merge:
-
-1. **Approve the braid as soon as you understand the work,** ideally before
-   you open or merge the pull request. Copy the approve command from the
-   intent page and run it. Your agent won't approve for you.
+1. **Approve** once you understand the work, with the command from the intent
+   page:
 
     ```sh
     braid review <braid-id> --verdict approved
     ```
 
-    If your agent does more work on the branch afterwards, the braid goes back
-    to Active. Reconstruct the intent and approve it again.
-
-2. **Ship when you're done with the braid.** Ask your agent to "ship the
-   braid". It confirms the branch and commit with you first, because the note
-   goes on the commit you have checked out.
-
-    If you ship before you squash-merge, the note stays on your branch's commit
-    and doesn't follow the squashed commit onto your default branch. To keep
-    the note with the code that landed, ship after the merge, from your updated
-    default branch.
+2. **Ship** by asking your agent to "ship the braid". Shipping is final. If you
+   squash-merge, ship after the merge so the note lands on the squashed commit.
 
 ## What leaves your machine
 
