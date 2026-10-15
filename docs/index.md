@@ -45,8 +45,8 @@ and again whenever Codex asks.
     | "reconstruct the intent" | [Understand the work](#understand-your-agents-work) on this branch |
     | "push the braid to the PR" | [Share the intent](#share-with-the-braid-bot) on your pull request |
     | "ship the braid" | [Finish the braid](#finish-with-braid-ship) |
-    | "is braid set up correctly?" | [Check the install](#check-your-setup) and recording |
-    | "why wasn't my session recorded?" | [Check Braid's hooks](#check-your-setup) in your agent |
+    | "is braid set up correctly?" | Check the install and recording |
+    | "why wasn't my session recorded?" | Check Braid's hooks in your agent |
 
 ## Understand your agent's work
 
@@ -132,21 +132,14 @@ to merge.
   worktree), keep that copy until you're done with the braid. Braid needs the
   folder the work happened in.
 
-## Troubleshooting
-
-### Check your setup
-
-You can ask your agent "is braid set up correctly?" It runs Braid's checks and tells
-you what to fix.
-
-### Known limitations
+## Known limitations
 
 - Braid can't reconstruct work started on a detached HEAD.
 - Changes the agent makes in another repository aren't in this branch's intent.
 - "Review boundary is incomplete" usually means the history was rewritten, or
   the checkout or branch changed.
 
-### Update Braid
+## Update Braid
 
 Braid doesn't update itself, and an outdated install can fail to reconstruct
 the intent.
@@ -155,12 +148,12 @@ the intent.
 braid upgrade
 ```
 
-### Stop or remove Braid
+## Stop or remove Braid
 
 To stop recording, run `braid hooks uninstall claude` or
 `braid hooks uninstall codex`. To remove Braid, run `braid uninstall`.
 
-### Get help
+## Get help
 
 Ask on [Discord](https://discord.gg/gzUevjYD9) or email
 [hello@braidkit.io](mailto:hello@braidkit.io).
