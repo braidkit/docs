@@ -59,11 +59,11 @@
     extension, which is what both actions point at.
   #}
   {#
-    `page_markdown.py` writes both shapes of Markdown URL for every page. Link
-    the bare one, `index.md`, because that is what Linear and Mintlify
-    serve and so the shape a reader is most likely to recognise.
+    `page_markdown.py` writes each page's source as `guide.md` beside `guide/`,
+    the shape Linear and Mintlify serve. The home page's URL is empty, so its
+    source is `index.md`; building the name from the URL alone gave `.md`.
   #}
-  {% set md_path = (page.url[:-1] if page.url[-1:] == '/' else page.url) ~ '.md' %}
+  {% set md_path = 'index.md' if not page.url else (page.url[:-1] if page.url[-1:] == '/' else page.url) ~ '.md' %}
   {% if page %}
     <div class="braid-pagebar">
       {#

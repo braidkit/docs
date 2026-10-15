@@ -9,6 +9,7 @@ structure.
 
 import argparse
 import pathlib
+import re
 import sys
 
 import yaml
@@ -116,6 +117,19 @@ def check_site(site_dir):
             source_url,
         ):
             require_text(page_html, contract, location, errors)
+
+        # Both Markdown actions link a published file. The home page's URL is
+        # empty, and building the link from it alone once produced `.md`.
+        for target in re.findall(
+            r'(?:data-markdown-url|href)="([^"]*\.md)"', page_html
+        ):
+            if "://" in target:
+                continue
+            resolved = (shell_path.parent / target).resolve()
+            if not resolved.is_file():
+                errors.append(
+                    f"{location}: Markdown action links {target}, which was not published"
+                )
 
     shell_css = SHELL_CSS.read_text(encoding="utf-8")
     for contract in (
