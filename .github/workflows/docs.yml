@@ -5,6 +5,10 @@ on:
   push:
     branches:
       - main
+  # Weekly, so a Braid release that renames a command, or a link that dies,
+  # fails here even in a week nobody edits the page.
+  schedule:
+    - cron: "17 14 * * 1"
 
 permissions:
   contents: read
@@ -31,9 +35,49 @@ jobs:
         run: python scripts/build_llms.py --check
       - name: Verify site contracts
         run: python scripts/check_site.py site
+      - name: Install Vale
+        env:
+          VALE_VERSION: 3.24.0
+          VALE_SHA256: 867534ddb678abca7f214bc4706ead0922bd5252ffe8035fc227013f66c8b214
+        run: |
+          archive="vale_${VALE_VERSION}_Linux_64-bit.tar.gz"
+          curl -fsSLo "$RUNNER_TEMP/$archive" "https://github.com/errata-ai/vale/releases/download/v${VALE_VERSION}/$archive"
+          echo "$VALE_SHA256  $RUNNER_TEMP/$archive" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/$archive" -C "$RUNNER_TEMP" vale
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+      # Spelling and the house rules in .vale/styles/Braid.
+      - name: Lint the prose
+        run: vale docs/index.md
+      # The built page, so anchors are checked against the headings MkDocs
+      # renders. Discord answers bursts with 429, which is not a broken link.
+      - name: Check links
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: --no-progress --include-fragments --accept 200..=299,429 site/index.html
       - name: Upload the rendered site
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: docs-site-${{ github.sha }}
           path: site/
           retention-days: 7
+
+  braid-commands:
+    name: braid commands
+    # Braid publishes macOS builds only.
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # The install command exactly as the page shows it, as a dry run: the
+      # script downloads, resolves the latest release and changes nothing.
+      - name: Dry-run the documented installer
+        run: curl -fsSL https://braidkit.io/cli/install.sh | bash -s -- --dry-run --no-modify-path
+      - name: Download the latest braid
+        run: |
+          tag="$(curl -fsSL https://braidkit.io/cli/latest.txt)"
+          archive="braid_${tag#v}_darwin_arm64.tar.gz"
+          cd "$RUNNER_TEMP"
+          curl -fsSLO "https://braidkit.io/cli/releases/$tag/$archive"
+          curl -fsSL "https://braidkit.io/cli/releases/$tag/checksums.txt" | grep " $archive\$" | shasum -a 256 -c -
+          tar -xzf "$archive" braid
+      - name: Check every braid command on the page
+        run: python3 scripts/check_commands.py --braid "$RUNNER_TEMP/braid"

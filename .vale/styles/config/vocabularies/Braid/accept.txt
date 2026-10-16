@@ -1,0 +1,8 @@
+[Bb]raids?
+Codex
+[Hh]aberdash
+idempotency
+rebase
+subagents?
+worktrees?
+[Ww]orkstreams?
