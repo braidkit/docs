@@ -48,6 +48,35 @@ and again whenever Codex asks.
     | "is braid set up correctly?" | Check the install and recording |
     | "why wasn't my session recorded?" | Check Braid's hooks in your agent |
 
+## Try it on a sample project
+
+[Haberdash](https://github.com/braidkit/haberdash) is a small order service
+with one open issue: orders fail when the catalog service times out. The fix
+looks simple, but the issue also warns that a card must never be charged
+twice, so your agent has a real decision to make. You need Python 3.9 or newer
+to run its tests.
+
+1. Clone it and create a branch:
+
+    ```sh
+    git clone https://github.com/braidkit/haberdash
+    cd haberdash
+    git switch -c fix/catalog-retries
+    ```
+
+2. Start a new agent session in `haberdash` and ask it to "fix the issue in
+   ISSUE.md, keep the tests green and commit".
+3. In a new message, ask it to "reconstruct the intent", and pick the request
+   from step 2.
+4. On the intent page, open **Decisions** and find what the agent decided to
+   do when a payment times out. Retrying the charge without an idempotency key
+   could charge the card twice. Check that the code does what the decision
+   says.
+5. [Approve and ship](#finish-with-braid-ship) the braid.
+
+The steps are the same on your own repository, except that you can also
+[share the intent](#share-with-the-braid-bot) on your pull request.
+
 ## Understand your agent's work
 
 Reconstructing the intent sends what Braid recorded, your requests, the agent's
