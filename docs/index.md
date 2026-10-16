@@ -54,14 +54,13 @@ and again whenever Codex asks.
 with one open issue: orders fail when the catalog service times out. The fix
 looks small, but a retry in the wrong place charges a card twice.
 
-[See a finished intent](SHOWCASE_URL) first. It comes from four requests: a
-plan, one pushback on how long checkout may wait, the build, and a follow-up
-about retried payments. Open **Decisions** to see each choice, the approach it
-rejected and why, and the test that covers it.
+First, look at [a finished intent](SHOWCASE_URL) built from four requests: a
+plan, one pushback, the build and a follow-up. Its **Decisions** show each
+choice, what it rejected and why, and the test that covers it.
 
-Then make your own. You need Python 3.9 or newer.
+Then make your own, with Python 3.9 or newer:
 
-1. Clone it and create a branch:
+1. Clone Haberdash and create a branch:
 
     ```sh
     git clone https://github.com/braidkit/haberdash
@@ -71,14 +70,13 @@ Then make your own. You need Python 3.9 or newer.
 
 2. Start a new agent session in `haberdash` and ask it to "read ISSUE.md and
    propose a plan, without changing any code yet".
-3. Push back on one part of the plan you'd decide differently, such as where
-   the retries live or how long an order may wait.
+3. Push back on one part you'd decide differently, such as where the retries
+   live or how long an order may wait.
 4. Ask it to build the plan, keep the tests green and commit.
 5. In a new message, ask it to "reconstruct the intent", and pick the request
    from step 2.
-6. Open **Decisions** and find your pushback, with the approach you rejected.
-   Check that the code does what each decision says, above all for payment
-   timeouts.
+6. In **Decisions**, find your pushback and the approach it replaced. Check
+   that the code does what each decision says, above all for payment timeouts.
 7. [Approve and ship](#finish-with-braid-ship) the braid.
 
 The steps are the same on your own repository, except that you can also
