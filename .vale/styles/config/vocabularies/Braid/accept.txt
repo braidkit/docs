@@ -2,6 +2,7 @@
 Codex
 [Hh]aberdash
 idempotency
+pushback
 rebase
 subagents?
 worktrees?

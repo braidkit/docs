@@ -52,9 +52,14 @@ and again whenever Codex asks.
 
 [Haberdash](https://github.com/braidkit/haberdash) is a small order service
 with one open issue: orders fail when the catalog service times out. The fix
-looks simple, but the issue also warns that a card must never be charged
-twice, so your agent has a real decision to make. You need Python 3.9 or newer
-to run its tests.
+looks small, but a retry in the wrong place charges a card twice.
+
+[See a finished intent](SHOWCASE_URL) first. It comes from four requests: a
+plan, one pushback on how long checkout may wait, the build, and a follow-up
+about retried payments. Open **Decisions** to see each choice, the approach it
+rejected and why, and the test that covers it.
+
+Then make your own. You need Python 3.9 or newer.
 
 1. Clone it and create a branch:
 
@@ -64,15 +69,17 @@ to run its tests.
     git switch -c fix/catalog-retries
     ```
 
-2. Start a new agent session in `haberdash` and ask it to "fix the issue in
-   ISSUE.md, keep the tests green and commit".
-3. In a new message, ask it to "reconstruct the intent", and pick the request
+2. Start a new agent session in `haberdash` and ask it to "read ISSUE.md and
+   propose a plan, without changing any code yet".
+3. Push back on one part of the plan you'd decide differently, such as where
+   the retries live or how long an order may wait.
+4. Ask it to build the plan, keep the tests green and commit.
+5. In a new message, ask it to "reconstruct the intent", and pick the request
    from step 2.
-4. On the intent page, open **Decisions** and find what the agent decided to
-   do when a payment times out. Retrying the charge without an idempotency key
-   could charge the card twice. Check that the code does what the decision
-   says.
-5. [Approve and ship](#finish-with-braid-ship) the braid.
+6. Open **Decisions** and find your pushback, with the approach you rejected.
+   Check that the code does what each decision says, above all for payment
+   timeouts.
+7. [Approve and ship](#finish-with-braid-ship) the braid.
 
 The steps are the same on your own repository, except that you can also
 [share the intent](#share-with-the-braid-bot) on your pull request.
