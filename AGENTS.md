@@ -11,9 +11,15 @@ python -m unittest discover -s tests -v     # tests
 python -m mkdocs build --strict             # warnings are errors
 python scripts/build_llms.py --check        # generated corpus is current
 python scripts/check_site.py site           # site contracts, after a build
+vale docs/index.md                          # spelling and house rules
+lychee --include-fragments site/index.html  # links and anchors, after a build
+python scripts/check_commands.py            # braid commands match the CLI
 ```
 
-CI runs all five in that order.
+CI runs them in that order, and weekly. `vale` and `lychee` come from
+Homebrew. The command check runs on macOS against the latest Braid release,
+because Braid publishes macOS builds only. Words Vale should accept go in
+`.vale/styles/config/vocabularies/Braid/accept.txt`.
 
 ## Copies from braidkit/brand
 

@@ -1,0 +1,12 @@
+extends: substitution
+message: "Use '%s' instead of '%s'."
+level: error
+ignorecase: false
+swap:
+  Github: GitHub
+  github: GitHub
+  MacOS: macOS
+  Mac OS: macOS
+  Claude code: Claude Code
+  CODEX: Codex
+  Mkdocs: MkDocs

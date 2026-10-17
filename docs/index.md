@@ -48,6 +48,43 @@ and again whenever Codex asks.
     | "is braid set up correctly?" | Check the install and recording |
     | "why wasn't my session recorded?" | Check Braid's hooks in your agent |
 
+## Try it on a sample project
+
+[Haberdash](https://github.com/braidkit/haberdash) is a small order service
+with one open issue: orders fail when the catalog service times out. The fix
+looks small, but a retry in the wrong place charges a card twice. You need
+Python 3.9 or newer.
+
+1. Clone it and create a branch:
+
+    ```sh
+    git clone https://github.com/braidkit/haberdash
+    cd haberdash
+    git switch -c fix/catalog-retries
+    ```
+
+2. Start a new agent session in `haberdash` and ask it to fix the issue:
+
+    ```text
+    Fix the issue in ISSUE.md. Keep the tests green and commit.
+    ```
+
+3. In a new message, reconstruct the intent, and pick the request from step 2:
+
+    ```text
+    reconstruct the intent
+    ```
+
+4. In **Decisions**, check that the code does what each decision says, above
+   all for payment timeouts.
+5. If you'd decide one differently, tell your agent what to change and to
+   commit. Then reconstruct the intent again, picking the same request. The
+   new intent includes your change and why.
+6. [Approve and ship](#finish-with-braid-ship) the braid.
+
+The steps are the same on your own repository, except that you can also
+[share the intent](#share-with-the-braid-bot) on your pull request.
+
 ## Understand your agent's work
 
 Reconstructing the intent sends what Braid recorded, your requests, the agent's
@@ -55,7 +92,7 @@ replies and the code changes, to Braid's service, which uses a third-party AI
 model. Braid currently does not redact information, so anything the agent saw
 can be included.
 
-1. Create a branch before your first request. Braid groups the work by branch.
+1. Create a branch before your first request.
 2. Have your agent make the change and commit it.
 3. In a new message, ask it to "reconstruct the intent". It can't include the
    message it's still answering.
@@ -128,8 +165,10 @@ to merge.
 
 ## Tips for working with Braid
 
+- Create the branch before your first request, and stay on it until the work
+  is committed. Braid files each request under the branch it started on, so
+  work begun on another branch is left out of the intent.
 - One task per branch, or the intent mixes them.
-- Plan and build on the same branch, or the planning is left out.
 - Don't squash, rebase or amend before Braid reconstructs the intent. Squash
   when you merge.
 - If your agent app gives each task its own copy of the repository (a Git
@@ -140,6 +179,7 @@ to merge.
 
 ### Known limitations
 
+- Braid is built for one developer for now. Features for teams are coming.
 - Braid can't reconstruct work started on a detached HEAD.
 - Changes the agent makes in another repository aren't in this branch's intent.
 - "Review boundary is incomplete" usually means the history was rewritten, or
@@ -161,7 +201,7 @@ To stop recording, run `braid hooks uninstall claude` or
 
 ### Get help
 
-Ask on [Discord](https://discord.gg/gzUevjYD9) or email
+Ask on [Discord](https://discord.gg/G3wzPsKtR) or email
 [hello@braidkit.io](mailto:hello@braidkit.io).
 
 If we ask for a support file, ask your agent for a "Braid support dump". It

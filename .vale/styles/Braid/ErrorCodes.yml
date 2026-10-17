@@ -1,0 +1,6 @@
+extends: existence
+message: "Don't show readers Braid's internal error code '%s'. Say what happened and what to do."
+level: error
+nonword: true
+tokens:
+  - 'BRD-\d+'
