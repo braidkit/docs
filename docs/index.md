@@ -195,7 +195,7 @@ To stop recording, run `braid hooks uninstall claude` or
 
 ### Get help
 
-Ask on [Discord](https://discord.gg/gzUevjYD9) or email
+Ask on [Discord](https://discord.gg/G3wzPsKtR) or email
 [hello@braidkit.io](mailto:hello@braidkit.io).
 
 If we ask for a support file, ask your agent for a "Braid support dump". It
