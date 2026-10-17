@@ -180,6 +180,10 @@ to merge.
 
 ### Known limitations
 
+- Braid is single-player for now. A braid holds the work recorded on one
+  developer's machine, and only they can update it. Teammates can read an
+  intent you [share](#share-with-the-braid-bot) on a pull request. Ways to work
+  on a braid together are coming later.
 - Braid can't reconstruct work started on a detached HEAD.
 - Changes the agent makes in another repository aren't in this branch's intent.
 - "Review boundary is incomplete" usually means the history was rewritten, or
