@@ -93,7 +93,7 @@ extra:
   # disappears rather than 404s.
   support:
     title: Get help
-    link: https://discord.gg/gzUevjYD9
+    link: https://discord.gg/G3wzPsKtR
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/braidkit/docs
