@@ -66,7 +66,7 @@ Python 3.9 or newer.
 2. Start a new agent session in `haberdash` and ask for a plan:
 
     ```text
-    Read ISSUE.md and propose a plan for the fix. Don't change any code yet.
+    Read ISSUE.md and plan the fix. Don't change code yet.
     ```
 
 3. When the plan looks right, ask it to build:
