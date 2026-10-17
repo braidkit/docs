@@ -52,15 +52,10 @@ and again whenever Codex asks.
 
 [Haberdash](https://github.com/braidkit/haberdash) is a small order service
 with one open issue: orders fail when the catalog service times out. The fix
-looks small, but a retry in the wrong place charges a card twice.
+looks small, but a retry in the wrong place charges a card twice. You need
+Python 3.9 or newer.
 
-First, look at [a finished intent](SHOWCASE_URL) built from four requests: a
-plan, one pushback, the build and a follow-up. Its **Decisions** show each
-choice, what it rejected and why, and the test that covers it.
-
-Then make your own, with Python 3.9 or newer:
-
-1. Clone Haberdash and create a branch:
+1. Clone it and create a branch:
 
     ```sh
     git clone https://github.com/braidkit/haberdash
