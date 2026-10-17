@@ -134,7 +134,8 @@ for keyboard shortcuts.
 The intent is private until you share it. The Braid bot shares it on your pull
 request: it comments with a brief of the intent and a link to the full page,
 which anyone who can read the repository can open after signing in with GitHub.
-Sharing uploads the intent and a summary of the session, including your
+For now, teammates can read a braid but only you can add to it. More ways to
+work together are coming. Sharing uploads the intent and a summary of the session, including your
 prompts. Please exercise care when sharing intent.
 
 To turn the bot on:
@@ -169,7 +170,6 @@ to merge.
   is committed. Braid files each request under the branch it started on, so
   work begun on another branch is left out of the intent.
 - One task per branch, or the intent mixes them.
-- Plan and build on the same branch, or the planning is left out.
 - Don't squash, rebase or amend before Braid reconstructs the intent. Squash
   when you merge.
 - If your agent app gives each task its own copy of the repository (a Git
@@ -180,10 +180,6 @@ to merge.
 
 ### Known limitations
 
-- Braid is single-player for now. A braid holds the work recorded on one
-  developer's machine, and only they can update it. Teammates can read an
-  intent you [share](#share-with-the-braid-bot) on a pull request. Ways to work
-  on a braid together are coming later.
 - Braid can't reconstruct work started on a detached HEAD.
 - Changes the agent makes in another repository aren't in this branch's intent.
 - "Review boundary is incomplete" usually means the history was rewritten, or
