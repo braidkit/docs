@@ -84,7 +84,7 @@ replies and the code changes, to Braid's service, which uses a third-party AI
 model. Braid currently does not redact information, so anything the agent saw
 can be included.
 
-1. Create a branch before your first request. Braid groups the work by branch.
+1. Create a branch before your first request.
 2. Have your agent make the change and commit it.
 3. In a new message, ask it to "reconstruct the intent". It can't include the
    message it's still answering.
@@ -157,6 +157,9 @@ to merge.
 
 ## Tips for working with Braid
 
+- Create the branch before your first request, and stay on it until the work
+  is committed. Braid files each request under the branch it started on, so
+  work begun on another branch is left out of the intent.
 - One task per branch, or the intent mixes them.
 - Plan and build on the same branch, or the planning is left out.
 - Don't squash, rebase or amend before Braid reconstructs the intent. Squash
