@@ -63,27 +63,23 @@ Python 3.9 or newer.
     git switch -c fix/catalog-retries
     ```
 
-2. Start a new agent session in `haberdash` and ask for a plan:
+2. Start a new agent session in `haberdash` and ask it to fix the issue:
 
     ```text
-    Read ISSUE.md and plan the fix. Don't change code yet.
+    Fix the issue in ISSUE.md. Keep the tests green and commit.
     ```
 
-3. When the plan looks right, ask it to build:
-
-    ```text
-    Build it, keep the tests green and commit.
-    ```
-
-4. In a new message, reconstruct the intent, and pick the request from step 2:
+3. In a new message, reconstruct the intent, and pick the request from step 2:
 
     ```text
     reconstruct the intent
     ```
 
-5. In **Decisions**, check that the code does what each decision says, above
-   all for payment timeouts. If you'd decide one differently, tell your agent
-   and reconstruct again. The intent records your change and why.
+4. In **Decisions**, check that the code does what each decision says, above
+   all for payment timeouts.
+5. If you'd decide one differently, tell your agent what to change and to
+   commit. Then reconstruct the intent again, picking the same request. The
+   new intent includes your change and why.
 6. [Approve and ship](#finish-with-braid-ship) the braid.
 
 The steps are the same on your own repository, except that you can also
