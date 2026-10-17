@@ -63,16 +63,28 @@ Python 3.9 or newer.
     git switch -c fix/catalog-retries
     ```
 
-2. Start a new agent session in `haberdash` and ask it to "read ISSUE.md and
-   propose a plan, without changing any code yet".
-3. Push back on one part you'd decide differently, such as where the retries
-   live or how long an order may wait.
-4. Ask it to build the plan, keep the tests green and commit.
-5. In a new message, ask it to "reconstruct the intent", and pick the request
-   from step 2.
-6. In **Decisions**, find your pushback and the approach it replaced. Check
-   that the code does what each decision says, above all for payment timeouts.
-7. [Approve and ship](#finish-with-braid-ship) the braid.
+2. Start a new agent session in `haberdash` and ask for a plan:
+
+    ```text
+    Read ISSUE.md and propose a plan for the fix. Don't change any code yet.
+    ```
+
+3. When the plan looks right, ask it to build:
+
+    ```text
+    Build it, keep the tests green and commit.
+    ```
+
+4. In a new message, reconstruct the intent, and pick the request from step 2:
+
+    ```text
+    reconstruct the intent
+    ```
+
+5. In **Decisions**, check that the code does what each decision says, above
+   all for payment timeouts. If you'd decide one differently, tell your agent
+   and reconstruct again. The intent records your change and why.
+6. [Approve and ship](#finish-with-braid-ship) the braid.
 
 The steps are the same on your own repository, except that you can also
 [share the intent](#share-with-the-braid-bot) on your pull request.
