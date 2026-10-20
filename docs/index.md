@@ -185,12 +185,14 @@ to merge.
 - "Review boundary is incomplete" usually means the history was rewritten, or
   the checkout or branch changed.
 
-### Codex permissions
+### Agent sandboxes
 
-Braid's skills run `braid` in Codex's sandbox, and it talks to the Braid daemon
-on your machine. That needs network access and local binding. Without them,
-Braid says you're signed out or that the daemon isn't running when neither is
-true. Allow both in Codex's permissions, in whichever way suits you.
+Braid's skills run `braid` through your agent, and it talks to the Braid daemon
+on your machine. If your agent runs commands in a sandbox, as Codex does by
+default and Claude Code does once you turn its sandbox on, the sandbox needs
+network access and local binding. Without them, Braid can say you're signed out
+or that the daemon isn't running when neither is true. Allow both in whichever
+way suits you.
 
 ### Update Braid
 
