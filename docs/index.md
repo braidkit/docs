@@ -1,6 +1,6 @@
 ---
 title: Get started with Braid
-description: Install Braid, understand your agent's work through the intent Braid reconstructs, and what to know during the private preview.
+description: Install Braid, try parallel subagents on BrewGo, and review their work through the intent Braid reconstructs.
 ---
 
 # Get started with Braid
@@ -50,40 +50,133 @@ and again whenever Codex asks.
 
 ## Try it on a sample project
 
-[Haberdash](https://github.com/braidkit/haberdash) is a small order service
-with one open issue: orders fail when the catalog service times out. The fix
-looks small, but a retry in the wrong place charges a card twice. You need
-Python 3.9 or newer.
+<!-- Adapted from braidkit/braid, docs/runbooks/
+live-claude-single-session-scenarios-detailed.md, Scenario 6: Parallel
+Independent Subagents. That test uses a small CommonJS fixture. This exercise
+uses the React/FastAPI app in braidkit/brewgo at the pinned storefront commit;
+its paths and verification commands intentionally differ from the fixture. -->
 
-1. Clone it and create a branch:
+BrewGo is a coffee order-ahead app with a React frontend and a FastAPI backend.
+You'll add a small admin analytics page with two subagents working in parallel,
+then use Braid to understand their choices and how the work fits together.
+
+You need **Node.js 22.12 or later**, **Python 3.10 or later**, and an agent
+that can launch subagents. BrewGo is currently private; ask the Braid team for
+repository access before starting.
+
+### Set up BrewGo
+
+1. Clone it and create a branch from the storefront commit. Starting from this
+   commit keeps the exercise available after later features are merged:
 
     ```sh
-    git clone https://github.com/braidkit/haberdash
-    cd haberdash
-    git switch -c fix/catalog-retries
+    git clone https://github.com/braidkit/brewgo.git
+    cd brewgo
+    git switch -c feat/admin-analytics \
+      733976704cfe95136d104493fda186b2c0658b58
     ```
 
-2. Start a new agent session in `haberdash` and ask it to fix the issue:
+2. Install the dependencies and start the app:
 
-    ```text
-    Fix the issue in ISSUE.md. Keep the tests green and commit.
+    ```sh
+    npm ci
+    python3 -m venv .venv
+    .venv/bin/pip install -r backend/requirements-lock.txt
+    npm run dev
     ```
 
-3. In a new message, reconstruct the intent, and pick the request from step 2:
+    Open `http://127.0.0.1:5173` and place a few sample orders to give the
+    analytics something to show. Payments are simulated. Use `127.0.0.1`
+    consistently so its cookies work. `npm run dev` starts the frontend on
+    port 5173 and the API on port 8000. Leave it running while you work.
+
+### Delegate the work
+
+Start a **new agent session** in this `brewgo` checkout, on
+`feat/admin-analytics`. If you use a terminal agent, open a second terminal
+in `brewgo` so the app can keep running. For this exercise, keep the parent
+and its subagents in the same checkout and branch. Paste this request:
+
+```text
+Add a small admin analytics page to BrewGo using two parallel subagents.
+
+Act as the parent coordinator. Confirm the repository and branch first.
+Inspect the existing React, FastAPI, and SQLite app. Before delegating, define
+the admin sign-in, sign-out, and analytics APIs and their response shapes.
+Give both subagents the same API contract so they can work independently.
+
+Launch exactly two subagents concurrently in this checkout and branch.
+Give them separate file ownership. Neither subagent should commit, switch
+branches, create a worktree, or change the other's files.
+
+Backend subagent:
+- Own backend/ only, including its tests.
+- Add admin sign-in and sign-out separate from the sample customer profiles,
+  with no default credentials. Provide a local command to create an admin.
+- Add a read-only summary of saved orders: total orders, revenue before tax,
+  average order value, and counts by status. Keep money in integer cents.
+- Require an admin session for every analytics request. Handle empty data
+  and unauthorized requests. Preserve orders and the existing customer APIs.
+- Add focused API tests and run npm run test:api.
+
+Frontend subagent:
+- Own src/ only.
+- Add an /admin page with sign-in, summary, and sign-out using the agreed APIs.
+- Show the summary with loading, empty, unauthorized, and error states.
+  Keep simulated payments clearly labeled and preserve the storefront.
+- Use the existing components and dependencies. Run npm run build.
+
+As parent, coordinate and review rather than edit implementation files.
+Wait for both subagents to finish. Check that each changed only its owned
+files. Run npm run build, npm run test:api, and git diff --check.
+Check the admin sign-in, summary, sign-out, and original ordering flow in
+the browser. Fix any failures through the subagent that owns the files.
+Commit the completed change with this message:
+feat: add BrewGo analytics with parallel subagents
+Leave the working tree clean. Report each subagent's result, the checks that
+passed, and how to create the local admin account.
+```
+
+The parent coordinates and commits. The backend and frontend subagents each
+own their implementation. Braid records the work as it happens; you don't
+need to register each subagent yourself.
+
+### Review the combined work
+
+1. Wait for both subagents and the parent's reply to finish, with the change
+   committed. Read [what reconstruction sends](#understand-your-agents-work),
+   then send a **new message**:
 
     ```text
     reconstruct the intent
     ```
 
-4. In **Decisions**, check that the code does what each decision says, above
-   all for payment timeouts.
-5. If you'd decide one differently, tell your agent what to change and to
-   commit. Then reconstruct the intent again, picking the same request. The
-   new intent includes your change and why.
-6. [Approve and ship](#finish-with-braid-ship) the braid.
+2. Pick the request that starts "Add a small admin analytics page to BrewGo".
+   Open the intent link when it is ready.
 
-The steps are the same on your own repository, except that you can also
-[share the intent](#share-with-the-braid-bot) on your pull request.
+3. Start with **Overview**. Check that the goal and outcome describe the
+   admin summary you asked for. In **Workstreams**, follow the parent's
+   coordination and the separate backend and frontend work. Open each
+   subagent's trace to see what it was asked to do and the files it changed.
+
+4. In **Decisions**, inspect how admin access is checked, how revenue is
+   calculated, and how the UI handles failed requests. Check consequential
+   claims against the linked code and test results. A reconstructed explanation
+   does not establish that the implementation works.
+
+5. Try steering the work. For example, ask the parent to have the frontend
+   subagent add a retry button after a failed analytics request, if one is
+   missing. Have it check and commit the change. Then reconstruct the intent
+   again for the **same braid** and the same starting request. Check that the
+   updated intent explains the change and retains the earlier work.
+
+6. When you're done steering, [approve and ship](#finish-with-braid-ship) once
+   you understand and accept the result.
+
+If a subagent's work is missing, ask your agent "why wasn't my session
+recorded?" before treating the review as complete. You can also
+[share the intent](#share-with-the-braid-bot) on a pull request in a repository
+where you have permission to open one.
 
 ## Understand your agent's work
 
