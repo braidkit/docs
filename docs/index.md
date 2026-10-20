@@ -19,7 +19,7 @@ it.
 | **macOS** | Linux and Windows aren't supported yet. |
 | **Git 2.25 or later** | On your `PATH`. |
 | **A Git repository** | Braid works on local branches. It doesn't need a remote. |
-| **Claude Code or Codex** | The agents Braid records. |
+| **Claude Code or Codex** | The agents Braid records. Codex needs [network access and local binding](#install-braid) on. |
 | **A GitHub account** | You sign in with it. Your code can be hosted anywhere. |
 
 ## Install Braid
@@ -35,6 +35,12 @@ Accept its prompts to sign in and to set up your agents.
 When it finishes, start a new agent session, because sessions that were already
 open aren't recorded. In Codex, also run `/hooks` and approve Braid's hooks,
 and again whenever Codex asks.
+
+Codex also needs network access and local binding on. Braid's skills run
+`braid` in Codex's sandbox, and it talks to the Braid daemon on your machine.
+Without them, Braid says you're signed out or that the daemon isn't running
+when neither is true. Turn them on in whichever way suits you, such as full
+access or a permissions profile.
 
 !!! tip "Braid's skills do the work"
     Setting up an agent also installs Braid's skills, so you ask your agent in
