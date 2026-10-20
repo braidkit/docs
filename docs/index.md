@@ -194,6 +194,13 @@ network access and local binding. Without them, Braid can say you're signed out
 or that the daemon isn't running when neither is true. Allow both in whichever
 way suits you.
 
+### macOS folder access
+
+If your repository is in Desktop, Documents, Downloads or iCloud Drive, macOS
+asks whether `braid-daemon` can access that folder. Allow it, because Braid
+reads your repository from there. If you chose **Don't Allow**, turn it back
+on in **System Settings > Privacy & Security > Files & Folders**.
+
 ### Update Braid
 
 Braid doesn't update itself, and an outdated install can fail to reconstruct
