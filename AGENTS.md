@@ -11,9 +11,13 @@ python -m unittest discover -s tests -v     # tests
 python -m mkdocs build --strict             # warnings are errors
 python scripts/build_llms.py --check        # generated corpus is current
 python scripts/check_site.py site           # site contracts, after a build
-vale docs/index.md                          # spelling and house rules
-lychee --include-fragments site/index.html  # links and anchors, after a build
+vale docs                                  # spelling and house rules
+lychee --include-fragments --index-files index.html \
+  --remap "^https://docs[.]braidkit[.]io/(.*)$ file://$PWD/site/\$1" \
+  --remap "^https://github[.]com/braidkit/docs/blob/main/docs/(.*)$ file://$PWD/docs/\$1" \
+  site/index.html site/guides/brewgo-subagents/index.html
 python scripts/check_commands.py            # braid commands match the CLI
+python scripts/check_commands.py docs/guides/brewgo-subagents.md
 ```
 
 CI runs them in that order, and weekly. `vale` and `lychee` come from
@@ -51,12 +55,12 @@ use, and is where docs-specific ones belong. UI lives in `docs/stylesheets/` and
 
 ## Content
 
-The site is one page, `docs/index.md`, on purpose. Braid is in a gated preview
-and changes often, and a stale page misleads readers and agents more than a
-missing one. The page covers what Braid is, how to install it, the review loop
-and how to get help. Everything else is left to `braid <command> --help`,
-which always matches the installed version, and to Discord. Ask before you add
-a page or extend this one beyond that.
+Keep the quickstart in `docs/index.md`: what Braid is, installation, a small
+first example, the review loop, and help. The full parallel-subagent walkthrough
+lives separately in `docs/guides/brewgo-subagents.md`. Braid is in a gated preview
+and changes often, so keep both pages current. Exact command details belong in
+`braid <command> --help`. Ask before adding pages beyond these or expanding
+their scope.
 
 Adding or renaming a page means updating the nav in `mkdocs.yml` and re-running
 the corpus check, which regenerates `llms.txt`.
