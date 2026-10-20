@@ -1,6 +1,7 @@
 [Bb]raids?
 Codex
 [Hh]aberdash
+iCloud
 idempotency
 pushback
 rebase

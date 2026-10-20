@@ -19,7 +19,7 @@ it.
 | **macOS** | Linux and Windows aren't supported yet. |
 | **Git 2.25 or later** | On your `PATH`. |
 | **A Git repository** | Braid works on local branches. It doesn't need a remote. |
-| **Claude Code or Codex** | The agents Braid records. |
+| **A supported coding agent** | Claude Code or Codex. |
 | **A GitHub account** | You sign in with it. Your code can be hosted anywhere. |
 
 ## Install Braid
@@ -184,6 +184,22 @@ to merge.
 - Changes the agent makes in another repository aren't in this branch's intent.
 - "Review boundary is incomplete" usually means the history was rewritten, or
   the checkout or branch changed.
+
+### Agent sandboxes
+
+Braid's skills run `braid` through your agent, and it talks to the Braid daemon
+on your machine. If your agent runs commands in a sandbox, as Codex does by
+default and Claude Code does once you turn its sandbox on, the sandbox needs
+network access and local binding. Without them, Braid can say you're signed out
+or that the daemon isn't running when neither is true. Allow both in whichever
+way suits you.
+
+### macOS folder access
+
+If your repository is in Desktop, Documents, Downloads or iCloud Drive, macOS
+asks whether `braid-daemon` can access that folder. Allow it, because Braid
+reads your repository from there. If you chose **Don't Allow**, turn it back
+on in **System Settings > Privacy & Security > Files & Folders**.
 
 ### Update Braid
 
