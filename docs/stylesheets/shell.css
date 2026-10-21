@@ -352,6 +352,12 @@
   }
 }
 
+/* Copy confirmation uses an inverse surface. The article's .md-typeset colour
+   otherwise overrides Material's light-on-dark text (and dark-on-light text). */
+.md-dialog__inner.md-typeset {
+  color: var(--canvas);
+}
+
 /* ============================================================== page outline
  */
 
