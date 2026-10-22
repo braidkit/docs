@@ -85,6 +85,9 @@ Python 3.9 or newer.
 The steps are the same on your own repository, except that you can also
 [share the intent](#share-with-the-braid-bot) on your pull request.
 
+For a full guide to working with parallel agents, follow
+[Build and review BrewGo with parallel subagents](guides/brewgo-subagents.md).
+
 ## Understand your agent's work
 
 Reconstructing the intent sends what Braid recorded, your requests, the agent's

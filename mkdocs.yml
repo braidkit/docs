@@ -32,8 +32,8 @@ theme:
     - content.code.copy
     - content.code.annotate
     - content.tooltips
-# One page needs no search. An empty list, because leaving the key out turns
-# MkDocs' default search plugin back on.
+# The quickstart and guide link to each other. Keep search disabled; leaving
+# this key out would turn MkDocs' default search plugin back on.
 plugins: []
 
 # Generate the agent-readable corpus for local, CI, and Cloudflare builds.
@@ -87,6 +87,8 @@ markdown_extensions:
 
 nav:
   - Braid: index.md
+  - Guides:
+      - BrewGo with parallel subagents: guides/brewgo-subagents.md
 
 extra:
   # Rendered as the help link in the header. Omit this block and the link
