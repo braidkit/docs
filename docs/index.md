@@ -192,7 +192,8 @@ on your machine. If your agent runs commands in a sandbox, as Codex does by
 default and Claude Code does once you turn its sandbox on, the sandbox needs
 network access and local binding. Without them, Braid can say you're signed out
 or that the daemon isn't running when neither is true. Allow both in whichever
-way suits you.
+way suits you. Approving your agent's request to run `braid` outside the
+sandbox works too.
 
 ### macOS folder access
 
