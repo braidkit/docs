@@ -1,225 +1,87 @@
 ---
-title: Get started with Braid
-description: Install Braid, understand your agent's work through the intent Braid reconstructs, and what to know during the private preview.
+title: Overview
+description: Understand where Braid fits, what it records, and how to review the intent behind a change.
 ---
 
-# Get started with Braid
+# Overview
 
-Braid keeps the intent behind code written with an AI agent, and the
-understanding needed to work on it. As the work happens, Braid records what was
-done, what was decided, what was noticed and what was checked. People and
-agents then share the same picture of what the code is for and why it is the
-way it is, so reviewers, teammates and future you can pick up the work and own
-it.
+Braid keeps the intent behind code written with an AI agent. It connects your
+request, the work the agent did, the choices it made, and the checks it ran
+to the code change you need to understand.
 
-## Before you start
+You keep working in your coding agent. Braid records the session. When the
+change is ready, ask it to **reconstruct the intent** and review the result.
 
-| You need | Notes |
-|---|---|
-| **macOS** | Linux and Windows aren't supported yet. |
-| **Git 2.25 or later** | On your `PATH`. |
-| **A Git repository** | Braid works on local branches. It doesn't need a remote. |
-| **A supported coding agent** | Claude Code or Codex. |
-| **A GitHub account** | You sign in with it. Your code can be hosted anywhere. |
+[Try it on BrewGo →](quickstart.md){ .md-button }
 
-## Install Braid
+## Where Braid fits
 
-```sh
-curl -fsSL https://braidkit.io/cli/install.sh | bash
-```
+Your request starts the work. An agent may delegate parts of it, change code,
+run checks, and revise its approach. The final diff shows the code changes;
+the session also contains the context behind them.
 
-The installer puts `braid` and `braid-daemon` in `~/.local/bin`, adds that to
-your `PATH`, and starts the daemon as a login service. It never uses `sudo`.
-Accept its prompts to sign in and to set up your agents.
+<figure class="braid-overview-figure">
+  <img class="braid-frame-light" src="assets/overview/capture.png" alt="A developer directs a primary agent and subagents. Braid captures their work as they produce code and tests." loading="eager">
+  <img class="braid-frame-dark" src="assets/overview/capture-dark.png" alt="A developer directs a primary agent and subagents. Braid captures their work as they produce code and tests." loading="eager">
+  <figcaption>Braid records the work while you use your coding agent.</figcaption>
+</figure>
 
-When it finishes, start a new agent session, because sessions that were already
-open aren't recorded. In Codex, also run `/hooks` and approve Braid's hooks,
-and again whenever Codex asks.
+## Review the work behind the change
 
-!!! tip "Braid's skills do the work"
-    Setting up an agent also installs Braid's skills, so you ask your agent in
-    plain words instead of learning Braid's commands:
+Reconstruct the intent after the agent has finished and committed. Braid uses
+the captured work and code changes to explain the goal, the outcome, the
+decisions, and the steps that led there.
 
-    | Ask | To |
-    |---|---|
-    | "reconstruct the intent" | [Understand the work](#understand-your-agents-work) on this branch |
-    | "push the braid to the PR" | [Share the intent](#share-with-the-braid-bot) on your pull request |
-    | "ship the braid" | [Finish the braid](#finish-with-braid-ship) |
-    | "is braid set up correctly?" | Check the install and recording |
-    | "why wasn't my session recorded?" | Check Braid's hooks in your agent |
+Open a decision to see the code it affected and the agent trace behind it.
+Check the explanation against that evidence before you accept the change.
 
-## Try it on a sample project
+<figure class="braid-overview-figure">
+  <img class="braid-frame-light" src="assets/overview/review.png" alt="Captured work flows through Braid's record into the intent UI, where the developer reviews it." loading="lazy">
+  <img class="braid-frame-dark" src="assets/overview/review-dark.png" alt="Captured work flows through Braid's record into the intent UI, where the developer reviews it." loading="lazy">
+  <figcaption>The intent gives you a starting point for checking what the agent did and why.</figcaption>
+</figure>
 
-[Haberdash](https://github.com/braidkit/haberdash) is a small order service
-with one open issue: orders fail when the catalog service times out. The fix
-looks small, but a retry in the wrong place charges a card twice. You need
-Python 3.9 or newer.
+| View | Use it to |
+| --- | --- |
+| **Overview** | Check that the goal and outcome match your request. |
+| **Steps** | Follow the work, including checks and revisions, in order. |
+| **Decisions** | Inspect choices, alternatives, and their effect on the code. |
+| **Workstreams** | Follow the parent session and each captured subagent. |
+| **Diagrams** | Understand how the changed parts fit together. |
 
-1. Clone it and create a branch:
+If you would make a different choice, tell your agent what to change and why.
+Have it commit, then reconstruct the same braid again. Review the updated
+intent before moving on.
 
-    ```sh
-    git clone https://github.com/braidkit/haberdash
-    cd haberdash
-    git switch -c fix/catalog-retries
-    ```
+## Keep the record with the code
 
-2. Start a new agent session in `haberdash` and ask it to fix the issue:
+Approval records that you understood and accepted the intent. Shipping marks
+the braid done and writes a signed Git note on the commit. A signature records
+provenance; it does not establish that the code is correct.
 
-    ```text
-    Fix the issue in ISSUE.md. Keep the tests green and commit.
-    ```
+<figure class="braid-overview-figure">
+  <img class="braid-frame-light" src="assets/overview/record.png" alt="After review and approval, Braid keeps a signed Git note beside the commit." loading="lazy">
+  <img class="braid-frame-dark" src="assets/overview/record-dark.png" alt="After review and approval, Braid keeps a signed Git note beside the commit." loading="lazy">
+  <figcaption>Shipping keeps the final record beside the commit it explains.</figcaption>
+</figure>
 
-3. In a new message, reconstruct the intent, and pick the request from step 2:
+## What to expect in the preview
 
-    ```text
-    reconstruct the intent
-    ```
+Braid supports macOS with Claude Code or Codex. This preview focuses on a
+developer reviewing their own work. Team sharing is not part of this exercise.
 
-4. In **Decisions**, check that the code does what each decision says, above
-   all for payment timeouts.
-5. If you'd decide one differently, tell your agent what to change and to
-   commit. Then reconstruct the intent again, picking the same request. The
-   new intent includes your change and why.
-6. [Approve and ship](#finish-with-braid-ship) the braid.
+The Review UI runs locally. Reconstruction sends captured requests, agent
+replies, and code changes to Braid's hosted service, which uses a third-party
+AI model. Braid does not currently redact that information automatically.
+Use synthetic data for the sample and keep credentials out of agent messages.
 
-The steps are the same on your own repository, except that you can also
-[share the intent](#share-with-the-braid-bot) on your pull request.
+The intent is reconstructed by a model. Use it to find the important code and
+evidence, then make your own judgment.
 
-## Understand your agent's work
+## Choose your next step
 
-Reconstructing the intent sends what Braid recorded, your requests, the agent's
-replies and the code changes, to Braid's service, which uses a third-party AI
-model. Braid currently does not redact information, so anything the agent saw
-can be included.
+- [Quickstart](quickstart.md): add a feature to BrewGo and review the agent's work.
+- [Build and review](build-and-review.md): the planned expanded exercise, including a follow-up feature and the PR workflow.
 
-1. Create a branch before your first request.
-2. Have your agent make the change and commit it.
-3. In a new message, ask it to "reconstruct the intent". It can't include the
-   message it's still answering.
-4. Pick the request where the work started.
-
-You get a link to the intent in a minute or two.
-
-### Explore the intent
-
-The intent gives you the context to understand the work: what it set out to
-do, what was decided and why, and how the code changed. With that, you can
-steer your agent where it went wrong, or [approve and ship](#finish-with-braid-ship)
-with confidence. An AI model reconstructs the intent, so check anything that
-matters against the code.
-
-Start with the **Overview**: the goal, the outcome so far and why this
-direction. If the goal isn't what you asked for, tell your agent before going
-further.
-
-Then explore the work in whichever way suits you, using the tabs below the
-Overview:
-
-| Tab | Shows the work |
-|---|---|
-| **Steps** | In the order it happened |
-| **Decisions** | By the choices the agent made |
-| **Workstreams** | By agent session, including subagents |
-
-In each, open an item to see what was accepted and what was rejected and why,
-the code it affected, and the agent trace behind it. Code and traces open in
-the side panel.
-
-**Diagrams** shows how the change fits together: a component diagram of the
-parts it touched and a sequence diagram of how they call each other. Press `?`
-for keyboard shortcuts.
-
-## Share with the Braid bot
-
-The intent is private until you share it. The Braid bot shares it on your pull
-request: it comments with a brief of the intent and a link to the full page,
-which anyone who can read the repository can open after signing in with GitHub.
-Sharing uploads the intent and a summary of the session, including your
-prompts. Please exercise care when sharing intent.
-
-To turn the bot on:
-
-1. Install the [Braid GitHub App](https://github.com/apps/braidkit) on the
-   repository.
-2. Run `braid bot enable`, once. It covers every repository, and your agent
-   won't run it for you. `braid bot disable` turns it off.
-
-Then ask your agent to "push the braid to the PR".
-
-## Finish with braid ship
-
-Approving signs that you understood and accepted the intent. Shipping marks the
-braid done and writes the intent onto your commit as a signed Git note. Both
-are optional during the preview, and neither has to wait for your pull request
-to merge.
-
-1. **Approve** once you understand the work, with the command from the intent
-   page:
-
-    ```sh
-    braid review <braid-id> --verdict approved
-    ```
-
-2. **Ship** by asking your agent to "ship the braid". Shipping is final. If you
-   squash-merge, ship after the merge so the note lands on the squashed commit.
-
-## Tips for working with Braid
-
-- Create the branch before your first request, and stay on it until the work
-  is committed. Braid files each request under the branch it started on, so
-  work begun on another branch is left out of the intent.
-- One task per branch, or the intent mixes them.
-- Don't squash, rebase or amend before Braid reconstructs the intent. Squash
-  when you merge.
-- If your agent app gives each task its own copy of the repository (a Git
-  worktree), keep that copy until you're done with the braid. Braid needs the
-  folder the work happened in.
-
-## Troubleshooting
-
-### Known limitations
-
-- Braid is built for one developer for now. Features for teams are coming.
-- Braid can't reconstruct work started on a detached HEAD.
-- Changes the agent makes in another repository aren't in this branch's intent.
-- "Review boundary is incomplete" usually means the history was rewritten, or
-  the checkout or branch changed.
-
-### Agent sandboxes
-
-Braid's skills run `braid` through your agent, and it talks to the Braid daemon
-on your machine. If your agent runs commands in a sandbox, as Codex does by
-default and Claude Code does once you turn its sandbox on, the sandbox needs
-network access and local binding. Without them, Braid can say you're signed out
-or that the daemon isn't running when neither is true. Allow both in whichever
-way suits you. Approving your agent's request to run `braid` outside the
-sandbox works too.
-
-### macOS folder access
-
-If your repository is in Desktop, Documents, Downloads or iCloud Drive, macOS
-asks whether `braid-daemon` can access that folder. Allow it, because Braid
-reads your repository from there. If you chose **Don't Allow**, turn it back
-on in **System Settings > Privacy & Security > Files & Folders**.
-
-### Update Braid
-
-Braid doesn't update itself, and an outdated install can fail to reconstruct
-the intent.
-
-```sh
-braid upgrade
-```
-
-### Stop or remove Braid
-
-To stop recording, run `braid hooks uninstall claude` or
-`braid hooks uninstall codex`. To remove Braid, run `braid uninstall`.
-
-### Get help
-
-Ask on [Discord](https://discord.gg/G3wzPsKtR) or email
+Need help? Ask on [Discord](https://discord.gg/G3wzPsKtR) or email
 [hello@braidkit.io](mailto:hello@braidkit.io).
-
-If we ask for a support file, ask your agent for a "Braid support dump". It
-holds Braid's checks and logs, not your prompts, code or credentials.

@@ -5,10 +5,11 @@ Material and Braid's documentation shell.
 
 ## Current scope
 
-The launch branch contains the documentation home, existing concept and
-installation pages, and clearly marked outlines for launch guidance.
-An outline is a writing brief, not a working tutorial or a shipped feature.
-See [LAUNCH.md](LAUNCH.md) for the minimum content set and its Linear sources.
+The draft has three pages: Overview (`docs/index.md`), Quickstart
+(`docs/quickstart.md`), and Build and review (`docs/build-and-review.md`).
+Build and review is an outline for the next writing pass. The Quickstart
+flags its sample-data setup dependency. An outline is a writing brief, not
+a working tutorial or a shipped feature.
 
 Merging the site structure and opening the docs publicly are separate steps.
 The site currently sends `noindex` headers and disallows crawling, but those

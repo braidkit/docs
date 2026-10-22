@@ -1,10 +1,14 @@
 [Bb]raids?
+BrewGo
 Codex
+FastAPI
 [Hh]aberdash
 iCloud
 idempotency
 pushback
+[Qq]uickstart
 rebase
+SQLite
 subagents?
 worktrees?
 [Ww]orkstreams?

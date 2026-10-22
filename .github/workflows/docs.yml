@@ -47,13 +47,20 @@ jobs:
           echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
       # Spelling and the house rules in .vale/styles/Braid.
       - name: Lint the prose
-        run: vale docs/index.md
-      # The built page, so anchors are checked against the headings MkDocs
-      # renders. Discord answers bursts with 429, which is not a broken link.
+        run: vale docs
+      # Check new pages against this checkout before they exist on main or the
+      # production site. BrewGo requires private-repository access; public CI
+      # cannot verify that link. Discord burst 429s are accepted.
       - name: Check links
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
         with:
-          args: --no-progress --include-fragments --accept 200..=299,429 site/index.html
+          args: >-
+            --no-progress --include-fragments --index-files index.html
+            --accept 200..=299,429
+            --remap '^https://docs[.]braidkit[.]io/(.*)$ file://${{ github.workspace }}/site/$1'
+            --remap '^https://github[.]com/braidkit/docs/blob/main/docs/(.*)$ file://${{ github.workspace }}/docs/$1'
+            --exclude '^https://github[.]com/braidkit/brewgo([/#?].*)?$'
+            site/index.html site/quickstart/index.html site/build-and-review/index.html
       - name: Upload the rendered site
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
@@ -79,5 +86,5 @@ jobs:
           curl -fsSLO "https://braidkit.io/cli/releases/$tag/$archive"
           curl -fsSL "https://braidkit.io/cli/releases/$tag/checksums.txt" | grep " $archive\$" | shasum -a 256 -c -
           tar -xzf "$archive" braid
-      - name: Check every braid command on the page
-        run: python3 scripts/check_commands.py --braid "$RUNNER_TEMP/braid"
+      - name: Check every braid command in the Quickstart
+        run: python3 scripts/check_commands.py --braid "$RUNNER_TEMP/braid" docs/quickstart.md

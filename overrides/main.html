@@ -35,8 +35,8 @@
 {% endblock %}
 
 {#
-  Only the outline. The site is one page, so Material's navigation rail, and the
-  drawer it becomes on small screens, have nothing to list.
+  Page navigation lives in the compact row above the article. Keep only the
+  page outline in Material's sidebar.
 #}
 {% block site_nav %}
   {% if page.meta and page.meta.hide %}
@@ -52,6 +52,11 @@
 {% endblock %}
 
 {% block content %}
+  <nav class="braid-section-nav" aria-label="Documentation">
+    {% for item in nav %}
+      <a href="{{ item.url | url }}"{% if item.active %} aria-current="page"{% endif %}>{{ item.title }}</a>
+    {% endfor %}
+  </nav>
   {#
     The page bar carries the Markdown actions above the article.
 

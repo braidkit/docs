@@ -86,7 +86,9 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
 
 nav:
-  - Braid: index.md
+  - Overview: index.md
+  - Quickstart: quickstart.md
+  - Build and review: build-and-review.md
 
 extra:
   # Rendered as the help link in the header. Omit this block and the link
