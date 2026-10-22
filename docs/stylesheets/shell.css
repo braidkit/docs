@@ -672,3 +672,43 @@
     width: 1px;
   }
 }
+
+/* Three documentation pages share a compact navigation row. */
+.md-typeset .braid-section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  border-bottom: 1px solid var(--border);
+  margin: 0 0 var(--space-4);
+  padding-bottom: var(--space-2);
+}
+.md-typeset .braid-section-nav a {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  text-decoration: none;
+}
+.md-typeset .braid-section-nav a[aria-current="page"] {
+  color: var(--brand);
+  font-weight: 600;
+}
+.md-typeset .braid-overview-figure { margin: var(--space-4) 0; }
+.md-typeset .braid-overview-figure img {
+  aspect-ratio: 1.45;
+  object-fit: cover;
+  object-position: top;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  display: block;
+  width: 100%;
+}
+.md-typeset .braid-overview-figure figcaption {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  margin-top: var(--space-2);
+  text-align: start;
+}
+
+/* Theme-matched screenshots of the supplied concept diagram. */
+.md-typeset .braid-overview-figure .braid-frame-dark { display: none; }
+[data-md-color-scheme="slate"] .md-typeset .braid-overview-figure .braid-frame-light { display: none; }
+[data-md-color-scheme="slate"] .md-typeset .braid-overview-figure .braid-frame-dark { display: block; }
