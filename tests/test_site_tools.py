@@ -1,7 +1,10 @@
+import contextlib
+import io
 import pathlib
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 import yaml
 
@@ -12,6 +15,10 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import build_llms  # noqa: E402
 import page_markdown  # noqa: E402
 import site_config  # noqa: E402
+
+
+class HookConfig(dict):
+    """A config mapping that, like MkDocs', knows the file it came from."""
 
 
 class SiteConfigTests(unittest.TestCase):
@@ -27,8 +34,9 @@ class SiteConfigTests(unittest.TestCase):
         config = site_config.load_site_config()
         pages = site_config.site_pages(config)
 
-        self.assertEqual(1, len(pages))
-        self.assertEqual("Get started with Braid", pages[0].title)
+        self.assertEqual(2, len(pages))
+        self.assertEqual(["Overview", "Quickstart"], [p.title for p in pages])
+        self.assertEqual(["", "quickstart/"], [p.url for p in pages])
         self.assertEqual("", pages[0].url)
         self.assertEqual("index.html", pages[0].dest_uri)
 
@@ -151,6 +159,26 @@ class PublishingTests(unittest.TestCase):
         self.assertIn("## Authored home", full)
         self.assertNotIn("Draft body.", full)
 
+    def test_serve_address_does_not_change_the_corpus(self):
+        # mkdocs serve passes hooks its own address as site_url. Two servers on
+        # one docs folder must still write the same corpus, or each rebuild
+        # rewrites the other's files and both reload without end.
+        config_file = self.root / "mkdocs.yml"
+        config_file.write_text(yaml.safe_dump(self.config), encoding="utf-8")
+        written = []
+        for address in ("http://127.0.0.1:8000/", "http://127.0.0.1:8932/"):
+            served = HookConfig(self.config, site_url=address)
+            served.config_file_path = str(config_file)
+            with (
+                mock.patch.object(build_llms, "ROOT", self.root),
+                contextlib.redirect_stdout(io.StringIO()),
+            ):
+                build_llms.on_config(served)
+            written.append((self.docs / "llms.txt").read_text(encoding="utf-8"))
+
+        self.assertEqual(written[0], written[1])
+        self.assertIn("[Authored home](https://docs.example.com/)", written[0])
+
     def test_sidecar_publisher_runs_without_mkdocs(self):
         page_markdown.publish_markdown(self.config)
 
@@ -168,6 +196,34 @@ class PublishingTests(unittest.TestCase):
             "https://docs.example.com/guides/install/",
             install_meta["url"],
         )
+
+    def test_sidecar_publisher_publishes_a_page_agent_guide(self):
+        (self.docs / "index.md").write_text(
+            "---\ntitle: Authored home\ndescription: Start here.\n"
+            "agent_guide: index.agent.md\n---\n\n# Home\n",
+            encoding="utf-8",
+        )
+        (self.docs / "index.agent.md").write_text("# Steps for an agent\n", encoding="utf-8")
+
+        page_markdown.publish_markdown(self.config)
+
+        self.assertEqual(
+            "# Steps for an agent\n",
+            (self.site / "index.agent.md").read_text(encoding="utf-8"),
+        )
+        self.assertFalse((self.site / "guides" / "install.agent.md").exists())
+        self.assertEqual(
+            "guides/install.agent.md",
+            page_markdown.agent_guide_destination("guides/install/index.html"),
+        )
+
+    def test_sidecar_publisher_rejects_a_missing_agent_guide(self):
+        (self.docs / "index.md").write_text(
+            "---\ntitle: Home\ndescription: Start here.\nagent_guide: missing.agent.md\n---\n",
+            encoding="utf-8",
+        )
+        with self.assertRaisesRegex(SystemExit, "missing.agent.md, which does not exist"):
+            page_markdown.publish_markdown(self.config)
 
     def test_llms_requires_descriptions_and_existing_sources(self):
         (self.docs / "index.md").write_text(

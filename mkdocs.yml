@@ -69,6 +69,8 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.highlight:
       anchor_linenums: true
+      # Adds language-<name> to each block, so prompts (```text) can wrap.
+      pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.keys
@@ -85,8 +87,14 @@ markdown_extensions:
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
 
+# Agent guides are plain instructions, not pages. page_markdown.py publishes
+# them next to their page for the "Copy for agent" button.
+exclude_docs: |
+  *.agent.md
+
 nav:
-  - Braid: index.md
+  - Overview: index.md
+  - Quickstart: quickstart.md
 
 extra:
   # Rendered as the help link in the header. Omit this block and the link

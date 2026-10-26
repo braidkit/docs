@@ -196,14 +196,17 @@
 /* =============================================================== page actions
  */
 
-/* The Markdown actions sit above the article, against its right edge. */
+/* The Markdown actions share the title's row, against the article's right
+   edge. Floating them keeps the title where it was, and the top margin centres
+   the 26px control on the title's first line. */
 .md-typeset .braid-pagebar {
   align-items: center;
   display: flex;
   flex-wrap: wrap;
+  float: right;
   gap: var(--space-3);
   justify-content: space-between;
-  margin: 0 0 var(--space-2);
+  margin: calc((var(--text-2xl) * var(--leading-tight) - 26px) / 2) 0 var(--space-2) var(--space-4);
   min-height: 26px;
 }
 
@@ -671,4 +674,23 @@
     white-space: nowrap;
     width: 1px;
   }
+}
+
+/* Three documentation pages share a compact navigation row. */
+.md-typeset .braid-section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  border-bottom: 1px solid var(--border);
+  margin: 0 0 var(--space-4);
+  padding-bottom: var(--space-2);
+}
+.md-typeset .braid-section-nav a {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  text-decoration: none;
+}
+.md-typeset .braid-section-nav a[aria-current="page"] {
+  color: var(--brand);
+  font-weight: 600;
 }

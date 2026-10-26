@@ -11,9 +11,13 @@ python -m unittest discover -s tests -v     # tests
 python -m mkdocs build --strict             # warnings are errors
 python scripts/build_llms.py --check        # generated corpus is current
 python scripts/check_site.py site           # site contracts, after a build
-vale docs/index.md                          # spelling and house rules
-lychee --include-fragments site/index.html  # links and anchors, after a build
-python scripts/check_commands.py            # braid commands match the CLI
+vale docs                                  # spelling and house rules
+lychee --include-fragments --index-files index.html \
+  --remap "^https://docs[.]braidkit[.]io/(.*)$ file://$PWD/site/\$1" \
+  --remap "^https://github[.]com/braidkit/docs/blob/main/docs/(.*)$ file://$PWD/docs/\$1" \
+  --exclude '^https://github[.]com/braidkit/brewgo([/#?].*)?$' \
+  site/index.html site/quickstart/index.html
+python scripts/check_commands.py docs/quickstart.md # braid commands match the CLI
 ```
 
 CI runs them in that order, and weekly. `vale` and `lychee` come from
@@ -51,15 +55,20 @@ use, and is where docs-specific ones belong. UI lives in `docs/stylesheets/` and
 
 ## Content
 
-The site is one page, `docs/index.md`, on purpose. Braid is in a gated preview
-and changes often, and a stale page misleads readers and agents more than a
-missing one. The page covers what Braid is, how to install it, the review loop
-and how to get help. Everything else is left to `braid <command> --help`,
-which always matches the installed version, and to Discord. Ask before you add
-a page or extend this one beyond that.
+The site has two pages: Overview in `docs/index.md` and Quickstart in
+`docs/quickstart.md`. Do not promise team sharing
+until access is enabled and verified. Ask before adding pages beyond these.
+Exact command details belong in `braid <command> --help`.
 
 Adding or renaming a page means updating the nav in `mkdocs.yml` and re-running
 the corpus check, which regenerates `llms.txt`.
+
+A page can have an agent guide: instructions that a coding agent follows for the
+reader, such as `docs/quickstart.agent.md`. Name it in the page's front matter
+as `agent_guide`. The page's **Copy for agent** button copies it,
+`page_markdown.py` publishes it as `<page>.agent.md`, and `mkdocs.yml` keeps
+`*.agent.md` out of the HTML build. Change the guide whenever the page's steps
+change.
 
 ## Personal instructions
 

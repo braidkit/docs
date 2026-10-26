@@ -42,6 +42,11 @@ def markdown_destination(dest_uri):
     return stem + ".md"
 
 
+def agent_guide_destination(dest_uri):
+    """Return the path for a page's agent guide, beside its Markdown sidecar."""
+    return markdown_destination(dest_uri)[: -len(".md")] + ".agent.md"
+
+
 def render_sidecar(page, source_text, site_url):
     """Render one authored Markdown page with portable source metadata."""
     metadata, markdown = split_front_matter(source_text)
@@ -65,16 +70,23 @@ def publish_markdown(config, site_dir=None):
     )
     for page in site_pages(config, ROOT):
         source = docs_dir / page.src_uri
+        source_text = source.read_text(encoding="utf-8")
         target = output_dir / markdown_destination(page.dest_uri)
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(
-            render_sidecar(
-                page,
-                source.read_text(encoding="utf-8"),
-                config.get("site_url"),
-            ),
+            render_sidecar(page, source_text, config.get("site_url")),
             encoding="utf-8",
         )
+        # A page can name instructions for coding agents, which the page bar
+        # copies. MkDocs excludes them from the build, so they are published here.
+        guide = split_front_matter(source_text)[0].get("agent_guide")
+        if guide:
+            guide_source = docs_dir / guide
+            if not guide_source.is_file():
+                raise SystemExit(f"{page.src_uri} names agent_guide {guide}, which does not exist")
+            (output_dir / agent_guide_destination(page.dest_uri)).write_text(
+                guide_source.read_text(encoding="utf-8"), encoding="utf-8"
+            )
 
 
 def on_post_build(config):

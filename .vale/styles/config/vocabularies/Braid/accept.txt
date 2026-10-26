@@ -1,10 +1,16 @@
+ambiently
 [Bb]raids?
+BrewGo
 Codex
+FastAPI
 [Hh]aberdash
 iCloud
 idempotency
 pushback
+[Qq]uickstart
 rebase
+SQLite
+Starbucks
 subagents?
 worktrees?
 [Ww]orkstreams?

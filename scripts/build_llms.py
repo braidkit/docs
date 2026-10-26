@@ -111,7 +111,10 @@ def write_corpus(config):
 
 def on_config(config):
     """Thin MkDocs adapter; other builders can call ``main`` directly."""
-    write_corpus(config)
+    # ``mkdocs serve`` replaces site_url with its own address. Read the file
+    # instead, so every server writes the published URLs and none of them
+    # rewrites a corpus that another server on these docs has just written.
+    write_corpus(load_site_config(config.config_file_path))
     return config
 
 
