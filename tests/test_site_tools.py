@@ -127,10 +127,9 @@ class PublishingTests(unittest.TestCase):
             "---\n"
             "title: Install\n"
             "description: Install Braid.\n"
-            "draft: true\n"
             "---\n\n"
             "# Install\n\n"
-            "Draft body.\n",
+            "Install body.\n",
             encoding="utf-8",
         )
         self.config = {
@@ -146,7 +145,7 @@ class PublishingTests(unittest.TestCase):
     def tearDown(self):
         self.temporary.cleanup()
 
-    def test_llms_corpus_uses_authored_title_and_omits_draft_body(self):
+    def test_llms_corpus_uses_authored_titles_in_navigation_order(self):
         index, full = build_llms.render(
             site_config.nav_entries(self.config),
             self.docs,
@@ -155,9 +154,9 @@ class PublishingTests(unittest.TestCase):
 
         self.assertIn("[Authored home](https://docs.example.com/)", index)
         self.assertIn("[Install](https://docs.example.com/guides/install/)", index)
-        self.assertIn("Outline only", index)
+        self.assertIn("Install Braid.", index)
         self.assertIn("## Authored home", full)
-        self.assertNotIn("Draft body.", full)
+        self.assertLess(full.index("## Authored home"), full.index("Install body."))
 
     def test_serve_address_does_not_change_the_corpus(self):
         # mkdocs serve passes hooks its own address as site_url. Two servers on

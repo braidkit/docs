@@ -78,8 +78,8 @@ Production still remains on MkDocs.
 - Run both MkDocs and Zensical in CI.
 - Compare every route and generated publishing-boundary file.
 - Test the home page, three-column layout, navigation, search, light and dark
-  themes, mobile drawer, page outline, heading links, source links, page copy,
-  previous/next controls, and persistent support link.
+  themes, mobile drawer, page outline, heading links, page copy, previous/next
+  controls, and persistent support link.
 
 Rollback: remove the parallel job. MkDocs remains the production path.
 
@@ -106,7 +106,7 @@ known-good MkDocs commit or Pages deployment.
 - Search returns relevant results and keyboard behavior is unchanged.
 - Desktop, tablet, and mobile screenshots show no unintended layout changes.
 - Navigation, page outline, support access, heading links, Markdown actions,
-  source links, theme switching, and instant navigation work as expected.
+  theme switching, and instant navigation work as expected.
 - Cloudflare preview deployment passes the checks in `DEPLOYMENT.md`.
 - The MkDocs rollback command and last known-good deployment are recorded.
 

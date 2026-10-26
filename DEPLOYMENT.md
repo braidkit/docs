@@ -52,9 +52,8 @@ The launch branch builds the full navigation, existing pages, and explicit
 outlines. Merging it no longer means the writing is complete.
 
 **Access control must be configured separately before deploying content that
-must stay private.** Neither `draft: true`, `robots.txt`, nor `noindex`
-prevents access. The docs source repository is public and is outside a website
-access gate.
+must stay private.** Neither `robots.txt` nor `noindex` prevents access. The
+docs source repository is public and is outside a website access gate.
 
 Available approaches:
 
@@ -84,7 +83,6 @@ For a preview deployment:
 
 * open the preview URL from the pull request;
 * confirm Home shows the configured task cards and grouped navigation;
-* confirm every outline shows its status notice;
 * confirm support is available once at the foot of the sidebar;
 * confirm search, deep links, dark mode, and mobile navigation work;
 * confirm the response includes `X-Robots-Tag: noindex`.
@@ -111,8 +109,7 @@ commit with the intended PR/main commit.
 ## Open the docs publicly
 
 1. Complete the writing and release checks in [LAUNCH.md](LAUNCH.md).
-2. Remove `draft: true` only from reviewed pages; hide unfinished pages if they
-   are deferred from launch.
+2. Hide unfinished pages if they are deferred from launch.
 3. Verify the deployed build, then remove the chosen access gate deliberately.
 4. Resolve the indexing policy in
    [BRA-250](https://linear.app/braidkit/issue/BRA-250). If indexing is approved,

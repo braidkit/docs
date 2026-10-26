@@ -228,6 +228,19 @@ Braid comments on a pull request when the Braid GitHub App is installed on its
 repository. If you installed the App for selected repositories only, add your new
 `brewgo` repository in the [Braid App's settings](https://github.com/apps/braidkit/installations/new).
 
+On the pull request, Braid's comment gives your peers an intent brief:
+
+[![Braid's comment on a pull request, with five numbered parts: 1, the intent brief, which says what the change does and what it leaves out; 2, the main decisions and their reasons; 3, a blocking concern to check before approval; 4, the link to open the intent review; 5, the intent revision and the commit it covers.](assets/quickstart/pr-intent-comment.png)](assets/quickstart/pr-intent-comment.png)
+
+1. **The intent brief:** what the change does, and what it leaves out.
+2. **The main decisions**, each with its reason. The rest are in the intent
+   review.
+3. **Concerns** that Braid found in the reconstructed intent. Check a blocking
+   concern before you approve.
+4. **Open the intent review:** the full review, with the steps, decisions,
+   workstreams, diagrams, and the agent work trace.
+5. **The intent revision** and the commit that it covers.
+
 ## Troubleshooting
 
 ### Agent permissions

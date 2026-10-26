@@ -22,7 +22,6 @@
   /* -- brand ------------------------------------------------------------- */
   --brand: var(--bk-brand);             /* 10.3:1 on canvas */
   --brand-strong: var(--bk-brand-strong);
-  --brand-contrast: var(--bk-on-brand);    /* text on a --brand fill: 10.9:1 */
   --accent: var(--bk-signed);            /* 5.9:1 on canvas */
 
   /* -- surfaces ---------------------------------------------------------- */
@@ -41,12 +40,8 @@
   --code-bg: var(--bk-code-bg);
   --code-fg: var(--bk-code-text);           /* 10.1:1 on --code-bg */
 
-  /* -- callout hues ------------------------------------------------------ *
-   * One hue family per severity, all at the same chroma so a page of mixed
-   * callouts reads as one system. */
-  --callout-info: var(--bk-signed);    /* 5.9:1 — teal */
-  --callout-tip: var(--bk-promoted);     /* 4.7:1 — green; "success" has to look like it */
-  --callout-warn: var(--bk-attention);    /* 5.1:1 — amber */
+  /* -- danger hue -------------------------------------------------------- *
+   * Material's colour for deleted text is mixed from it below. */
   --callout-danger: var(--bk-blocked);  /* 6.2:1 — red. Deliberately far from the brand
                                  plum: an error must not be the most on-brand
                                  thing on the page. */
@@ -58,7 +53,7 @@
   --tint: 10%;
   --tint-strong: 16%;
 
-  /* How much of a hue a border carries. Recurs on callouts and buttons. */
+  /* How much of a hue a border carries. Used on buttons. */
   --mix-border: 35%;
 
   /* -- type -------------------------------------------------------------- *
@@ -96,7 +91,7 @@
   --text-2xs: 0.6rem;     /* 12px — kbd, labels. The brand's metadata floor. */
   --text-xs:  0.625rem;   /* 12.5px — outline */
   --text-sm:  0.7rem;     /* 14px — table cells. The brand's control floor. */
-  --text-md:  0.7rem;     /* 14px — callouts */
+  --text-md:  0.7rem;     /* 14px — buttons, previous/next titles */
   --text-base:0.75rem;    /* 15px — body, a step below the brand's 16px floor */
   --text-lg:  0.9rem;     /* 18px — h3 */
   --text-xl:  1.1rem;     /* 22px — h2 */
@@ -126,8 +121,6 @@
      means something rather than decorating every surface. */
   --radius-sm: var(--bk-radius-control);
   --radius-md: var(--bk-radius-control);
-  --radius-lg: var(--bk-radius-panel);
-  --radius-pill: 999px;
 
   /* -- layout ------------------------------------------------------------ */
   --header-height: 56px;
@@ -181,7 +174,6 @@
 [data-md-color-scheme="slate"] {
   --brand: var(--bk-brand);             /* 9.5:1 on canvas */
   --brand-strong: var(--bk-brand-strong);
-  --brand-contrast: var(--bk-on-brand);    /* text on a --brand fill: 9.4:1 */
   --accent: var(--bk-signed);            /* 8.4:1 */
 
   --canvas: var(--bk-canvas);
@@ -197,9 +189,6 @@
   --code-bg: var(--bk-code-bg);
   --code-fg: var(--bk-code-text);           /* 11.7:1 on --code-bg */
 
-  --callout-info: var(--bk-signed);    /* 8.4:1 */
-  --callout-tip: var(--bk-promoted);     /* 7.9:1 */
-  --callout-warn: var(--bk-attention);    /* 7.0:1 */
   --callout-danger: var(--bk-blocked);  /* 7.6:1 */
 
   --tint-weak: 10%;
@@ -211,9 +200,9 @@
  * Bridge to Material's own variables.
  *
  * Material's stylesheet is built on --md-* names. Mapping ours onto theirs
- * once, here, means every un-restyled Material component (footnotes, tabs,
- * task lists, annotations, the 404 page) inherits the Braid palette for free
- * instead of needing a rule of its own.
+ * once, here, means every un-restyled Material component (tabs, tooltips,
+ * the 404 page) inherits the Braid palette for free instead of needing a rule
+ * of its own.
  * ------------------------------------------------------------------------ */
 :root,
 [data-md-color-scheme="slate"] {

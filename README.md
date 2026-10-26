@@ -49,13 +49,8 @@ Quote values containing a colon followed by a space:
 ---
 title: Quickstart
 description: "Your first change: from setup to completion."
-draft: true
 ---
 ```
-
-`draft: true` displays an outline notice and labels links on the home page.
-It does **not** hide the page or protect access. Replace the outline with
-reviewed guidance and remove that field when it is ready.
 
 Keep commands out of outlines until verified against the applicable release.
 Record release applicability and authoritative sources for operational pages.
@@ -86,7 +81,6 @@ It generates ignored `docs/llms.txt` and `docs/llms-full.txt` from nav pages:
 
 - descriptions and YAML frontmatter are validated;
 - grouped navigation retains its reading order;
-- outlines appear in the index as unwritten and are omitted from the full text;
 - unchanged outputs are not rewritten, avoiding a live-reload loop.
 
 These files and the search index contain documentation content and must be
@@ -102,7 +96,7 @@ standalone commands for another builder.
 - `braid-tokens.css`: the shared tokens, vendored from `braidkit/brand`.
 - `docs/stylesheets/tokens.css`: maps those onto the names this site and Material use.
 - `fonts.css`: locally hosted fonts; see [FONTS.md](FONTS.md).
-- `base.css`: article typography, tables, code, callouts.
+- `base.css`: article typography, tables, code, buttons.
 - `shell.css`: header, navigation, search, outline, responsive drawer.
 - `home.css`: navigation cards and outline notices.
 - `overrides/`: focused Material template overrides.

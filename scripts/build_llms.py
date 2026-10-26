@@ -2,8 +2,7 @@
 """Generate llms.txt and llms-full.txt from the published documentation.
 
 The corpus follows the configured navigation, including grouped sections and
-utility pages. Draft pages are listed as outlines, but their empty bodies are
-omitted.
+utility pages.
 
 MkDocs currently calls this module through ``on_config``. The generator itself
 only reads ``mkdocs.yml`` and Markdown, so a future builder can run it directly
@@ -57,8 +56,7 @@ def render(entries, docs_dir=DOCS, site_url=SITE):
         "",
         f"> {INTRO}",
         "",
-        "Page content follows in navigation order. Unwritten outlines are "
-        "listed in llms.txt and omitted here.",
+        "Page content follows in navigation order.",
         "",
     ]
 
@@ -72,12 +70,6 @@ def render(entries, docs_dir=DOCS, site_url=SITE):
             sys.exit(f"{path}: invalid YAML front matter: {error}")
         page_title = str(meta.get("title") or title)
         description = describe(meta, path)
-        if meta.get("draft"):
-            index.append(
-                f"- [{page_title}]({page_url(path, site_url)}): "
-                "Outline only; instructions have not been written."
-            )
-            continue
         index.append(f"- [{page_title}]({page_url(path, site_url)}): {description}")
         full.append(f"## {page_title}")
         full.append("")

@@ -153,18 +153,12 @@
       </div>
     </div>
   {% endif %}
-  {% if page and page.meta.draft %}
-    <aside class="braid-draft" aria-label="Page status">
-      <strong>Outline · To be written</strong>
-      <span>This page shows the planned coverage. Instructions are not available yet.</span>
-    </aside>
-  {% endif %}
   {{ super() }}
   {#
     Previous and next. Material renders these in the page footer, which spans
     the whole shell and so places them under the rails instead of under the
     prose. Mintlify and Linear both keep them in the article column, which is
-    where they are rendered here; `partials/footer.html` drops its own copy.
+    where they are rendered here.
 
     The `hide: [footer]` page-meta opt-out is Material's and still works.
   #}
@@ -192,3 +186,9 @@
     </nav>
   {% endif %}
 {% endblock %}
+
+{#
+  No footer. Previous and next render in the article above, and the site has
+  no copyright line or social links, so Material's footer would be an empty bar.
+#}
+{% block footer %}{% endblock %}

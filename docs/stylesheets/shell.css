@@ -1,7 +1,7 @@
 /* Braid Docs — application shell
  *
- * Header, page actions, outline, footer, and the two-column grid that holds the
- * article and its outline.
+ * Header, page actions, outline, and the two-column grid that holds the article
+ * and its outline.
  *
  * The site is one page, so there is no navigation rail, drawer or search. Below
  * the desktop breakpoint the outline is hidden and the article takes the full
@@ -489,34 +489,6 @@
   font-family: var(--font-display);
   font-size: var(--text-md);
   font-weight: 600;
-}
-
-/* ==================================================================== footer
- */
-
-/* Transparent, so the backdrop runs to the foot of the page. */
-.md-footer,
-.md-footer-meta {
-  background: transparent;
-  color: var(--text-subtle);
-}
-
-/* Footer metadata and the page actions name a source or a route, so they take
-   the captured voice like the rest of the chrome. */
-.md-footer-meta,
-.md-source__repository,
-.md-content__button {
-  font-family: var(--font-mono);
-  font-size: var(--text-2xs);
-  letter-spacing: 0.04em;
-}
-
-.md-footer {
-  border-top: 1px solid var(--glass-border);
-}
-
-.md-footer__link {
-  border-radius: var(--radius-md);
 }
 
 /* =============================================================== focus & motion
