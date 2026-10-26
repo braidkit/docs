@@ -26,7 +26,7 @@ The full guide for people is at <https://docs.braidkit.io/quickstart/>.
 Tell the user these checkpoints before you start:
 
 1. Approve the Braid sign-in code in their browser.
-2. In Codex only, approve Braid's hooks: `/hooks` in Codex CLI, or
+2. In Codex only, approve Braid's hooks: `/hooks` in the Codex CLI, or
    **Settings > Hooks** in the Codex app.
 3. Approve your requests to use the network and to run commands, if their agent
    settings ask for approval.
@@ -111,8 +111,8 @@ the new session.
 ```text
 You are in BrewGo for the Braid Quickstart, on the feat/admin-analytics branch.
 
-1. Use spec.md and start working on building the admin analytics dashboard
-   feature. Follow spec.md exactly, including its checks and its commit.
+1. Use spec.md to build the admin analytics dashboard feature. Follow spec.md
+   exactly, including its checks and its commit.
 2. When the commit is done and the tree is clean, stop. Ask me to send
    "reconstruct the intent" as a new message, because Braid reviews only
    finished turns.
@@ -121,8 +121,8 @@ You are in BrewGo for the Braid Quickstart, on the feat/admin-analytics branch.
    the steps, the decisions, the workstreams, the diagrams, and the trace.
 4. When I say the review is done, ask whether to share it. If I agree: create a
    private brewgo repository on my GitHub account, make it origin, push main,
-   then push and raise a PR. Braid comments the intent on the PR when the Braid
-   GitHub App is installed on that repository.
+   then push and raise a PR. Braid posts the intent as a comment on the PR when
+   the Braid GitHub App is installed on that repository.
 ```
 
 ## If something goes wrong

@@ -7,13 +7,13 @@ agent_guide: quickstart.agent.md
 
 # Quickstart
 
-[BrewGo](https://github.com/braidkit/brewgo) is a digital coffee shop like Starbucks. 
+[BrewGo](https://github.com/braidkit/brewgo) is a digital coffee shop like Starbucks.
 
-We are adding admin portal feature to [BrewGo](https://github.com/braidkit/brewgo) sample repository. Then use Braid to understand what your agent built,
+In this Quickstart, you add an admin analytics feature to the BrewGo sample repository. Then you use Braid to understand what your agent built,
 check its choices, and direct a change before you open or merge a pull request.
 
-Following `spec.md` in the repository, your agent adds an analytics module that reads those orders
-without changing them, and a testable admin view. A parent agent gives each part to its own subagent. 
+Following `spec.md` in the repository, your agent adds an analytics module that reads BrewGo's orders
+without changing them, and a testable admin view. A parent agent gives each part to its own subagent.
 
 ## Before you start
 
@@ -30,13 +30,13 @@ without changing them, and a testable admin view. A parent agent gives each part
 curl -fsSL https://braidkit.io/cli/install.sh | bash
 ```
 
-Follow the prompts to sign in with GitHub, add the Braid GitHub App and set up your coding agent.
+Follow the prompts to sign in with GitHub, add the Braid GitHub App, and set up your coding agent.
 
 The installer puts Braid in `~/.local/bin`.
 
-Braid ambiently records AI Coding agent sessions automatically after installation setup. The coding sessions stay local. We will never be able to see them!
+Braid ambiently records AI coding agent sessions after setup. The coding sessions stay local. We will never be able to see them!
 
-> In Codex Desktop, please trust all the hooks by going to Settings -> Hooks. In Codex CLI, run `/hooks` and approve Braid's hooks when prompted. 
+> In the Codex app, go to **Settings > Hooks** and trust Braid's hooks. In the Codex CLI, run `/hooks` and approve Braid's hooks when prompted.
 
 ## 2. Prepare BrewGo
 
@@ -54,14 +54,14 @@ git switch -c feat/admin-analytics
 Open a new coding agent session in this `brewgo` checkout. Then paste this prompt:
 
 ```text
-use spec.md and start working on building the admin analytics dashboard feature.
+use spec.md to build the admin analytics dashboard feature.
 ```
 
-Wait for the parent and both subagents to finish. 
+Wait for the parent and both subagents to finish.
 
 ## 4. Reconstruct the intent
 
-You can reconstruct the intent in two ways: through Braid's skill in your agent,
+You can reconstruct the intent in two ways: through Braid's skills in your agent,
 or with the CLI.
 
 === "Skill"
@@ -83,11 +83,11 @@ or with the CLI.
     Braid finds the captured work on the current branch and asks which prompt to
     include.
 
-Braid opens the local intent review UI. 
+Braid opens the local Review UI.
 
 [![The Braid Review UI for the BrewGo analytics work: the goal, the outcome so far, and why this direction, followed by the agent's six decisions, such as counting all entries but validating status and totals.](assets/quickstart/review-ui-overview.webp)](assets/quickstart/review-ui-overview.webp)
 
-## 5. Understand what the agent did through Braid
+## 5. Use Braid to understand what the agent did
 
 The Review UI shows the intent behind your change in three parts: the overview,
 four ways to review the work, and the agent work trace. Watch a short tour, or
@@ -108,15 +108,14 @@ read about each part below.
    change.
 3. **Why this direction:** the direction that the agent took, and why.
 
-Does the goal match your request? Does the outcome match with what you are
-thinking?
+Does the goal match your request? Does the outcome match what you had in mind?
 
 ### Review by: four views of one change
 
 [![The Review by bar, with five numbered parts: 1, Steps; 2, Decisions; 3, Workstreams; 4, Diagrams; 5, Agent work trace.](assets/quickstart/review-ui-review-by.png)](assets/quickstart/review-ui-review-by.png)
 
 Each view shows the same change from another angle: the steps (1), the
-decisions (2), each agent's work (3), and diagrams (4). The agent work trace (5)
+decisions (2), each agent's work (3), and the diagrams (4). The agent work trace (5)
 shows the record behind all of them.
 
 === "Steps"
@@ -178,11 +177,11 @@ shows the record behind all of them.
    checkpoints, and review.
 3. **A tool call**, such as a shell command, with its time.
 4. **The agent's reasoning** for a choice.
-5. **A checkpoint**, such as a decision that the agent took.
+5. **A checkpoint**, such as a decision that the agent made.
 
-If you would choose differently, tell your agent which approach to take and why using the copy button. 
+If you would choose differently, use the copy button to tell your agent which approach to take, and why.
 
-## 6. Share the Intent with your peers
+## 6. Share the intent with your peers
 
 You cannot push to `braidkit/brewgo`, so your pull request opens in a repository
 of your own. You can share the intent in two ways: through Braid's skills in your
@@ -199,8 +198,8 @@ agent, or with the CLI.
     Your agent creates the repository with its own GitHub tools, usually the
     GitHub CLI, and points `origin` at it. Then it pushes the branch and opens
     the pull request. Braid's skills push the braid, link it to the pull request,
-    and comment the intent on the PR, so your peers can read the intent where
-    they review the code.
+    and post the intent as a comment on the PR, so your peers can read the
+    intent where they review the code.
 
 === "CLI"
 
@@ -226,7 +225,7 @@ agent, or with the CLI.
 
 Braid comments on a pull request when the Braid GitHub App is installed on its
 repository. If you installed the App for selected repositories only, add your new
-`brewgo` repository in the [Braid App's settings](https://github.com/apps/braidkit/installations/new).
+`brewgo` repository in the [Braid GitHub App's settings](https://github.com/apps/braidkit/installations/new).
 
 On the pull request, Braid's comment gives your peers an intent brief:
 
@@ -254,7 +253,7 @@ sandbox works too.
 
 ### macOS folder access
 
-If your repository is in Desktop, Documents, Downloads or iCloud Drive, macOS
+If your repository is in Desktop, Documents, Downloads, or iCloud Drive, macOS
 asks whether `braid-daemon` can access that folder. Allow it, because Braid
 reads your repository from there. If you chose **Don't Allow**, turn it back
 on in **System Settings > Privacy & Security > Files & Folders**.
