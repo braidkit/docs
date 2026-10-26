@@ -196,14 +196,17 @@
 /* =============================================================== page actions
  */
 
-/* The Markdown actions sit above the article, against its right edge. */
+/* The Markdown actions share the title's row, against the article's right
+   edge. Floating them keeps the title where it was, and the top margin centres
+   the 26px control on the title's first line. */
 .md-typeset .braid-pagebar {
   align-items: center;
   display: flex;
   flex-wrap: wrap;
+  float: right;
   gap: var(--space-3);
   justify-content: space-between;
-  margin: 0 0 var(--space-2);
+  margin: calc((var(--text-2xl) * var(--leading-tight) - 26px) / 2) 0 var(--space-2) var(--space-4);
   min-height: 26px;
 }
 
