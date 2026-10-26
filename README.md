@@ -52,27 +52,12 @@ description: "Your first change: from setup to completion."
 ---
 ```
 
-Keep commands out of outlines until verified against the applicable release.
+Verify commands against the current Braid release before publishing them.
 Record release applicability and authoritative sources for operational pages.
-Writing prompts live in HTML comments so the preview shows the heading
-structure without invented instructions.
 
-Add pages to `nav` in `mkdocs.yml`. The sidebar uses four collapsible groups:
-Get started, Guides, Concepts, and Reference. The active group expands by default;
-other groups can be opened when needed.
-Get help and Changelog stay in the build/navigation data for validation and
-discovery, but their links appear in the support footer and section switcher
-rather than twice in the sidebar.
-
-Quickstart owns one complete first example, including hosted sign-in. Guides
-cover recurring tasks: capture, understanding a change, and review. Concepts
-explain the model and evidence; Reference holds exact commands, states, machine
-configuration, account/device details, troubleshooting, and preview limits.
-See `LAUNCH.md` for page boundaries, writing requirements, and source issues.
-
-Home-page navigation is defined under `extra.home` in `mkdocs.yml` and rendered
-by `overrides/home.html`. `docs/index.md` carries the same links for readers of
-the agent corpus; `scripts/check_site.py` fails when the two drift apart.
+Pages are listed under `nav` in `mkdocs.yml`, and the row above each article
+links them in that order. Ask before adding one, as [AGENTS.md](AGENTS.md)
+says. The header's Get help link comes from `extra.support`.
 
 ## Agent-readable docs
 
@@ -83,8 +68,8 @@ It generates ignored `docs/llms.txt` and `docs/llms-full.txt` from nav pages:
 - grouped navigation retains its reading order;
 - unchanged outputs are not rewritten, avoiding a live-reload loop.
 
-These files and the search index contain documentation content and must be
-covered by the same access gate as the HTML.
+These files contain documentation content and must be covered by the same
+access gate as the HTML.
 
 The corpus generator, page-Markdown publisher, and site contract checker read
 the shared project configuration without importing MkDocs internals. MkDocs
@@ -97,8 +82,7 @@ standalone commands for another builder.
 - `docs/stylesheets/tokens.css`: maps those onto the names this site and Material use.
 - `fonts.css`: locally hosted fonts; see [FONTS.md](FONTS.md).
 - `base.css`: article typography, tables, code, buttons.
-- `shell.css`: header, navigation, search, outline, responsive drawer.
-- `home.css`: navigation cards and outline notices.
+- `shell.css`: header, page actions, outline, previous/next, two-column layout.
 - `overrides/`: focused Material template overrides.
 
 The tokens, typefaces, icons and the header mark are copies owned by
@@ -109,9 +93,9 @@ here. The design rules they implement are `DESIGN.md` in that repository, and
 Nothing is fetched at runtime; every asset is served from this site's own
 origin.
 
-Keep structural desktop rules inside their desktop media query. Material owns
-the mobile drawer and its label/checkbox controls; replacing those controls
-or leaking desktop layout into the drawer has previously broken navigation.
+Keep structural desktop rules inside their desktop media query. Below it,
+Material's own layout runs untouched, and desktop rules leaking into it have
+broken navigation before.
 
 ## Deployment
 
@@ -126,7 +110,7 @@ Custom domain: docs.braidkit.io
 
 CI checks the build, corpus, expected page outputs, and custom shell contracts.
 A successful build does not establish that the deployed site is private or
-that an outline is ready to launch. Follow [DEPLOYMENT.md](DEPLOYMENT.md) for
+that the writing is ready to launch. Follow [DEPLOYMENT.md](DEPLOYMENT.md) for
 access verification, public launch, and rollback.
 
 ## Builder migration

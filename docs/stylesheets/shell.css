@@ -3,9 +3,10 @@
  * Header, page actions, outline, and the two-column grid that holds the article
  * and its outline.
  *
- * The site is one page, so there is no navigation rail, drawer or search. Below
- * the desktop breakpoint the outline is hidden and the article takes the full
- * width; Material's own layout runs there untouched.
+ * The site has two pages, linked in the row above the article, so there is no
+ * navigation rail, drawer or search. Below the desktop breakpoint the outline
+ * is hidden and the article takes the full width; Material's own layout runs
+ * there untouched.
  */
 
 /* ===================================================================== header

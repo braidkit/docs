@@ -48,9 +48,6 @@ commit that produced each Cloudflare build.
 
 ## Private review before public launch
 
-The launch branch builds the full navigation, existing pages, and explicit
-outlines. Merging it no longer means the writing is complete.
-
 **Access control must be configured separately before deploying content that
 must stay private.** Neither `robots.txt` nor `noindex` prevents access. The
 docs source repository is public and is outside a website access gate.
@@ -82,9 +79,9 @@ and [Functions fail-open behavior](https://developers.cloudflare.com/pages/funct
 For a preview deployment:
 
 * open the preview URL from the pull request;
-* confirm Home shows the configured task cards and grouped navigation;
-* confirm support is available once at the foot of the sidebar;
-* confirm search, deep links, dark mode, and mobile navigation work;
+* confirm the row above the article links Overview and Quickstart;
+* confirm Get help appears once, in the header;
+* confirm deep links, dark mode, previous/next, and the mobile layout work;
 * confirm the response includes `X-Robots-Tag: noindex`.
 
 For an access-controlled deployment, anonymous requests must be challenged or
@@ -92,12 +89,12 @@ denied on every hostname, including these paths:
 
 ```sh
 curl --head https://docs.braidkit.io/
-curl --head https://docs.braidkit.io/why-braid/
-curl --head https://docs.braidkit.io/search/search_index.json
+curl --head https://docs.braidkit.io/quickstart/
+curl --head https://docs.braidkit.io/quickstart.md
 curl --head https://docs.braidkit.io/llms.txt
 curl --head https://docs.braidkit.io/llms-full.txt
 curl --head https://docs.braidkit.io/sitemap.xml
-curl --head https://docs.braidkit.io/stylesheets/home.css
+curl --head https://docs.braidkit.io/stylesheets/base.css
 curl --head https://docs.braidkit.io/404.html
 ```
 
@@ -108,14 +105,15 @@ commit with the intended PR/main commit.
 
 ## Open the docs publicly
 
-1. Complete the writing and release checks in [LAUNCH.md](LAUNCH.md).
+1. Confirm both pages are reviewed and match the latest Braid release.
 2. Hide unfinished pages if they are deferred from launch.
 3. Verify the deployed build, then remove the chosen access gate deliberately.
 4. Resolve the indexing policy in
    [BRA-250](https://linear.app/braidkit/issue/BRA-250). If indexing is approved,
    update `docs/robots.txt` and `docs/_headers` together.
-5. Verify public HTML, search, sitemap, and both agent-readable files, plus the
-   marketing redirect at `https://braidkit.io/docs`.
+5. Verify public HTML, the sitemap, the Markdown copies, and both
+   agent-readable files, plus the marketing redirect at
+   `https://braidkit.io/docs`.
 
 ## Roll back
 

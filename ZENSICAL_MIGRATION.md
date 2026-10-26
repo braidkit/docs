@@ -77,8 +77,8 @@ Production still remains on MkDocs.
   HTML, publishes Markdown sidecars, and runs the same contract checks.
 - Run both MkDocs and Zensical in CI.
 - Compare every route and generated publishing-boundary file.
-- Test the home page, three-column layout, navigation, search, light and dark
-  themes, mobile drawer, page outline, heading links, page copy, previous/next
+- Test the home page, two-column layout, page links, light and dark themes,
+  mobile layout, page outline, heading links, page copy, previous/next
   controls, and persistent support link.
 
 Rollback: remove the parallel job. MkDocs remains the production path.
@@ -103,7 +103,7 @@ known-good MkDocs commit or Pages deployment.
 - `scripts/check_site.py` passes against the Zensical output.
 - `llms.txt`, `llms-full.txt`, per-page Markdown, sitemap, robots policy, and
   response headers are present and correct.
-- Search returns relevant results and keyboard behavior is unchanged.
+- Keyboard behavior is unchanged.
 - Desktop, tablet, and mobile screenshots show no unintended layout changes.
 - Navigation, page outline, support access, heading links, Markdown actions,
   theme switching, and instant navigation work as expected.

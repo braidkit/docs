@@ -24,7 +24,7 @@ theme:
     - toc.follow
     - content.code.copy
     - content.tooltips
-# One page needs no search. An empty list, because leaving the key out turns
+# Two pages need no search. An empty list, because leaving the key out turns
 # MkDocs' default search plugin back on.
 plugins: []
 
