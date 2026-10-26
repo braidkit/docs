@@ -32,8 +32,6 @@ curl -fsSL https://braidkit.io/cli/install.sh | bash
 
 Follow the prompts to sign in with GitHub, add the Braid GitHub App and set up your coding agent.
 
-[Screenshot-tktk]
-
 The installer puts Braid in `~/.local/bin`.
 
 Braid ambiently records AI Coding agent sessions automatically after installation setup. The coding sessions stay local. We will never be able to see them!
