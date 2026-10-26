@@ -52,8 +52,8 @@ The launch branch builds the full navigation, existing pages, and explicit
 outlines. Merging it no longer means the writing is complete.
 
 **Access control must be configured separately before deploying content that
-must stay private.** Neither `robots.txt` nor `noindex` prevents access. The docs source repository is public and is outside a website
-access gate.
+must stay private.** Neither `robots.txt` nor `noindex` prevents access. The
+docs source repository is public and is outside a website access gate.
 
 Available approaches:
 
@@ -83,7 +83,6 @@ For a preview deployment:
 
 * open the preview URL from the pull request;
 * confirm Home shows the configured task cards and grouped navigation;
-* confirm every outline shows its status notice;
 * confirm support is available once at the foot of the sidebar;
 * confirm search, deep links, dark mode, and mobile navigation work;
 * confirm the response includes `X-Robots-Tag: noindex`.
