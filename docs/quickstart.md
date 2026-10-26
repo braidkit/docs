@@ -85,26 +85,103 @@ or with the CLI.
 
 Braid opens the local intent review UI. 
 
-[screenshot-tktk]
+[![The Braid Review UI for the BrewGo analytics work: the goal, the outcome so far, and why this direction, followed by the agent's six decisions, such as counting all entries but validating status and totals.](assets/quickstart/review-ui-overview.webp)](assets/quickstart/review-ui-overview.webp)
 
 ## 5. Understand what the agent did through Braid
 
-Start with **Overview**. Does the goal match your request? Does the outcome
-match with what you are thinking?
+The Review UI shows the intent behind your change in three parts: the overview,
+four ways to review the work, and the agent work trace. Watch a short tour, or
+read about each part below.
 
-[screenshot-tktk]
+<video controls muted playsinline preload="metadata" width="1438" height="856"
+  poster="../assets/quickstart/review-ui-walkthrough-poster.jpg"
+  aria-label="A walkthrough of the Braid Review UI: the overview, the steps, the decisions, the workstreams, the diagrams, and the code behind a decision.">
+  <source src="../assets/quickstart/review-ui-walkthrough.mp4" type="video/mp4">
+</video>
 
-In **Workstreams**, follow the backend and frontend work separately. In **Steps**,
-look at implementation, integration fixes, and checks. Then open the important
-**Decisions** and inspect their linked code and evidence:
+### The overview: your intent
 
-| Decision to inspect | Check against the code and tests |
-| --- | --- |
-| Admin access | Only an admin request gets analytics. Any other request gets a 403 before the orders are read. |
-| Revenue and averages | Cancelled and refunded orders count in the total but not in revenue or the average. Check how the average rounds. |
-| Malformed orders | The agent defines a rule for an order with a missing status or a non-integer total. Such an order must not change revenue or the average. |
-| Read-only data | The SQLite orders are read and never changed. Check the before-and-after hash of `brewgo.db` that the agent reports. |
-| Stale responses | In the admin view, an older response, including a failed one, cannot replace a newer result. |
+[![The overview of the braid, with three numbered parts: 1, the goal; 2, the outcome so far; 3, why this direction.](assets/quickstart/review-ui-intent.png)](assets/quickstart/review-ui-intent.png)
+
+1. **Goal:** what you and your agent set out to change.
+2. **Outcome so far:** what the agent delivered, and what stays outside the
+   change.
+3. **Why this direction:** the direction that the agent took, and why.
+
+Does the goal match your request? Does the outcome match with what you are
+thinking?
+
+### Review by: four views of one change
+
+[![The Review by bar, with five numbered parts: 1, Steps; 2, Decisions; 3, Workstreams; 4, Diagrams; 5, Agent work trace.](assets/quickstart/review-ui-review-by.png)](assets/quickstart/review-ui-review-by.png)
+
+Each view shows the same change from another angle: the steps (1), the
+decisions (2), each agent's work (3), and diagrams (4). The agent work trace (5)
+shows the record behind all of them.
+
+=== "Steps"
+
+    [![The Steps view, with four numbered parts: 1, the step; 2, what the step did; 3, the files it changed; 4, the decision it carried out.](assets/quickstart/review-ui-steps.png)](assets/quickstart/review-ui-steps.png)
+
+    1. **The step:** what the agent did, in order, and the kind of work, such as
+       Implementation.
+    2. **What:** a summary of the step.
+    3. **Files:** the files that the step changed. Select `</>` to see the code.
+    4. **The decision** that the step carried out, and whether a check covers
+       it.
+
+=== "Decisions"
+
+    [![Decision D6 in the Braid Review UI, with four numbered parts: 1, the question about which SQLite read mode to use; 2, the test that covers the decision and passed; 3, the chosen approach, a normal read-only open; 4, the other approach considered, immutable mode, and why it was not chosen.](assets/quickstart/review-ui-decision.png)](assets/quickstart/review-ui-decision.png)
+
+    Every decision has the same four parts. In this run, decision `D6` is about
+    how the analytics module opens BrewGo's SQLite database. Your agent makes
+    its own decisions, so yours can differ.
+
+    1. **The question** that the agent had to answer. Did your change need this
+       question answered?
+    2. **The evidence:** the recorded check that covers the decision, and its
+       result. Here, the SQLite repository tests passed. When Braid shows no
+       test coverage for a decision, read the code yourself.
+    3. **The chosen approach**, and why the agent took it. Select `</>` to see
+       the code behind it.
+    4. **The other approaches** that the agent considered, and why it did not
+       take them. Here, immutable mode could miss orders that are still in the
+       write-ahead log.
+
+=== "Workstreams"
+
+    [![The Workstreams view, with three numbered parts: 1, the workstream and its model; 2, its intent; 3, its first decision.](assets/quickstart/review-ui-workstreams.png)](assets/quickstart/review-ui-workstreams.png)
+
+    1. **The workstream:** one agent's part of the work, such as a parent agent
+       or one of its subagents, and the model that did it.
+    2. **Its intent:** what this part of the work achieved.
+    3. **Its decisions**, in the same form as in Decisions.
+
+=== "Diagrams"
+
+    [![The Diagrams view, with three numbered parts: 1, the switch between the component and sequence diagrams; 2, the diagram's summary; 3, a component with its decision labels.](assets/quickstart/review-ui-diagrams.png)](assets/quickstart/review-ui-diagrams.png)
+
+    1. **Component or Sequence:** see how the parts of the change fit together,
+       or the order in which they call each other.
+    2. **The summary:** what the change does to the system.
+    3. **A component** that the change adds or uses. Its labels, such as `D5`
+       and `D6`, link it to the decisions about it.
+
+### The agent work trace
+
+[![The agent work trace, with five numbered parts: 1, the search box; 2, the filters; 3, a tool call; 4, the agent's reasoning; 5, a decision checkpoint.](assets/quickstart/review-ui-trace.png)](assets/quickstart/review-ui-trace.png)
+
+1. **Search** the trace. Here, "nested" finds the entries about the nested
+   package files.
+2. **Filter** by workstream, and by kind: prompts, reasoning, tool calls,
+   checkpoints, and review.
+3. **A tool call**, such as a shell command, with its time.
+4. **The agent's reasoning** for a choice.
+5. **A checkpoint**, such as a decision that the agent took.
+
+If you would choose differently, tell your agent which approach to take and why.
+Have it commit, then reconstruct the intent again.
 
 An explanation can be wrong. Use the code, the recorded checks, and the test
 results to decide whether you accept each choice.
