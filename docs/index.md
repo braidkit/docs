@@ -63,7 +63,6 @@ This helps in building a shared understanding of any change, big or small!
 ## Choose your next step
 
 - [Quickstart](quickstart.md): add a feature to BrewGo and review the agent's work.
-- [Build and review](build-and-review.md): the planned expanded exercise, including a follow-up feature and the PR workflow.
 
 Need help? Ask on [Discord](https://discord.gg/G3wzPsKtR) or email
 [hello@braidkit.io](mailto:hello@braidkit.io).

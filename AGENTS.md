@@ -16,7 +16,7 @@ lychee --include-fragments --index-files index.html \
   --remap "^https://docs[.]braidkit[.]io/(.*)$ file://$PWD/site/\$1" \
   --remap "^https://github[.]com/braidkit/docs/blob/main/docs/(.*)$ file://$PWD/docs/\$1" \
   --exclude '^https://github[.]com/braidkit/brewgo([/#?].*)?$' \
-  site/index.html site/quickstart/index.html site/build-and-review/index.html
+  site/index.html site/quickstart/index.html
 python scripts/check_commands.py docs/quickstart.md # braid commands match the CLI
 ```
 
@@ -55,11 +55,8 @@ use, and is where docs-specific ones belong. UI lives in `docs/stylesheets/` and
 
 ## Content
 
-The site has three pages: Overview in `docs/index.md`, Quickstart in
-`docs/quickstart.md`, and Build and review in `docs/build-and-review.md`.
-The last page is an outline until its instructions have been written and
-verified. Keep the sample-data setup dependency visible in the Quickstart
-until it is available on BrewGo's main branch. Do not promise team sharing
+The site has two pages: Overview in `docs/index.md` and Quickstart in
+`docs/quickstart.md`. Do not promise team sharing
 until access is enabled and verified. Ask before adding pages beyond these.
 Exact command details belong in `braid <command> --help`.
 

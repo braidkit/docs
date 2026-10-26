@@ -5,11 +5,8 @@ Material and Braid's documentation shell.
 
 ## Current scope
 
-The draft has three pages: Overview (`docs/index.md`), Quickstart
-(`docs/quickstart.md`), and Build and review (`docs/build-and-review.md`).
-Build and review is an outline for the next writing pass. The Quickstart
-flags its sample-data setup dependency. An outline is a writing brief, not
-a working tutorial or a shipped feature.
+The draft has two pages: Overview (`docs/index.md`) and Quickstart
+(`docs/quickstart.md`).
 
 Merging the site structure and opening the docs publicly are separate steps.
 The site currently sends `noindex` headers and disallows crawling, but those

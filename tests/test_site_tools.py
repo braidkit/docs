@@ -34,9 +34,9 @@ class SiteConfigTests(unittest.TestCase):
         config = site_config.load_site_config()
         pages = site_config.site_pages(config)
 
-        self.assertEqual(3, len(pages))
-        self.assertEqual(["Overview", "Quickstart", "Build and review"], [p.title for p in pages])
-        self.assertEqual(["", "quickstart/", "build-and-review/"], [p.url for p in pages])
+        self.assertEqual(2, len(pages))
+        self.assertEqual(["Overview", "Quickstart"], [p.title for p in pages])
+        self.assertEqual(["", "quickstart/"], [p.url for p in pages])
         self.assertEqual("", pages[0].url)
         self.assertEqual("index.html", pages[0].dest_uri)
 
