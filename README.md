@@ -81,7 +81,6 @@ It generates ignored `docs/llms.txt` and `docs/llms-full.txt` from nav pages:
 
 - descriptions and YAML frontmatter are validated;
 - grouped navigation retains its reading order;
-- outlines appear in the index as unwritten and are omitted from the full text;
 - unchanged outputs are not rewritten, avoiding a live-reload loop.
 
 These files and the search index contain documentation content and must be
