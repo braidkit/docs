@@ -5,7 +5,7 @@ description: Add a new feature to a sample coffee shop app with your coding agen
 
 # Quickstart
 
-[BrewGo](https://github.com/braidkit/brewgo) is a digital coffee shop like starbucks. 
+[BrewGo](https://github.com/braidkit/brewgo) is a digital coffee shop like Starbucks. 
 
 We are adding admin analytics to [BrewGo](https://github.com/braidkit/brewgo). Then use Braid to understand what your agent built,
 check its choices, and direct a change before you open or merge a pull request.

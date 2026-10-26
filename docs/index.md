@@ -20,7 +20,7 @@ change is ready, ask your agent to **reconstruct the intent** and review the res
 
 It is true, no one reads code anymore, but it is not because they don't want to! They are unable to comprehend large chunks of code written by agents. As humans, we have limited mental bandwidth, however, we still want to steer the agent, own direction and outcome that agents are producing. 
 
-To continue scale with the AI agent output, we need to understand and conciously guide the agent to success. 
+To continue scale with the AI agent output, we need to understand and consciously guide the agent to success. 
 
 Braid precisely does this, by being your ambient monitor of the agent. reconstructs the intent behind your work, the agent’s choices, and its checks to the code. You can follow the work, question a decision, and steer the next change. Keep building without losing the high-level system context.
 

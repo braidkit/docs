@@ -1,3 +1,4 @@
+ambiently
 [Bb]raids?
 BrewGo
 Codex
@@ -9,6 +10,7 @@ pushback
 [Qq]uickstart
 rebase
 SQLite
+Starbucks
 subagents?
 worktrees?
 [Ww]orkstreams?
