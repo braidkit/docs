@@ -7,13 +7,11 @@ description: Add a new feature to a sample coffee shop app with your coding agen
 
 [BrewGo](https://github.com/braidkit/brewgo) is a digital coffee shop like Starbucks. 
 
-We are adding admin analytics to [BrewGo](https://github.com/braidkit/brewgo). Then use Braid to understand what your agent built,
+We are adding admin portal feature to [BrewGo](https://github.com/braidkit/brewgo) sample repository. Then use Braid to understand what your agent built,
 check its choices, and direct a change before you open or merge a pull request.
 
-The storefront already exists, and BrewGo comes with 300 synthetic orders in its SQLite database.
 Following `spec.md` in the repository, your agent adds an analytics module that reads those orders
-without changing them, and a testable admin view. A parent agent gives each part to its own subagent.
-Payments are simulated.
+without changing them, and a testable admin view. A parent agent gives each part to its own subagent. 
 
 ## Before you start
 
@@ -22,26 +20,28 @@ Payments are simulated.
 | macOS and Git 2.25 or later | Braid's supported client platform. |
 | Claude Code or Codex with subagent support | The spec uses a parent and two parallel subagents. |
 | Node.js 22.13 or later | The analytics module reads SQLite with Node's built-in `node:sqlite`. |
+
+
 ## 1. Install Braid
 
 ```sh
 curl -fsSL https://braidkit.io/cli/install.sh | bash
 ```
 
-Follow the prompts to sign in with GitHub and set up your coding agent.
+Follow the prompts to sign in with GitHub, add the Braidkit App and set up your coding agent.
 
 [Screenshot-tktk]
 
 The installer puts Braid in `~/.local/bin`.
 
-Braid records AI Coding agent sessions automatically after installation setup. 
+Braid ambiently records AI Coding agent sessions automatically after installation setup. The coding sessions stay local. We will never be able to see them!
 
-> In Codex CLI, run `/hooks` and approve Braid's hooks when prompted. In Codex Desktop, please trust all the hooks by going to Settings -> Hooks.
+> In Codex Desktop, please trust all the hooks by going to Settings -> Hooks. In Codex CLI, run `/hooks` and approve Braid's hooks when prompted. 
 
 ## 2. Prepare BrewGo
 
 In a terminal, clone BrewGo and create the feature branch **before starting the agent session**.
-A fresh clone is on `main`:
+
 
 ```sh
 git clone https://github.com/braidkit/brewgo.git
@@ -54,7 +54,7 @@ git switch -c feat/admin-analytics
 Open a new coding agent session in this `brewgo` checkout. Then paste this prompt:
 
 ```text
-use spec.md and start working on building the admin analytics dashboard feature
+use spec.md and start working on building the admin analytics dashboard feature.
 ```
 
 Wait for the parent and both subagents to finish. 
@@ -111,50 +111,39 @@ results to decide whether you accept each choice.
 
 ## 6. Share the Intent with your peers
 
-You cannot push to `braidkit/brewgo`, so first move your work to a repository of
-your own:
-
-1. On GitHub, [create a new repository](https://github.com/new) named `brewgo`,
-   public or private. Leave it empty: do not add a README, license, or `.gitignore`.
-2. In a terminal, in your `brewgo` checkout, point `origin` at it and push `main`.
-   Replace `<your-username>` with your GitHub username:
-
-    ```sh
-    git remote set-url origin https://github.com/<your-username>/brewgo.git
-    git push -u origin main
-    ```
-
-Your pull request opens in this repository.
-
-You can share the intent in two ways: through Braid's skills in your agent, or
-with the CLI.
+You cannot push to `braidkit/brewgo`, so your pull request opens in a repository
+of your own. You can share the intent in two ways: through Braid's skills in your
+agent, or with the CLI.
 
 === "Skill"
 
     In the same coding agent session, ask:
 
     ```text
-    push and raise a PR
+    create a private brewgo repository on my GitHub account, make it origin, push main, then push and raise a PR
     ```
 
-    Your agent pushes the branch and opens the pull request. Braid's skills then
-    push the braid and link it to the pull request, and Braid comments the intent
-    on the PR, so your peers can read the intent where they review the code.
-
-    Your agent opens the pull request with its own GitHub tools, usually the
-    GitHub CLI. If it has none, use the CLI method.
+    Your agent creates the repository with its own GitHub tools, usually the
+    GitHub CLI, and points `origin` at it. Then it pushes the branch and opens
+    the pull request. Braid's skills push the braid, link it to the pull request,
+    and comment the intent on the PR, so your peers can read the intent where
+    they review the code.
 
 === "CLI"
 
-    Push the branch:
+    With the [GitHub CLI](https://cli.github.com), create the repository, push
+    both branches, and open the pull request:
 
     ```sh
+    git remote remove origin
+    gh repo create brewgo --private --source=. --remote=origin
+    git push -u origin main
     git push -u origin feat/admin-analytics
+    gh pr create --base main --fill
     ```
 
-    Open the pull request on GitHub from the link that `git push` prints. Then
-    push the braid with its ID from step 4, and the pull request number and URL.
-    Always pass both:
+    Then push the braid with its ID from step 4, and the pull request number and
+    URL that `gh pr create` printed. Always pass both:
 
     ```sh
     braid push <braid-id> --pr-number <number> --pr-url <pull-request-url>
