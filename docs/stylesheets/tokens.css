@@ -22,7 +22,6 @@
   /* -- brand ------------------------------------------------------------- */
   --brand: var(--bk-brand);             /* 10.3:1 on canvas */
   --brand-strong: var(--bk-brand-strong);
-  --brand-contrast: var(--bk-on-brand);    /* text on a --brand fill: 10.9:1 */
   --accent: var(--bk-signed);            /* 5.9:1 on canvas */
 
   /* -- surfaces ---------------------------------------------------------- */
@@ -41,12 +40,8 @@
   --code-bg: var(--bk-code-bg);
   --code-fg: var(--bk-code-text);           /* 10.1:1 on --code-bg */
 
-  /* -- callout hues ------------------------------------------------------ *
-   * One hue family per severity, all at the same chroma so a page of mixed
-   * callouts reads as one system. */
-  --callout-info: var(--bk-signed);    /* 5.9:1 — teal */
-  --callout-tip: var(--bk-promoted);     /* 4.7:1 — green; "success" has to look like it */
-  --callout-warn: var(--bk-attention);    /* 5.1:1 — amber */
+  /* -- danger hue -------------------------------------------------------- *
+   * Material's colour for deleted text is mixed from it below. */
   --callout-danger: var(--bk-blocked);  /* 6.2:1 — red. Deliberately far from the brand
                                  plum: an error must not be the most on-brand
                                  thing on the page. */
@@ -126,8 +121,6 @@
      means something rather than decorating every surface. */
   --radius-sm: var(--bk-radius-control);
   --radius-md: var(--bk-radius-control);
-  --radius-lg: var(--bk-radius-panel);
-  --radius-pill: 999px;
 
   /* -- layout ------------------------------------------------------------ */
   --header-height: 56px;
@@ -181,7 +174,6 @@
 [data-md-color-scheme="slate"] {
   --brand: var(--bk-brand);             /* 9.5:1 on canvas */
   --brand-strong: var(--bk-brand-strong);
-  --brand-contrast: var(--bk-on-brand);    /* text on a --brand fill: 9.4:1 */
   --accent: var(--bk-signed);            /* 8.4:1 */
 
   --canvas: var(--bk-canvas);
@@ -197,9 +189,6 @@
   --code-bg: var(--bk-code-bg);
   --code-fg: var(--bk-code-text);           /* 11.7:1 on --code-bg */
 
-  --callout-info: var(--bk-signed);    /* 8.4:1 */
-  --callout-tip: var(--bk-promoted);     /* 7.9:1 */
-  --callout-warn: var(--bk-attention);    /* 7.0:1 */
   --callout-danger: var(--bk-blocked);  /* 7.6:1 */
 
   --tint-weak: 10%;

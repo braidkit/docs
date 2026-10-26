@@ -491,34 +491,6 @@
   font-weight: 600;
 }
 
-/* ==================================================================== footer
- */
-
-/* Transparent, so the backdrop runs to the foot of the page. */
-.md-footer,
-.md-footer-meta {
-  background: transparent;
-  color: var(--text-subtle);
-}
-
-/* Footer metadata and the page actions name a source or a route, so they take
-   the captured voice like the rest of the chrome. */
-.md-footer-meta,
-.md-source__repository,
-.md-content__button {
-  font-family: var(--font-mono);
-  font-size: var(--text-2xs);
-  letter-spacing: 0.04em;
-}
-
-.md-footer {
-  border-top: 1px solid var(--glass-border);
-}
-
-.md-footer__link {
-  border-radius: var(--radius-md);
-}
-
 /* =============================================================== focus & motion
  */
 
