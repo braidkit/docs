@@ -28,7 +28,7 @@ without changing them, and a testable admin view. A parent agent gives each part
 curl -fsSL https://braidkit.io/cli/install.sh | bash
 ```
 
-Follow the prompts to sign in with GitHub, add the Braidkit App and set up your coding agent.
+Follow the prompts to sign in with GitHub, add the Braid GitHub App and set up your coding agent.
 
 [Screenshot-tktk]
 
