@@ -23,8 +23,6 @@ theme:
     - navigation.footer
     - toc.follow
     - content.code.copy
-    - content.code.annotate
-    - content.tooltips
 # One page needs no search. An empty list, because leaving the key out turns
 # MkDocs' default search plugin back on.
 plugins: []
@@ -51,34 +49,18 @@ extra_javascript:
   - javascripts/copy-markdown.js
 
 markdown_extensions:
-  - admonition
   - attr_list
-  - md_in_html
   - tables
-  - footnotes
   - toc:
       permalink: true
       title: On this page
-  - pymdownx.details
   - pymdownx.highlight:
       anchor_linenums: true
       # Adds language-<name> to each block, so prompts (```text) can wrap.
       pygments_lang_class: true
-  - pymdownx.inlinehilite
-  - pymdownx.snippets
-  - pymdownx.keys
-  - pymdownx.tasklist:
-      custom_checkbox: true
   - pymdownx.tabbed:
       alternate_style: true
-  - pymdownx.emoji:
-      emoji_index: !!python/name:material.extensions.emoji.twemoji
-      emoji_generator: !!python/name:material.extensions.emoji.to_svg
-  - pymdownx.superfences:
-      custom_fences:
-        - name: mermaid
-          class: mermaid
-          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.superfences
 
 # Agent guides are plain instructions, not pages. page_markdown.py publishes
 # them next to their page for the "Copy for agent" button.

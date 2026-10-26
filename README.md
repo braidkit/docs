@@ -49,13 +49,8 @@ Quote values containing a colon followed by a space:
 ---
 title: Quickstart
 description: "Your first change: from setup to completion."
-draft: true
 ---
 ```
-
-`draft: true` displays an outline notice and labels links on the home page.
-It does **not** hide the page or protect access. Replace the outline with
-reviewed guidance and remove that field when it is ready.
 
 Keep commands out of outlines until verified against the applicable release.
 Record release applicability and authoritative sources for operational pages.
