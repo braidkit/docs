@@ -1,34 +1,28 @@
 ---
 title: Quickstart
-description: Add admin analytics to BrewGo with your coding agent, reconstruct the intent, and check the decisions against the code.
+description: Add a new feature to a sample coffee shop app with your coding agent, reconstruct the intent, and check the decisions against the code.
 ---
 
 # Quickstart
 
-Add a protected admin analytics page to [BrewGo](https://github.com/braidkit/brewgo),
-a coffee order-ahead app. Then use Braid to understand what your agent built,
+[BrewGo](https://github.com/braidkit/brewgo) is a digital coffee shop like starbucks. 
+
+We are adding admin analytics to [BrewGo](https://github.com/braidkit/brewgo). Then use Braid to understand what your agent built,
 check its choices, and direct a change before you open or merge a pull request.
 
-The storefront already exists. The exercise extends its Python/FastAPI backend,
-SQLite database, and React frontend on a new branch. The orders are synthetic
-and payments are simulated. You do not need to place orders.
-
-!!! note "Draft setup dependency"
-    BrewGo's repeatable sample-data setup must land on `main` before this page
-    can be followed from a fresh clone. The `seed:orders` command below exists
-    on the sample-data branch today. It preserves existing orders and avoids
-    duplicating the synthetic history. The clone instructions remain a draft
-    until that setup is published.
+The storefront already exists, and BrewGo comes with 300 synthetic orders in its SQLite database.
+Following `spec.md` in the repository, your agent adds an analytics module that reads those orders
+without changing them, and a testable admin view. A parent agent gives each part to its own subagent.
+Payments are simulated.
 
 ## Before you start
 
 | You need | Notes |
 | --- | --- |
 | macOS and Git 2.25 or later | Braid's supported client platform. |
-| Claude Code or Codex with subagent support | The request uses a parent and two parallel subagents. |
-| Node.js 22.12 or later | BrewGo's frontend and development scripts. |
-| Python 3.10 or later | BrewGo's existing API and tests. |
-| Access to `braidkit/brewgo` | The sample repository is private. |
+| Claude Code or Codex with subagent support | The spec uses a parent and two parallel subagents. |
+| Node.js 22.13 or later | The analytics module reads SQLite with Node's built-in `node:sqlite`. |
+| GitHub CLI, signed in with `gh auth login` | Step 6 puts BrewGo in a repository of your own and opens the pull request there. |
 
 ## 1. Install Braid
 
@@ -37,106 +31,70 @@ curl -fsSL https://braidkit.io/cli/install.sh | bash
 ```
 
 Follow the prompts to sign in with GitHub and set up your coding agent.
-The installer puts Braid in `~/.local/bin` and starts its local daemon.
 
-```sh
-braid auth status
-braid hooks doctor
-```
+[Screenshot-tktk]
 
-Braid records sessions started after setup. Open the new session in step 3,
-after the feature branch is ready. Earlier sessions may not be recorded.
+The installer puts Braid in `~/.local/bin`.
+
+Braid records AI Coding agent sessions automatically after installation setup. 
+
+> In Codex CLI, run `/hooks` and approve Braid's hooks when prompted. In Codex Desktop, please trust all the hooks by going to Settings -> Hooks.
 
 ## 2. Prepare BrewGo
 
-Start from the existing application on `main`:
+In a terminal, clone BrewGo and create the feature branch **before starting the agent session**.
+A fresh clone is on `main`:
 
 ```sh
 git clone https://github.com/braidkit/brewgo.git
 cd brewgo
-git switch main
-npm ci
-python3 -m venv .venv
-.venv/bin/pip install -r backend/requirements-lock.txt
-npm run seed:orders
-npm run build
-npm run test:api
-```
-
-The sample-data command adds 300 synthetic orders across five cafés, including
-completed, cancelled, and refunded orders. Existing orders stay intact. If the
-sample history is already present, running it again does not duplicate it.
-The database stays local and is not committed to Git.
-
-Create the feature branch **before starting the agent session**:
-
-```sh
 git switch -c feat/admin-analytics
 ```
 
 ## 3. Ask your agent to build the feature
 
-Open a new agent session in this `brewgo` checkout. In Codex, run `/hooks`
-and approve Braid's hooks when prompted. Then paste this request:
+Open a new coding agent session in this `brewgo` checkout. Then paste this prompt:
 
 ```text
-Add a protected admin analytics page at /admin to BrewGo.
-Extend the existing Python/FastAPI app and React frontend.
-Use the saved SQLite orders. Preserve the storefront and data.
-
-Act as the parent coordinator. First define a shared API for
-admin sign-in, sign-out, and a filtered analytics summary. Then
-launch two subagents in parallel in this checkout and branch:
-
-- Backend: own backend/, including tests. Add admin accounts and
-  revocable sessions separate from customer profiles. Protect
-  every analytics request. Add a local command to create an admin
-  that prompts for a password. Do not add default credentials.
-- Frontend: own src/. Add sign-in, the summary, date-range and
-  café filters, and sign-out. Handle loading, empty data, errors,
-  and responses that arrive after filters change or sign-out.
-
-Show total orders, revenue before tax, average order value, and
-counts by status. Use integer cents. Define which orders count
-in each metric, rounding, and date boundaries. Keep simulated
-payments labeled. Use the existing dependencies.
-
-Keep the subagents in their owned files. They should not commit
-or switch branches. As parent, coordinate integration and have
-the owning subagent resolve any failures.
-
-Briefly report material choices, alternatives actually considered,
-and what the checks showed. Run npm run build, npm run test:api,
-and git diff --check. Fix failures and commit the completed work.
+use spec.md and start working on building the admin analytics dashboard feature
 ```
 
-Wait for the parent and both subagents to finish. Follow the agent's admin setup
-instructions, run `npm run dev`, and try `/admin` at `http://127.0.0.1:5173/admin`.
-Check sign-in, filters, and sign-out. Confirm that the storefront still loads.
+Wait for the parent and both subagents to finish. 
 
 ## 4. Reconstruct the intent
 
-In a **new message** to the parent agent, ask:
+You can reconstruct the intent in two ways: through Braid's skill in your agent,
+or with the CLI.
 
-```text
-reconstruct the intent
-```
+=== "Skill"
 
-Choose `brewgo`, the `feat/admin-analytics` branch, and the request from step 3.
-Include the parent and both subagents. The implementation turn must have
-finished so Braid can include it.
+    In the same coding agent session, send a new message:
 
-Braid opens the local Review UI. Keep the braid ID so later reconstructions
-update the same braid.
+    ```text
+    reconstruct the intent
+    ```
 
-Reconstruction uses Braid's hosted service and a third-party AI model. Captured
-requests, agent replies, and code changes can be included. Keep the sample
-synthetic and keep passwords out of agent messages.
+=== "CLI"
 
-## 5. Check what the agent decided
+    In a terminal, in your `brewgo` checkout, run:
+
+    ```sh
+    braid intent
+    ```
+
+    Braid finds the captured work on the current branch and asks which prompt to
+    include.
+
+Braid opens the local intent review UI. 
+
+[screenshot-tktk]
+
+## 5. Understand what the agent did through Braid
 
 Start with **Overview**. Does the goal match your request? Does the outcome
-match what you tried?
+match with what you are thinking?
+
+[screenshot-tktk]
 
 In **Workstreams**, follow the backend and frontend work separately. In **Steps**,
 look at implementation, integration fixes, and checks. Then open the important
@@ -144,55 +102,69 @@ look at implementation, integration fixes, and checks. Then open the important
 
 | Decision to inspect | Check against the code and tests |
 | --- | --- |
-| Admin access | Every analytics API request checks the admin session. A sign-in page alone is not protection. |
-| Revenue and averages | Check which statuses count, whether tax is excluded, and how integer-cent averages round. |
-| Date and café filters | Check timezone, start/end boundaries, and invalid input. |
-| Sign-out and request races | A late response cannot restore analytics after sign-out or replace newer results. |
-| API integration | Frontend and Python API use the same fields, units, and error behavior. |
+| Admin access | Only an admin request gets analytics. Any other request gets a 403 before the orders are read. |
+| Revenue and averages | Cancelled and refunded orders count in the total but not in revenue or the average. Check how the average rounds. |
+| Malformed orders | The agent defines a rule for an order with a missing status or a non-integer total. Such an order must not change revenue or the average. |
+| Read-only data | The SQLite orders are read and never changed. Check the before-and-after hash of `brewgo.db` that the agent reports. |
+| Stale responses | In the admin view, an older response, including a failed one, cannot replace a newer result. |
 
-An explanation can be wrong. Use the code, recorded checks, and your own app
-checks to decide whether you accept each choice.
+An explanation can be wrong. Use the code, the recorded checks, and the test
+results to decide whether you accept each choice.
 
-## 6. Steer a choice and review again
+## 6. Share the Intent with your peers
 
-If you would decide something differently, return to the same parent session.
-Explain the behavior you want and why. Ask the agent to make the change, run
-the checks, and commit.
-
-After that turn finishes, ask it to reconstruct the **same braid**, keeping
-the original request as the starting point. The updated intent should include
-the change and the reason you gave. Check it again.
-
-## 7. Take the reviewed change to your PR
-
-Push the code branch and open a pull request through your normal Git workflow.
-If the PR already exists, update it with the reviewed commits. Local intent
-review can happen before or after the PR is opened.
-
-You can save the reconstructed braid to your own Braid account separately:
+You cannot push to `braidkit/brewgo`, so first move your work to a repository of
+your own. In a terminal, in your `brewgo` checkout, run:
 
 ```sh
-braid push <braid-id>
+git remote remove origin
+gh repo create brewgo --private --source=. --remote=origin
+git push -u origin main
 ```
 
-This uploads the intent and trace summary shown in the Review UI. It does
-not push your Git branch. Team sharing is not enabled for this exercise;
-pushing a braid is not a promise that teammates can open it.
+This makes a private `brewgo` repository on your GitHub account, points `origin`
+at it, and pushes `main`. Your pull request opens there. If you already have a
+repository named `brewgo`, use another name.
 
-Approval and shipping are optional during the preview. Approval records that
-you understood and accepted the intent. Shipping is final and adds a signed Git
-note to the commit. If you squash-merge, ship after the merge so the note is
-attached to the resulting commit.
+You can share the intent in two ways: through Braid's skills in your agent, or
+with the CLI.
 
-When ready, use the approval command from the intent page, then ask your agent
-to "ship the braid". Keep the checkout and commit history until the braid is done.
+=== "Skill"
+
+    In the same coding agent session, ask:
+
+    ```text
+    push and raise a PR
+    ```
+
+    Your agent pushes the branch and opens the pull request. Braid's skills then
+    push the braid and link it to the pull request, and Braid comments the intent
+    on the PR, so your peers can read the intent where they review the code.
+
+=== "CLI"
+
+    Push the braid to braid server with its ID from step 4:
+
+    ```sh
+    braid push <braid-id>
+    ```
+
+    To link a pull request and comment the intent on it, add the pull request
+    number and URL. Always pass both:
+
+    ```sh
+    braid push <braid-id> --pr-number <number> --pr-url <pull-request-url>
+    ```
+
+Braid comments on a pull request when the Braid GitHub App is installed on its
+repository. If you installed the App for selected repositories only, add your new
+`brewgo` repository in the [Braid App's settings](https://github.com/apps/braidkit/installations/new).
 
 ## Troubleshooting
 
-### Agent sandboxes
+### Agent permissions
 
-Braid's skills run `braid` through your agent, and it talks to the Braid daemon
-on your machine. If your agent runs commands in a sandbox, as Codex does by
+Braid's skills run `braid` through your agent. If your agent runs commands in a sandbox, as Codex does by
 default and Claude Code does once you turn its sandbox on, the sandbox needs
 network access and local binding. Without them, Braid can say you're signed out
 or that the daemon isn't running when neither is true. Allow both in whichever
@@ -205,6 +177,8 @@ If your repository is in Desktop, Documents, Downloads or iCloud Drive, macOS
 asks whether `braid-daemon` can access that folder. Allow it, because Braid
 reads your repository from there. If you chose **Don't Allow**, turn it back
 on in **System Settings > Privacy & Security > Files & Folders**.
+
+![The macOS dialog: "braid-daemon" would like to access files in your Documents folder, with Don't Allow and Allow buttons.](assets/quickstart/macos-folder-access.png){ width="302" }
 
 ### Update Braid
 
@@ -223,10 +197,6 @@ To stop recording, run `braid hooks uninstall claude` or
 ## Need help?
 
 Ask your agent "is Braid set up correctly?" if setup or recording looks wrong.
-If a subagent is missing, check capture before accepting the record as complete.
 
 Ask on [Discord](https://discord.gg/G3wzPsKtR) or email
 [hello@braidkit.io](mailto:hello@braidkit.io).
-
-[Build and review](build-and-review.md) will expand this exercise with full
-verification steps, a CSV export follow-up, and the PR workflow.

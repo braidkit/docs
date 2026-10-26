@@ -1,82 +1,64 @@
 ---
 title: Overview
-description: Understand where Braid fits, what it records, and how to review the intent behind a change.
+description: Understand what is Braid, how and why to review the intent behind a change.
 ---
 
 # Overview
 
-Braid keeps the intent behind code written with an AI agent. It connects your
-request, the work the agent did, the choices it made, and the checks it ran
-to the code change you need to understand.
+Git records what changed in your code. Braid records why it changed: what you
+asked your coding agent for, the decisions it made, and the checks it ran.
+So you, your reviewers, and future you can recall the reasons, not only the code.
 
-You keep working in your coding agent. Braid records the session. When the
-change is ready, ask it to **reconstruct the intent** and review the result.
+You keep working in your coding agent. Braid ambiently tracks everything. When the
+change is ready, ask your agent to **reconstruct the intent** and review the result.
 
-[Try it on BrewGo →](quickstart.md){ .md-button }
+[Try it on Quickstart →](quickstart.md){ .md-button }
 
-## Where Braid fits
+## Why Braid?
 
-Your request starts the work. An agent may delegate parts of it, change code,
-run checks, and revise its approach. The final diff shows the code changes;
-the session also contains the context behind them.
+> Nobody reads code anymore!
 
-<figure class="braid-overview-figure">
-  <img class="braid-frame-light" src="assets/overview/capture.png" alt="A developer directs a primary agent and subagents. Braid captures their work as they produce code and tests." loading="eager">
-  <img class="braid-frame-dark" src="assets/overview/capture-dark.png" alt="A developer directs a primary agent and subagents. Braid captures their work as they produce code and tests." loading="eager">
-  <figcaption>Braid records the work while you use your coding agent.</figcaption>
-</figure>
+It is true, no one reads code anymore, but it is not because they don't want to! They are unable to comprehend large chunks of code written by agents. As humans, we have limited mental bandwidth, however, we still want to steer the agent, own direction and outcome that agents are producing. 
 
-## Review the work behind the change
+To continue scale with the AI agent output, we need to understand and conciously guide the agent to success. 
 
-Reconstruct the intent after the agent has finished and committed. Braid uses
+Braid precisely does this, by being your ambient monitor of the agent. reconstructs the intent behind your work, the agent’s choices, and its checks to the code. You can follow the work, question a decision, and steer the next change. Keep building without losing the high-level system context.
+
+Because of which you develop: 
+
+1. Own understanding of what you want to merge/ship. 
+2. Help make knowledge transfer in the team easy. 
+3. Easier to rehydrate the coding loop again, when you want to retrieve the same change at a later time. 
+
+![Without Braid, understanding of a change drops at each handover: the reviewer starts over from the diff, and the organisation starts over from git blame. With Braid, the traces, decisions, and intent captured while the agent works stay with the change for every reader.](assets/overview/why-braid.png#only-light)
+![Without Braid, understanding of a change drops at each handover: the reviewer starts over from the diff, and the organisation starts over from git blame. With Braid, the traces, decisions, and intent captured while the agent works stay with the change for every reader.](assets/overview/why-braid-dark.png#only-dark)
+
+## Where Braid fits in your current workflow?
+
+Your prompt in the coding agent session is the start. An agent may delegate parts of it to another sub-agent, change code, run checks, and revise its approach. The final diff shows the code changes;
+the session also contains the context behind them say the issue from GitHub, or a document from Notion.
+
+[![Codex or Claude Code reads context such as Notion, Linear, or Google Docs during the session. On your machine, Braid captures the sessions, records the intent, and opens it in a local review UI, where you inspect and steer the agent. You can push the intent to the GitHub PR as a comment.](assets/overview/braid-fits.png#only-light)](assets/overview/braid-fits.png)
+[![Codex or Claude Code reads context such as Notion, Linear, or Google Docs during the session. On your machine, Braid captures the sessions, records the intent, and opens it in a local review UI, where you inspect and steer the agent. You can push the intent to the GitHub PR as a comment.](assets/overview/braid-fits-dark.png#only-dark)](assets/overview/braid-fits-dark.png)
+
+## Understand what your agent has done
+
+Reconstruct the intent after the agent has finished and committed changes. Braid uses
 the captured work and code changes to explain the goal, the outcome, the
 decisions, and the steps that led there.
 
 Open a decision to see the code it affected and the agent trace behind it.
 Check the explanation against that evidence before you accept the change.
 
-<figure class="braid-overview-figure">
-  <img class="braid-frame-light" src="assets/overview/review.png" alt="Captured work flows through Braid's record into the intent UI, where the developer reviews it." loading="lazy">
-  <img class="braid-frame-dark" src="assets/overview/review-dark.png" alt="Captured work flows through Braid's record into the intent UI, where the developer reviews it." loading="lazy">
-  <figcaption>The intent gives you a starting point for checking what the agent did and why.</figcaption>
-</figure>
-
-| View | Use it to |
-| --- | --- |
-| **Overview** | Check that the goal and outcome match your request. |
-| **Steps** | Follow the work, including checks and revisions, in order. |
-| **Decisions** | Inspect choices, alternatives, and their effect on the code. |
-| **Workstreams** | Follow the parent session and each captured subagent. |
-| **Diagrams** | Understand how the changed parts fit together. |
-
 If you would make a different choice, tell your agent what to change and why.
 Have it commit, then reconstruct the same braid again. Review the updated
 intent before moving on.
 
-## Keep the record with the code
+## Make your peers easily understand your code
 
-Approval records that you understood and accepted the intent. Shipping marks
-the braid done and writes a signed Git note on the commit. A signature records
-provenance; it does not establish that the code is correct.
+Once you are satisfied with the agent's work you can push the same intent doc from the coding agent session to Braid cloud. Braid would also comment the intent on the PR so that your peers or their agents trying to understand will have full context of the change you are trying to merge. 
 
-<figure class="braid-overview-figure">
-  <img class="braid-frame-light" src="assets/overview/record.png" alt="After review and approval, Braid keeps a signed Git note beside the commit." loading="lazy">
-  <img class="braid-frame-dark" src="assets/overview/record-dark.png" alt="After review and approval, Braid keeps a signed Git note beside the commit." loading="lazy">
-  <figcaption>Shipping keeps the final record beside the commit it explains.</figcaption>
-</figure>
-
-## What to expect in the preview
-
-Braid supports macOS with Claude Code or Codex. This preview focuses on a
-developer reviewing their own work. Team sharing is not part of this exercise.
-
-The Review UI runs locally. Reconstruction sends captured requests, agent
-replies, and code changes to Braid's hosted service, which uses a third-party
-AI model. Braid does not currently redact that information automatically.
-Use synthetic data for the sample and keep credentials out of agent messages.
-
-The intent is reconstructed by a model. Use it to find the important code and
-evidence, then make your own judgment.
+This helps in building a shared understanding of any change, big or small! 
 
 ## Choose your next step
 
