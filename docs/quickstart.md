@@ -223,7 +223,7 @@ agent, or with the CLI.
     URL that `gh pr create` printed. Always pass both:
 
     ```sh
-    braid push <braid-id> --pr-number <number> --pr-url <pull-request-url>
+    braid push <braid-id> --pr-number <number> --pr-url <url>
     ```
 
     To upload the intent without a pull request, run `braid push <braid-id>`.

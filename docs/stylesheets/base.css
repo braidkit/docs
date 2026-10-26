@@ -186,20 +186,39 @@ body {
   white-space: nowrap;
 }
 
+/* The right padding keeps text clear of the copy button in the top-right
+   corner. A quiet scrollbar for the commands that still scroll. */
 .md-typeset pre > code {
   font-size: var(--text-sm);
   line-height: var(--leading-snug);
   padding: var(--space-3);
+  padding-right: calc(var(--space-3) + 2rem);
+  scrollbar-color: var(--border-strong) transparent;
 }
 
 .md-typeset pre {
   border-radius: var(--radius-md);
 }
 
+/* One box per block. Material's margin on <pre> showed as an empty band
+   between this border and the code, so the box takes the margin instead. */
 .md-typeset .highlight {
+  background: var(--code-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
+  margin: 1em 0;
   overflow: hidden;
+}
+
+.md-typeset .highlight pre {
+  margin: 0;
+}
+
+/* Prompts are prose that readers paste into their agent, so they wrap and stay
+   fully visible. Commands keep one line each. */
+.md-typeset .language-text pre > code {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
 }
 
 /* ------------------------------------------------------------------- tables */
