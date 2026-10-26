@@ -1,7 +1,10 @@
+import contextlib
+import io
 import pathlib
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 import yaml
 
@@ -12,6 +15,10 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import build_llms  # noqa: E402
 import page_markdown  # noqa: E402
 import site_config  # noqa: E402
+
+
+class HookConfig(dict):
+    """A config mapping that, like MkDocs', knows the file it came from."""
 
 
 class SiteConfigTests(unittest.TestCase):
@@ -151,6 +158,26 @@ class PublishingTests(unittest.TestCase):
         self.assertIn("Outline only", index)
         self.assertIn("## Authored home", full)
         self.assertNotIn("Draft body.", full)
+
+    def test_serve_address_does_not_change_the_corpus(self):
+        # mkdocs serve passes hooks its own address as site_url. Two servers on
+        # one docs folder must still write the same corpus, or each rebuild
+        # rewrites the other's files and both reload without end.
+        config_file = self.root / "mkdocs.yml"
+        config_file.write_text(yaml.safe_dump(self.config), encoding="utf-8")
+        written = []
+        for address in ("http://127.0.0.1:8000/", "http://127.0.0.1:8932/"):
+            served = HookConfig(self.config, site_url=address)
+            served.config_file_path = str(config_file)
+            with (
+                mock.patch.object(build_llms, "ROOT", self.root),
+                contextlib.redirect_stdout(io.StringIO()),
+            ):
+                build_llms.on_config(served)
+            written.append((self.docs / "llms.txt").read_text(encoding="utf-8"))
+
+        self.assertEqual(written[0], written[1])
+        self.assertIn("[Authored home](https://docs.example.com/)", written[0])
 
     def test_sidecar_publisher_runs_without_mkdocs(self):
         page_markdown.publish_markdown(self.config)
