@@ -102,11 +102,6 @@ def check_site(site_dir):
     if shell_path.is_file():
         page_html = shell_path.read_text(encoding="utf-8")
         location = str(shell_path.relative_to(site_dir))
-        source_url = (
-            f"{config.get('repo_url', '').rstrip('/')}/"
-            f"{config.get('edit_uri', '').lstrip('/')}"
-            f"{shell_page.src_uri}"
-        )
         for contract in (
             'class="md-sidebar md-sidebar--secondary"',
             'class="braid-header__help"',
@@ -114,7 +109,6 @@ def check_site(site_dir):
             "data-braid-pageactions",
             "data-braid-copy-markdown",
             "Get help",
-            source_url,
         ):
             require_text(page_html, contract, location, errors)
 

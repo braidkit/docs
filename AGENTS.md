@@ -14,7 +14,6 @@ python scripts/check_site.py site           # site contracts, after a build
 vale docs                                  # spelling and house rules
 lychee --include-fragments --index-files index.html \
   --remap "^https://docs[.]braidkit[.]io/(.*)$ file://$PWD/site/\$1" \
-  --remap "^https://github[.]com/braidkit/docs/blob/main/docs/(.*)$ file://$PWD/docs/\$1" \
   --exclude '^https://github[.]com/braidkit/brewgo([/#?].*)?$' \
   site/index.html site/quickstart/index.html
 python scripts/check_commands.py docs/quickstart.md # braid commands match the CLI

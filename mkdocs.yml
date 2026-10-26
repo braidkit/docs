@@ -1,11 +1,6 @@
 site_name: Braid Docs
 site_url: https://docs.braidkit.io/
 site_description: Documentation for Braid, which records the decisions and reasoning behind a change and keeps that record with the code.
-repo_url: https://github.com/braidkit/docs
-repo_name: braidkit/docs
-# Used by the footer's GitHub icon to resolve each rendered page back to its
-# source Markdown file on the default branch.
-edit_uri: blob/main/docs/
 
 theme:
   name: material
@@ -21,8 +16,6 @@ theme:
       scheme: default
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-  icon:
-    repo: fontawesome/brands/github
   features:
     - navigation.instant
     - navigation.instant.progress
@@ -102,9 +95,4 @@ extra:
   support:
     title: Get help
     link: https://discord.gg/G3wzPsKtR
-  social:
-    - icon: fontawesome/brands/github
-      link: https://github.com/braidkit/docs
-      name: View this page on GitHub
-      page_source: true
   generator: false
