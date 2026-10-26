@@ -96,7 +96,7 @@ standalone commands for another builder.
 - `braid-tokens.css`: the shared tokens, vendored from `braidkit/brand`.
 - `docs/stylesheets/tokens.css`: maps those onto the names this site and Material use.
 - `fonts.css`: locally hosted fonts; see [FONTS.md](FONTS.md).
-- `base.css`: article typography, tables, code, callouts.
+- `base.css`: article typography, tables, code, buttons.
 - `shell.css`: header, navigation, search, outline, responsive drawer.
 - `home.css`: navigation cards and outline notices.
 - `overrides/`: focused Material template overrides.

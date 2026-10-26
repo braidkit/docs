@@ -1,7 +1,7 @@
 /* Braid Docs — content styles
  *
- * Everything inside the article: typography, links, code, tables, callouts,
- * buttons. Page chrome lives in shell.css.
+ * Everything inside the article: typography, links, code, tables, buttons.
+ * Page chrome lives in shell.css.
  *
  * All values come from tokens.css. No raw colours, no raw sizes, no
  * per-theme branches.

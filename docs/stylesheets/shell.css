@@ -1,7 +1,7 @@
 /* Braid Docs — application shell
  *
- * Header, page actions, outline, footer, and the two-column grid that holds the
- * article and its outline.
+ * Header, page actions, outline, and the two-column grid that holds the article
+ * and its outline.
  *
  * The site is one page, so there is no navigation rail, drawer or search. Below
  * the desktop breakpoint the outline is hidden and the article takes the full
