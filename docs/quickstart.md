@@ -180,11 +180,7 @@ shows the record behind all of them.
 4. **The agent's reasoning** for a choice.
 5. **A checkpoint**, such as a decision that the agent took.
 
-If you would choose differently, tell your agent which approach to take and why.
-Have it commit, then reconstruct the intent again.
-
-An explanation can be wrong. Use the code, the recorded checks, and the test
-results to decide whether you accept each choice.
+If you would choose differently, tell your agent which approach to take and why using the copy button. 
 
 ## 6. Share the Intent with your peers
 
