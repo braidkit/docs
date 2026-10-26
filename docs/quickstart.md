@@ -22,8 +22,6 @@ Payments are simulated.
 | macOS and Git 2.25 or later | Braid's supported client platform. |
 | Claude Code or Codex with subagent support | The spec uses a parent and two parallel subagents. |
 | Node.js 22.13 or later | The analytics module reads SQLite with Node's built-in `node:sqlite`. |
-| GitHub CLI, signed in with `gh auth login` | Step 6 puts BrewGo in a repository of your own and opens the pull request there. |
-
 ## 1. Install Braid
 
 ```sh
@@ -114,17 +112,19 @@ results to decide whether you accept each choice.
 ## 6. Share the Intent with your peers
 
 You cannot push to `braidkit/brewgo`, so first move your work to a repository of
-your own. In a terminal, in your `brewgo` checkout, run:
+your own:
 
-```sh
-git remote remove origin
-gh repo create brewgo --private --source=. --remote=origin
-git push -u origin main
-```
+1. On GitHub, [create a new repository](https://github.com/new) named `brewgo`,
+   public or private. Leave it empty: do not add a README, license, or `.gitignore`.
+2. In a terminal, in your `brewgo` checkout, point `origin` at it and push `main`.
+   Replace `<your-username>` with your GitHub username:
 
-This makes a private `brewgo` repository on your GitHub account, points `origin`
-at it, and pushes `main`. Your pull request opens there. If you already have a
-repository named `brewgo`, use another name.
+    ```sh
+    git remote set-url origin https://github.com/<your-username>/brewgo.git
+    git push -u origin main
+    ```
+
+Your pull request opens in this repository.
 
 You can share the intent in two ways: through Braid's skills in your agent, or
 with the CLI.
@@ -141,20 +141,26 @@ with the CLI.
     push the braid and link it to the pull request, and Braid comments the intent
     on the PR, so your peers can read the intent where they review the code.
 
+    Your agent opens the pull request with its own GitHub tools, usually the
+    GitHub CLI. If it has none, use the CLI method.
+
 === "CLI"
 
-    Push the braid to braid server with its ID from step 4:
+    Push the branch:
 
     ```sh
-    braid push <braid-id>
+    git push -u origin feat/admin-analytics
     ```
 
-    To link a pull request and comment the intent on it, add the pull request
-    number and URL. Always pass both:
+    Open the pull request on GitHub from the link that `git push` prints. Then
+    push the braid with its ID from step 4, and the pull request number and URL.
+    Always pass both:
 
     ```sh
     braid push <braid-id> --pr-number <number> --pr-url <pull-request-url>
     ```
+
+    To upload the intent without a pull request, run `braid push <braid-id>`.
 
 Braid comments on a pull request when the Braid GitHub App is installed on its
 repository. If you installed the App for selected repositories only, add your new
