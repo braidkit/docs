@@ -63,6 +63,13 @@ Exact command details belong in `braid <command> --help`.
 Adding or renaming a page means updating the nav in `mkdocs.yml` and re-running
 the corpus check, which regenerates `llms.txt`.
 
+A page can have an agent guide: instructions that a coding agent follows for the
+reader, such as `docs/quickstart.agent.md`. Name it in the page's front matter
+as `agent_guide`. The page's **Copy for agent** button copies it,
+`page_markdown.py` publishes it as `<page>.agent.md`, and `mkdocs.yml` keeps
+`*.agent.md` out of the HTML build. Change the guide whenever the page's steps
+change.
+
 ## Personal instructions
 
 Keep yours out of this file. Both tools read a personal layer that stacks with

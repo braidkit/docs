@@ -87,6 +87,11 @@ markdown_extensions:
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
 
+# Agent guides are plain instructions, not pages. page_markdown.py publishes
+# them next to their page for the "Copy for agent" button.
+exclude_docs: |
+  *.agent.md
+
 nav:
   - Overview: index.md
   - Quickstart: quickstart.md

@@ -1,9 +1,10 @@
 /*
   The Markdown split button: copy the page's source, or open the menu for both
-  actions.
+  actions. A page with an agent guide copies the guide from the face instead,
+  and offers the page's source in the menu.
 
-  `page_markdown.py` publishes every page's source beside its HTML, so copying
-  only has to fetch its own `.md` twin. Fetching rather than reading the DOM
+  `page_markdown.py` publishes every page's source beside its HTML, and each
+  agent guide beside that, so copying only has to fetch the button's file. Fetching rather than reading the DOM
   means the reader gets the authored Markdown, not a reconstruction of the
   rendered page.
 
@@ -17,15 +18,33 @@
   var RESET_MS = 2000;
   var resetTimer = null;
 
-  function labels(root) {
-    return root.querySelectorAll("[data-braid-copy-label]");
+  function labelsFor(url) {
+    // Every control that copies the same file reports back, so a copy from the
+    // menu also shows on the face.
+    var nodes = [];
+    document.querySelectorAll("[data-braid-copy-markdown]").forEach(function (button) {
+      var label = button.querySelector("[data-braid-copy-label]");
+      if (label && button.getAttribute("data-markdown-url") === url) {
+        nodes.push(label);
+      }
+    });
+    return nodes;
   }
 
-  function setLabel(text) {
-    // The face and the menu item share a label, so a copy from either place
-    // reports back in both.
-    labels(document).forEach(function (node) {
+  function setLabels(nodes, text) {
+    // The face and the menu items can have different labels, so each one
+    // remembers its own.
+    nodes.forEach(function (node) {
+      if (!node.hasAttribute("data-braid-copy-original")) {
+        node.setAttribute("data-braid-copy-original", node.textContent);
+      }
       node.textContent = text;
+    });
+  }
+
+  function resetLabels() {
+    document.querySelectorAll("[data-braid-copy-original]").forEach(function (node) {
+      node.textContent = node.getAttribute("data-braid-copy-original");
     });
   }
 
@@ -44,14 +63,9 @@
       return;
     }
 
-    var original = document.body.getAttribute("data-braid-copy-original");
-    if (original === null) {
-      var first = labels(document)[0];
-      original = first ? first.textContent : "Copy page";
-      document.body.setAttribute("data-braid-copy-original", original);
-    }
-
     window.clearTimeout(resetTimer);
+    resetLabels();
+    var nodes = labelsFor(url);
 
     try {
       var response = await fetch(url, { headers: { Accept: "text/markdown" } });
@@ -59,18 +73,16 @@
         throw new Error("markdown request failed: " + response.status);
       }
       await navigator.clipboard.writeText(await response.text());
-      setLabel("Copied");
+      setLabels(nodes, "Copied");
     } catch (error) {
       // The clipboard API needs a secure context and a permission the reader
       // can refuse, and the fetch can fail on its own. Say so rather than
       // leaving the button looking like it worked.
-      setLabel("Copy failed");
+      setLabels(nodes, "Copy failed");
       console.error("Braid: copy as Markdown failed", error);
     }
 
-    resetTimer = window.setTimeout(function () {
-      setLabel(document.body.getAttribute("data-braid-copy-original"));
-    }, RESET_MS);
+    resetTimer = window.setTimeout(resetLabels, RESET_MS);
   }
 
   document.addEventListener("click", function (event) {

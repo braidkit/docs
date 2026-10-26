@@ -69,6 +69,12 @@
     source is `index.md`; building the name from the URL alone gave `.md`.
   #}
   {% set md_path = 'index.md' if not page.url else (page.url[:-1] if page.url[-1:] == '/' else page.url) ~ '.md' %}
+  {#
+    A page that names an `agent_guide` copies instructions for coding agents
+    instead of its own source. `page_markdown.py` publishes the guide beside the
+    page's Markdown as `<page>.agent.md`.
+  #}
+  {% set agent_path = md_path[:-3] ~ '.agent.md' if page and page.meta.agent_guide else '' %}
   {% if page %}
     <div class="braid-pagebar">
       {#
@@ -81,10 +87,10 @@
           class="braid-pageactions__face"
           type="button"
           data-braid-copy-markdown
-          data-markdown-url="{{ md_path | url }}"
+          data-markdown-url="{{ (agent_path or md_path) | url }}"
         >
           {% include ".icons/material/content-copy.svg" %}
-          <span data-braid-copy-label>Copy page</span>
+          <span data-braid-copy-label>{{ 'Copy for agent' if agent_path else 'Copy page' }}</span>
         </button>
         <button
           class="braid-pageactions__toggle"
@@ -97,6 +103,21 @@
           {% include ".icons/material/chevron-down.svg" %}
         </button>
         <div class="braid-pageactions__menu" role="menu" hidden data-braid-menu>
+          {% if agent_path %}
+            <button
+              class="braid-pageactions__item"
+              type="button"
+              role="menuitem"
+              data-braid-copy-markdown
+              data-markdown-url="{{ agent_path | url }}"
+            >
+              {% include ".icons/material/robot-outline.svg" %}
+              <span>
+                <strong data-braid-copy-label>Copy for agent</strong>
+                <small>Steps your coding agent can follow for you</small>
+              </span>
+            </button>
+          {% endif %}
           <button
             class="braid-pageactions__item"
             type="button"

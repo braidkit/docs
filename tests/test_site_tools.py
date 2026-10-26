@@ -197,6 +197,34 @@ class PublishingTests(unittest.TestCase):
             install_meta["url"],
         )
 
+    def test_sidecar_publisher_publishes_a_page_agent_guide(self):
+        (self.docs / "index.md").write_text(
+            "---\ntitle: Authored home\ndescription: Start here.\n"
+            "agent_guide: index.agent.md\n---\n\n# Home\n",
+            encoding="utf-8",
+        )
+        (self.docs / "index.agent.md").write_text("# Steps for an agent\n", encoding="utf-8")
+
+        page_markdown.publish_markdown(self.config)
+
+        self.assertEqual(
+            "# Steps for an agent\n",
+            (self.site / "index.agent.md").read_text(encoding="utf-8"),
+        )
+        self.assertFalse((self.site / "guides" / "install.agent.md").exists())
+        self.assertEqual(
+            "guides/install.agent.md",
+            page_markdown.agent_guide_destination("guides/install/index.html"),
+        )
+
+    def test_sidecar_publisher_rejects_a_missing_agent_guide(self):
+        (self.docs / "index.md").write_text(
+            "---\ntitle: Home\ndescription: Start here.\nagent_guide: missing.agent.md\n---\n",
+            encoding="utf-8",
+        )
+        with self.assertRaisesRegex(SystemExit, "missing.agent.md, which does not exist"):
+            page_markdown.publish_markdown(self.config)
+
     def test_llms_requires_descriptions_and_existing_sources(self):
         (self.docs / "index.md").write_text(
             "---\ntitle: Missing description\n---\n\n# Home\n",

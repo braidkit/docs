@@ -1,6 +1,8 @@
 ---
 title: Quickstart
 description: Add a new feature to a sample coffee shop app with your coding agent, reconstruct the intent, and check the decisions against the code.
+# The "Copy for agent" button copies this file. page_markdown.py publishes it.
+agent_guide: quickstart.agent.md
 ---
 
 # Quickstart
