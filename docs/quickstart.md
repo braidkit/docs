@@ -7,7 +7,7 @@ agent_guide: quickstart.agent.md
 
 # Quickstart
 
-[BrewGo](https://github.com/braidkit/brewgo) is a digital coffee shop like Starbucks.
+[BrewGo](https://github.com/braidkit/brewgo) is a digital coffee shop.
 
 In this Quickstart, you add an admin analytics feature to the BrewGo sample repository. Then you use Braid to understand what your agent built,
 check its choices, and direct a change before you open or merge a pull request.
@@ -19,7 +19,8 @@ without changing them, and a testable admin view. A parent agent gives each part
 
 | You need | Notes |
 | --- | --- |
-| macOS and Git 2.25 or later | Braid's supported client platform. |
+| macOS and Git 2.25 or later | Linux and Windows aren't supported yet. |
+| A GitHub account | You sign in to Braid with it. |
 | Claude Code or Codex with subagent support | The spec uses a parent and two parallel subagents. |
 | Node.js 22.13 or later | The analytics module reads SQLite with Node's built-in `node:sqlite`. |
 
@@ -34,7 +35,7 @@ Follow the prompts to sign in with GitHub, add the Braid GitHub App, and set up 
 
 The installer puts Braid in `~/.local/bin`.
 
-Braid ambiently records AI coding agent sessions after setup. The coding sessions stay local. We will never be able to see them!
+Braid ambiently records AI coding agent sessions after setup. The coding sessions stay local.
 
 > In the Codex app, go to **Settings > Hooks** and trust Braid's hooks. In the Codex CLI, run `/hooks` and approve Braid's hooks when prompted.
 
@@ -60,6 +61,10 @@ use spec.md to build the admin analytics dashboard feature.
 Wait for the parent and both subagents to finish.
 
 ## 4. Reconstruct the intent
+
+Reconstructing sends the captured work to the Braid server, where a third-party
+AI model writes the intent. A **braid** is a record of one branch's change: the
+captured work and the intent reconstructed from it.
 
 You can reconstruct the intent in two ways: through Braid's skills in your agent,
 or with the CLI.
@@ -109,6 +114,7 @@ read about each part below.
 3. **Why this direction:** the direction that the agent took, and why.
 
 Does the goal match your request? Does the outcome match what you had in mind?
+If not, tell your agent before going further.
 
 ### Review by: four views of one change
 
@@ -179,9 +185,14 @@ shows the record behind all of them.
 4. **The agent's reasoning** for a choice.
 5. **A checkpoint**, such as a decision that the agent made.
 
-If you would choose differently, use the copy button to tell your agent which approach to take, and why.
+If you would choose differently, use the copy button to tell your agent which
+approach to take, and why. Have it commit, then reconstruct the intent again and
+pick the same prompt.
 
 ## 6. Share the intent with your peers
+
+Sharing uploads what the Review UI shows, including your prompts. Anyone who can
+read the repository can then open it.
 
 You cannot push to `braidkit/brewgo`, so your pull request opens in a repository
 of your own. You can share the intent in two ways: through Braid's skills in your
@@ -198,8 +209,8 @@ agent, or with the CLI.
     Your agent creates the repository with its own GitHub tools, usually the
     GitHub CLI, and points `origin` at it. Then it pushes the branch and opens
     the pull request. Braid's skills push the braid, link it to the pull request,
-    and post the intent as a comment on the PR, so your peers can read the
-    intent where they review the code.
+    and post the intent there as a comment, so your peers can read the intent
+    where they review the code.
 
 === "CLI"
 

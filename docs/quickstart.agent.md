@@ -34,7 +34,8 @@ Tell the user these checkpoints before you start:
    them. Braid records only the sessions that start after its capture is on, so
    the feature cannot be built in this session.
 5. In that session, send `reconstruct the intent` as a new message after the
-   build. Braid reviews only finished turns.
+   build. Braid reviews only finished turns. Reconstructing sends the captured
+   work to the Braid server, where a third-party AI model writes the intent.
 6. Review the intent in the Review UI.
 
 ## Part 1: set up, in this session
@@ -119,10 +120,12 @@ You are in BrewGo for the Braid Quickstart, on the feat/admin-analytics branch.
 3. When I send it, reconstruct the intent and open the Review UI. Tell me to
    follow step 5 of https://docs.braidkit.io/quickstart/ to read the overview,
    the steps, the decisions, the workstreams, the diagrams, and the trace.
-4. When I say the review is done, ask whether to share it. If I agree: create a
-   private brewgo repository on my GitHub account, make it origin, push main,
-   then push and raise a PR. Braid posts the intent as a comment on the PR when
-   the Braid GitHub App is installed on that repository.
+4. When I say the review is done, ask whether to share it, and tell me that
+   sharing uploads my prompts and that anyone who can read the repository can
+   open it. If I agree: create a private brewgo repository on my GitHub account,
+   make it origin, push main, then push and raise a PR. Braid posts the intent
+   as a comment on the PR when the Braid GitHub App is installed on that
+   repository.
 ```
 
 ## If something goes wrong
