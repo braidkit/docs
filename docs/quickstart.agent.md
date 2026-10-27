@@ -26,7 +26,7 @@ The full guide for people is at <https://docs.braidkit.io/quickstart/>.
 Tell the user these checkpoints before you start:
 
 1. Approve the Braid sign-in code in their browser.
-2. In Codex only, approve Braid's hooks: `/hooks` in Codex CLI, or
+2. In Codex only, approve Braid's hooks: `/hooks` in the Codex CLI, or
    **Settings > Hooks** in the Codex app.
 3. Approve your requests to use the network and to run commands, if their agent
    settings ask for approval.
@@ -34,7 +34,8 @@ Tell the user these checkpoints before you start:
    them. Braid records only the sessions that start after its capture is on, so
    the feature cannot be built in this session.
 5. In that session, send `reconstruct the intent` as a new message after the
-   build. Braid reviews only finished turns.
+   build. Braid reviews only finished turns. Reconstructing sends the captured
+   work to the Braid server, where a third-party AI model writes the intent.
 6. Review the intent in the Review UI.
 
 ## Part 1: set up, in this session
@@ -111,18 +112,20 @@ the new session.
 ```text
 You are in BrewGo for the Braid Quickstart, on the feat/admin-analytics branch.
 
-1. Use spec.md and start working on building the admin analytics dashboard
-   feature. Follow spec.md exactly, including its checks and its commit.
+1. Use spec.md to build the admin analytics dashboard feature. Follow spec.md
+   exactly, including its checks and its commit.
 2. When the commit is done and the tree is clean, stop. Ask me to send
    "reconstruct the intent" as a new message, because Braid reviews only
    finished turns.
 3. When I send it, reconstruct the intent and open the Review UI. Tell me to
    follow step 5 of https://docs.braidkit.io/quickstart/ to read the overview,
    the steps, the decisions, the workstreams, the diagrams, and the trace.
-4. When I say the review is done, ask whether to share it. If I agree: create a
-   private brewgo repository on my GitHub account, make it origin, push main,
-   then push and raise a PR. Braid comments the intent on the PR when the Braid
-   GitHub App is installed on that repository.
+4. When I say the review is done, ask whether to share it, and tell me that
+   sharing uploads my prompts and that anyone who can read the repository can
+   open it. If I agree: create a private brewgo repository on my GitHub account,
+   make it origin, push main, then push and raise a PR. Braid posts the intent
+   as a comment on the PR when the Braid GitHub App is installed on that
+   repository.
 ```
 
 ## If something goes wrong
